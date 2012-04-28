@@ -2,6 +2,7 @@ import pygame
 import os
 from ymzkgame.manager import Manager
 from ymzkgame.coordinate import Coordinate
+from math import pi as PI
 
 class Image:
   __loaded = {}
@@ -30,3 +31,5 @@ class Image:
     if not self.__converted:
       self.__image.convert()
       self.__converted = True
+  def rotate(self, angle):
+    return Image(pygame.transform.rotate(self.__image, angle * 180 / PI))
