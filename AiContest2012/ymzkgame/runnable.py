@@ -1,4 +1,4 @@
-import utility
+import ymzkgame.utility
 
 class StopRunning(Exception):
   pass

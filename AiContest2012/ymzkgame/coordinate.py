@@ -2,30 +2,38 @@
 class Coordinate:
   def __init__(self, *args):
     if len(args) == 0:
-      self.x, self.y = None, None
+      self.__x, self.__y = None, None
     elif len(args) == 2:
-      self.x, self.y = args
+      self.__x, self.__y = args
     else:
       raise TypeError('Coordinate() takes 0 or 2 arguments')
+  def getX(self):
+    return self.__x
+  def getY(self):
+    return self.__y
   def __repr__(self):
-    return '(' + repr(self.x) + ', ' + repr(self.y) + ')'
+    return '(' + repr(self.getX()) + ', ' + repr(self.getY()) + ')'
   def __pos__(self):
-    return Coordinate(self.x, self.y)
+    return Coordinate(self.getX(), self.getY())
   def __neg__(self):
-    return Coordinate(-self.x, -self.y)
+    return Coordinate(-self.getX(), -self.getY())
   def __add__(self, other):
-    return Coordinate(self.x + other.x, self.y + other.y)
+    return Coordinate(self.getX() + other.getX(), self.getY() + other.getY())
   def __sub__(self, other):
     return self + -other
   def __mul__(self, other):
     if isinstance(other, Coordinate):
       raise TypeError('unsupported operand type(s) for +: \'Coordinate\' and \'Coordinate\'')
-    return Coordinate(self.x * other, self.y * other)
+    return Coordinate(self.getX() * other, self.getY() * other)
   def __rmul__(self, other):
-    return Coordinate(other * self.x, other * self.y)
+    return Coordinate(other * self.getX(), other * self.getY())
   def __div__(self, other):
-    return Coordinate(self.x / other, self.y / other)
+    return Coordinate(self.getX() / other, self.getY() / other)
   def __truediv__(self, other):
-    return Coordinate(self.x / other, self.y / other)
+    return Coordinate(self.getX() / other, self.getY() / other)
   def __floordiv__(self, other):
-    return Coordinate(self.x // other, self.y // other)
+    return Coordinate(self.getX() // other, self.getY() // other)
+  def norm(self):
+    return self.getX() ** 2 + self.getY() ** 2
+  def __abs__(self):
+    return self.norm() ** (1 / 2)

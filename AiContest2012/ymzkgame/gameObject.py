@@ -1,14 +1,15 @@
-from runnable import Runnable
-import defaults
-from moveClasses import *
-from manager import Manager
+from ymzkgame.runnable import Runnable
+import ymzkgame.defaults as defaults
+from ymzkgame.moveClasses import *
+from ymzkgame.manager import Manager
+from ymzkgame.image import Image
 
 class GameObject(Runnable):
   def __init__(self,
                image = defaults.DEFAULT_IMAGE,
                position = defaults.DEFAULT_POSITION,
                direction = defaults.DEFAULT_DIRECTION):
-    self.__image = image
+    self.__image = Image(image)
     self.__position = position
     self.__direction = direction
     self.__move = NoMove()
@@ -19,5 +20,9 @@ class GameObject(Runnable):
     return self.__position
   def getDirection(self):
     return self.__direction
+  def setPosition(self, position):
+    self.__position = position
+  def setDirection(self, direction):
+    self.__direction = direction
   def setMove(self, move):
     self.__move = move

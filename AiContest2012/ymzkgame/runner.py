@@ -1,6 +1,6 @@
 import pygame
-from runnable import Runnable, StopRunning
-import defaults
+from ymzkgame.runnable import Runnable, StopRunning
+import ymzkgame.defaults as defaults
 
 class Runner:
   def __init__(self, firstScene, title = defaults.DEFAULT_TITLE,
@@ -13,8 +13,6 @@ class Runner:
     self.__screenSize = screenSize
     self.__fps = fps
   def step(self):
-    for gameObj in Manager.getRegistrated():
-      gameObj.step()
     while True:
       if len(self.__scenes) == 0:
         return False

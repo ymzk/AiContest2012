@@ -1,6 +1,6 @@
 import pygame
-from utility import toTuple
-from coordinate import Coordinate
+from ymzkgame.utility import toTuple
+from ymzkgame.coordinate import Coordinate
 
 class Manager:
   @staticmethod

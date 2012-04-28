@@ -1,5 +1,5 @@
 from math import pi as PI
-from move import Move
+from ymzkgame.move import Move
 
 class NoMove(Move):
     def __call__(self, position, direction):

@@ -34,10 +34,10 @@ class RunnableList(list, Runnable):
 class Hoge(Runnable):
   def run(self):
     obj = GameObject()
-    obj.setMove(MoveTo(Coordinate(800, 600), 180))
+    obj.setMove(MoveTo(Coordinate(800, 600), term = 180))
     for i in range(180):
-      yield
       obj.step()
+      yield
     yield Wait(60)
 
 run(Hoge())

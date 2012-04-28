@@ -1,4 +1,4 @@
-from coordinate import Coordinate
+from ymzkgame.coordinate import Coordinate
 
 class Iterator:
     def __iter__(self):
@@ -8,6 +8,6 @@ class Iterator:
 
 def toTuple(obj):
     if isinstance(obj, Coordinate):
-        return (obj.x, obj.y)
+        return (obj.getX(), obj.getY())
     else:
         return tuple(obj)

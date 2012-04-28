@@ -1,5 +1,5 @@
-from coordinate import Coordinate
-from image import Image
+from ymzkgame.coordinate import Coordinate
+from ymzkgame.image import Image
 
 DEFAULT_TITLE = 'no title'
 
