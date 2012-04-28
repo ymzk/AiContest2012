@@ -5,8 +5,19 @@ class Coordinate:
       self.__x, self.__y = None, None
     elif len(args) == 2:
       self.__x, self.__y = args
+    elif len(args) == 1:
+      if hasattr(args[0], 'getX') and hasattr(args[0], 'getY'):
+        self.__x = args[0].getX()
+        self.__y = args[0].getY()
+      elif hasattr(args[0], '__iter__'):
+        self.__x, self.__y = args[0]
+      elif hasattr(args[0], 'x') and hasattr(args[0], 'y'):
+        self.__x = args[0].x
+        self.__y = args[0].y
+      else:
+        raise TypeError('failed to convert Coordinate')
     else:
-      raise TypeError('Coordinate() takes 0 or 2 arguments')
+      raise TypeError('Coordinate() takes 0 to 2 arguments')
   def getX(self):
     return self.__x
   def getY(self):

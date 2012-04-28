@@ -3,6 +3,7 @@ import ymzkgame.defaults as defaults
 from ymzkgame.moveClasses import *
 from ymzkgame.manager import Manager
 from ymzkgame.image import Image
+from ymzkgame.coordinate import Coordinate
 
 class GameObject(Runnable):
   def __init__(self,
@@ -10,7 +11,7 @@ class GameObject(Runnable):
                position = defaults.DEFAULT_POSITION,
                direction = defaults.DEFAULT_DIRECTION):
     self.__image = Image(image)
-    self.__position = position
+    self.__position = Coordinate(position)
     self.__direction = direction
     self.__move = NoMove()
   def step(self):

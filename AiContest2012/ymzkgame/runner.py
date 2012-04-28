@@ -1,6 +1,8 @@
 import pygame
 from ymzkgame.runnable import Runnable, StopRunning
 import ymzkgame.defaults as defaults
+from ymzkgame.manager import Manager
+from ymzkgame._keyData import KeyData
 
 class Runner:
   def __init__(self, firstScene, title = defaults.DEFAULT_TITLE,
@@ -34,6 +36,12 @@ class Runner:
         for event in pygame.event.get():
           if event.type == pygame.QUIT:
             del self.__scenes[:]
+          elif event.type == pygame.KEYDOWN:
+            KeyData.setKeyStatus(event.key, True)
+          elif event.type == pygame.KEYUP:
+            KeyData.setKeyStatus(event.key, False)
+          elif event.type == pygame.MOUSEMOTION:
+            KeyData.setMousePosition(event.pos)
         pygame.display.flip()
         clock.tick(self.__fps)
     finally:
