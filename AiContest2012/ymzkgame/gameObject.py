@@ -10,6 +10,7 @@ class GameObject(Runnable):
                image = defaults.DEFAULT_IMAGE,
                position = defaults.DEFAULT_POSITION,
                direction = defaults.DEFAULT_DIRECTION):
+    Runnable.__init__(self)
     self.__image = Image(image)
     self.__position = Coordinate(position)
     self.__direction = direction

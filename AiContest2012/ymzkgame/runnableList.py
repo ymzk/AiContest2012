@@ -1,4 +1,4 @@
-from ymzkgame.runnable import Runnable, StopRunning
+from ymzkgame.runnable import Runnable
 
 class RunnableList(list, Runnable):
     def __init__(self, *args):
@@ -14,8 +14,9 @@ class RunnableList(list, Runnable):
     def step(self):
         i = 0
         while i < len(self):
-            try:
-                self[i].step()
-                i += 1
-            except StopRunning:
+            if not self[i].isValid():
                 del self[i]
+            else:
+                i += 1
+        for i in self:
+            i.step()

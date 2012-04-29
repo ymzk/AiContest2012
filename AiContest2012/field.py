@@ -7,16 +7,20 @@ class CellCode:
   (NOTHING, WALL) = range(2)
 
 class Cell(Runnable):
-  def __init__(self, cellWidth, cellHeight):
+  def __init__(self):
     super().__init__()
   def getCellCode(self, unit):
     assert True,"CellCode is not defined"
+  def effect(self, *args):
+    pass
   def run():
     super().run()
 
 class WallCell(Cell):  
-  def __init__(self, cellWidth, cellHeight):
-    super().__init__(cellWidth, cellHeight)
+  def __init__(self):
+    super().__init__()
+  def effect(self, runnableObject):
+    runnableObject.end()
   def getCellCode(self, teamFlag):
     return CellCode.WALL
       
@@ -40,41 +44,76 @@ class Field(Runnable):
   def __init__(self):
     super().__init__()
     self.setFieldSize(100, 100, 25, 25)
+    self.testInitialize()
   def setFieldSize(self, fieldWidth, fieldHeight,cellWidth,cellHeight):
     self._fieldWidth = fieldWidth
     self._fieldHeight = fieldHeight
     self._cellWidth = cellWidth
     self._cellHeight = cellHeight
-    self._fieldData = [[0 for i in range(fieldWidth)] for j in range(fieldHeight)]
-  def setCellSize(self, cellSize):
-    self._cellSize = cellSize
+    self._fieldData = [[NoneCell() for i in range(fieldWidth)] for j in range(fieldHeight)]
+  def testInitialize(self):
+    for i in range(self._fieldWidth):
+      self._fieldData[i][13] = WallCell()
+  def fieldEffect(self, runnableObject):
+    x = int(runnableObject.getPosition().getX() / self._cellWidth)
+    y = int(runnableObject.getPosition().getY() / self._cellHeight)
+    if x < 0 or y < 0 or x >= self._fieldWidth or y >= self._fieldHeight:
+      runnableObject.end()
+      return
+    self._fieldData[x][y].effect(runnableObject)
+
   def wallDistance(self, radius, unit):
-    index = self.changePositionToIndex(unit.getPosition())
-    point = getNerestPoint()
-    pass
-  def changePositionToIndex(self,unit):
-    Coordinate((int)(unit.getX() / self._cellWidth), (int)(unit.getY() / self._cellHeight))
-  def changeIndexToPosition(self,unit):
-    Coordinate(unit.getX() * self._cellWidth, unit.getY() * self._cellHeight)
-  def getNearestPoint(self, vector):
+    offsetX = unit.getPosition().getX() % self._cellWidth
+    offsetY = unit.getPosition().getY() % self._cellHeight
+    indexX = int(unit.getPosition().getX() / self._cellWidth)
+    indexY = int(unit.getPosition().getY() / self._cellHeight)
+    minRange = radius
+    minVector = Coordinate(0, 0)
+    rangeWidth = int(radius/self._cellWidth) + 1
+    for i in range(- rangeWidth, rangeWidth + 1):
+      val = (radius / self._cellHeight + 1) * (radius / self._cellHeight + 1) - i * i
+      if val < 0:
+        continue
+      rangeHeight = int(val ** 0.5)
+      for j in range(- rangeHeight, rangeHeight + 1):
+        if i == j:
+          continue
+        if self.checkWall(indexX + i, indexY + j, unit) == CellCode.NOTHING:
+          continue
+        vector = self.getVectorFromNearestPoint(i * self._cellWidth + offsetX, j * self._cellHeight + offsetY)
+        if abs(vector) < minRange:
+          minVector = vector
+          minRange = abs(vector)
+    if abs(minVector) == 0:
+      return Coordinate(0, 0)
+    return minVector/minRange * (radius - minRange)
+  def changePositionToIndex(self,point):
+    return Coordinate((int)(point.getX() / self._cellWidth), (int)(point.getY() / self._cellHeight))
+  def changeIndexToPosition(self,point):
+    return Coordinate(point.getX() * self._cellWidth, point.getY() * self._cellHeight)
+  def getVectorFromNearestPoint(self, x, y):
     #近隣点からのベクトルを返す
-    x = index.getX()
-    y = index.getY()
-    if abs(x) <= self.cellWidth / 2:
-      if abs(y) <= self.cellHeight / 2:
+    if abs(x) <= self._cellWidth / 2:
+      if abs(y) <= self._cellHeight / 2:
         #pointがこのcell内部
-        return Coordinate(x / abs(x) * self.cellWidth / 2 - x, 0) if x > y else Coordinate(0, y / abs(y) * self.cellHeight / 2 - y)
+        if x > y:
+          flag = 1 if x > 0 else -1
+          return Coordinate(flag * self._cellWidth / 2 - x, y)
+        flag = 1 if y > 0 else -1
+        return Coordinate(x, flag * self._cellHeight / 2 - y)
       #最寄点はy軸方向への推薦の足
-      return Coordinate(0, y / abs(y) * self.cellHeight / 2 - y)
-    if abs(y) < self.cellHeight / 2:
-      return Coordinate(x / abs(x) * self.cellWidth / 2 - x, 0)
-    return Coordinate(x / abs(x) * self.cellWidth / 2 - x, y / abs(y) * self.cellHeight / 2 - y)
-  def checkWall(self, unit):
-    x = unit.getPosition().getX()
-    y = unit.getPosition().getY()
-    if x < 0 or y < 0 or x >= fieldWidth or y >= fieldHeight:
+      flag = 1 if y > 0 else -1
+      return Coordinate(x, y - flag * self._cellHeight / 2)
+    if abs(y) <= self._cellHeight / 2:
+      flag = 1 if x > 0 else -1
+      return Coordinate(x - flag * self._cellWidth / 2, y)
+    flagX = 1 if x > 0 else -1
+    flagY = 1 if y > 0 else -1
+    return Coordinate(x - flagX * self._cellWidth / 2,y - flagY * self._cellHeight / 2)
+  def checkWall(self, x, y, unit):
+    if x < 0 or y < 0 or x >= self._fieldWidth or y >= self._fieldHeight:
       return CellCode.WALL
-    return self.feildData[x][y].getCellCode(unit)
+    return self._fieldData[x][y].getCellCode(unit)
   def getDataPoint(self, point):
     return ((int)(point.getx()/self._fieldWidth,(int)(point.gety()/self._fieldHeight)))
   def step(self):

@@ -18,7 +18,7 @@ class Unit(GameObject):
   def initialize(self):
     self.setPosition(self._startingPoint)
     self.setDirection(self._startingDirection)
-    self._timeNextFireing = 10
+    self._timeNextFireing = 1
     self._term = 0
     self._hp = 100
     self._attackPower = 10
@@ -57,9 +57,12 @@ class Unit(GameObject):
   def step(self):
     if self._term > 0:
       self._term -= 1
+    self.setPosition(self.getPosition() + Coordinate(10,10))
+    '''
     self.sendData()
     self._reciever.step()
     self.recieveData()
+    '''
     super().step()
     
 

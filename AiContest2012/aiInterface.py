@@ -20,7 +20,7 @@ class Reciever(Runnable):
     #毎フレームチェックされる。
     self._fireingFlag = flag
   def setPosition(self, point):
-    self._center = Point - Coordinate( sin(self._direction), -cos(self._direction))*50
+    self._point = point
   def setDirection(self, arg):
     #方向を変える
     self._direction = arg
@@ -30,20 +30,18 @@ class Reciever(Runnable):
     return self._objectivePoint
   def getFiring(self):
     return self._fireingFlag
-  def getDirection(self, arg):
+  def getDirection(self):
     return self._direction
-  
+  def getPosition(self):
+    return self._point
   #通信用
     
   def sendStartingMessage(self):
     #todoとりあえず
     self._fireingFlag = true
-    self._center = Point - Coordinate( sin(self._direction), -cos(self._direction))*50
   def step(self):
     #todoとりあえず
-    self._direction += 0.1
-    self._point = center + Coordinate( sin(self._direction), -cos(self._direction))*50
-    return self
+    self._point = self._point + Coordinate(100,100)
   def getMessage(self):
     #todoとりあえず
     pass    

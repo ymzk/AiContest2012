@@ -1,11 +1,9 @@
 import ymzkgame.utility
 
-class StopRunning(Exception):
-  pass
-
 class Runnable(object):
   def __init__(self, iterable = None):
     self.__iterable = iterable
+    self.__finished = False
   def setup(self):
     result = self.run()
     if isinstance(result, Runnable):
@@ -20,6 +18,8 @@ class Runnable(object):
     try:
       return next(self.__iterable)
     except StopIteration:
-      raise StopRunning()
+      self.end()
   def end(self):
-    raise StopRunning()
+    self.__finished = True
+  def isValid(self):
+    return not self.__finished

@@ -13,10 +13,8 @@ class Bullet(GameObject):
   def getTeamFlag(self):
     return self._masterId.getTeamFlag()
   def end(self):
-    self._deadFlag = True
-    #todo?
-  def getDeadFlag(self):
-    return self._deadFlag
+    super().end()
   def step(self):
     self.setPosition(self.getPosition() + self._vector)
     super().step()
+  
