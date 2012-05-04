@@ -20,6 +20,8 @@ class WallCell(Cell):
   def __init__(self):
     super().__init__()
   def effect(self, runnableObject):
+    ##################################################
+    print("dead")
     runnableObject.end()
   def getCellCode(self, teamFlag):
     return CellCode.WALL
@@ -58,13 +60,14 @@ class Field(Runnable):
     x = int(runnableObject.getPosition().getX() / self._cellWidth)
     y = int(runnableObject.getPosition().getY() / self._cellHeight)
     if x < 0 or y < 0 or x >= self._fieldWidth or y >= self._fieldHeight:
+      #場外に出たので消滅
       runnableObject.end()
       return
     self._fieldData[x][y].effect(runnableObject)
 
   def wallDistance(self, radius, unit):
-    offsetX = unit.getPosition().getX() % self._cellWidth
-    offsetY = unit.getPosition().getY() % self._cellHeight
+    offsetX = unit.getPosition().getX() % self._cellWidth - self._cellWidth / 2
+    offsetY = unit.getPosition().getY() % self._cellHeight - self._cellHeight /2
     indexX = int(unit.getPosition().getX() / self._cellWidth)
     indexY = int(unit.getPosition().getY() / self._cellHeight)
     minRange = radius
@@ -76,11 +79,11 @@ class Field(Runnable):
         continue
       rangeHeight = int(val ** 0.5)
       for j in range(- rangeHeight, rangeHeight + 1):
-        if i == j:
+        if i == j == 0:
           continue
         if self.checkWall(indexX + i, indexY + j, unit) == CellCode.NOTHING:
           continue
-        vector = self.getVectorFromNearestPoint(i * self._cellWidth + offsetX, j * self._cellHeight + offsetY)
+        vector = self.getVectorFromNearestPoint(offsetX - i * self._cellWidth, offsetY - j * self._cellHeight)
         if abs(vector) < minRange:
           minVector = vector
           minRange = abs(vector)
@@ -98,18 +101,18 @@ class Field(Runnable):
         #pointがこのcell内部
         if x > y:
           flag = 1 if x > 0 else -1
-          return Coordinate(flag * self._cellWidth / 2 - x, y)
+          return Coordinate(x - flag * self._cellWidth / 2, 0)
         flag = 1 if y > 0 else -1
-        return Coordinate(x, flag * self._cellHeight / 2 - y)
+        return Coordinate(0, y - flag * self._cellHeight / 2)
       #最寄点はy軸方向への推薦の足
       flag = 1 if y > 0 else -1
-      return Coordinate(x, y - flag * self._cellHeight / 2)
+      return Coordinate(0, y - flag * self._cellHeight / 2)
     if abs(y) <= self._cellHeight / 2:
       flag = 1 if x > 0 else -1
-      return Coordinate(x - flag * self._cellWidth / 2, y)
+      return Coordinate(x - flag * self._cellWidth / 2, 0)
     flagX = 1 if x > 0 else -1
     flagY = 1 if y > 0 else -1
-    return Coordinate(x - flagX * self._cellWidth / 2,y - flagY * self._cellHeight / 2)
+    return Coordinate(x - flagX * self._cellWidth / 2, y - flagY * self._cellHeight / 2)
   def checkWall(self, x, y, unit):
     if x < 0 or y < 0 or x >= self._fieldWidth or y >= self._fieldHeight:
       return CellCode.WALL

@@ -57,7 +57,7 @@ class Unit(GameObject):
   def step(self):
     if self._term > 0:
       self._term -= 1
-    self.setPosition(self.getPosition() + Coordinate(10,10))
+    self.setPosition(self.getPosition() - Coordinate(10,10))
     '''
     self.sendData()
     self._reciever.step()

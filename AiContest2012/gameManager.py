@@ -18,7 +18,7 @@ class DamyRunnable(Runnable):
     pass
 class GameManager(Runnable):
   _unitRange = 24
-  _pushStrength = 0.2
+  _pushStrength = 0.5
   def __init__(self):
     super().__init__()
     self.bullets = RunnableList()
@@ -30,6 +30,9 @@ class GameManager(Runnable):
     self.field = Field()
     self.testInitialize()
   def testInitialize(self):
+    self.field.setFieldSize(40, 40, 25, 25)
+    self.field.testInitialize()
+
     self.units.append(Unit(Coordinate(200,200),1,self,"team0"))
     self.units.append(Unit(Coordinate(600,400),1,self,"team1"))
     self.units.append(Unit(Coordinate(201,201),0,self,"team0"))
@@ -62,8 +65,8 @@ class GameManager(Runnable):
 
       flag = True
       for i in range(len(self.units)):
-        self.units[i].setPosition(self.units[i].getPosition() + powerList[i] * self._pushStrength)
-        if powerList[i].norm() > 10 ** -3:
+        if powerList[i].norm() > 1e-6:
+          self.units[i].setPosition(self.units[i].getPosition() + powerList[i] * self._pushStrength)
           flag = False
       if flag:
         break
