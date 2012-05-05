@@ -1,5 +1,8 @@
 from math import pi as PI
-from ymzkgame.move import Move
+from . utility import EPS
+from . coordinate import Coordinate
+from . move import Move
+from . manager import Manager
 
 class NoMove(Move):
     def __call__(self, position, direction):
@@ -72,3 +75,23 @@ class MoveStraight(Move):
             resultDirection = direction + self.__rollVelocity
         self.__count += 1
         return self, resultPosition, resultDirection
+
+class MoveByKey(Move):
+    def __init__(self, velocity = 1):
+        self._velocity = velocity
+    def __call__(self, position, direction):
+        dx = Coordinate(1, 0)
+        dy = Coordinate(0, 1)
+        d = Coordinate(0, 0)
+        if Manager.getKeyStatus(Manager.K_UP):
+            d -= dy
+        if Manager.getKeyStatus(Manager.K_LEFT):
+            d -= dx
+        if Manager.getKeyStatus(Manager.K_DOWN):
+            d += dy
+        if Manager.getKeyStatus(Manager.K_RIGHT):
+            d += dx
+        if d.norm() > EPS:
+            d *= self._velocity / abs(d)
+            position += d
+        return self, position, direction

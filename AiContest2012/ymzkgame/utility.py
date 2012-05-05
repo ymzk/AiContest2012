@@ -1,4 +1,6 @@
-from ymzkgame.coordinate import Coordinate
+from . coordinate import Coordinate
+
+EPS = 1e-6
 
 class Iterator:
     def __iter__(self):
