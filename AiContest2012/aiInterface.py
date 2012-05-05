@@ -2,9 +2,10 @@ import math
 import ymzkgame.runnable import Runnable
 
 class Reciever(Runnable):
-  def __init__(self, _id, startingPoint, startingDirection):
+  def __init__(self, _id):
     super().__init__()
     self._id = _id
+    if id == 
     self._point = startingPoint
     self._objectivePoint = startingPoint
     self._fireingFlag = false

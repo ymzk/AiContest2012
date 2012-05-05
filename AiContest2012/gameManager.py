@@ -4,6 +4,7 @@ from field import Field
 from unit import Unit
 # import bullet
 # import item
+from reciever import Reciever
 from ymzkgame.runnableList import RunnableList
 from ymzkgame.coordinate import Coordinate
 from ymzkgame.runnable import Runnable
@@ -33,10 +34,10 @@ class GameManager(Runnable):
     self.field.setFieldSize(40, 40, 25, 25)
     self.field.testInitialize()
 
-    self.units.append(Unit(Coordinate(200,200),1,self,"team0"))
-    self.units.append(Unit(Coordinate(600,400),1,self,"team1"))
-    self.units.append(Unit(Coordinate(201,201),0,self,"team0"))
-    self.units.append(Unit(Coordinate(601,401),0,self,"team1"))
+    self.units.append(Unit(Coordinate(200,200),1,self,"team0",Reciever(1)))
+    self.units.append(Unit(Coordinate(600,400),1,self,"team1",Reciever(2)))
+    self.units.append(Unit(Coordinate(201,201),0,self,"team0",Reciever(3)))
+    self.units.append(Unit(Coordinate(601,401),0,self,"team1",Reciever(4)))
   def addBullet(self,bullet):
     self.bullets.append(bullet)
   def step(self):

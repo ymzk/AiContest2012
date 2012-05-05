@@ -1,17 +1,11 @@
 from math import *
 from ymzkgame.coordinate import Coordinate
 
-class Reciever():
-  def __init__(self, _id, startingPoint, startingDirection):
+class Reciever:
+  def __init__(self, _id):
     super().__init__()
     self._id = _id
-    self._position = startingPoint
-    self._objectivePoint = startingPoint
     self._fireingFlag = False
-    self._direction = startingDirection
-    #todoとりあえず
-    self.ai = 0
-    self.sendStartingMessage()
   def setPosition(self, position):
     self._position = position
   def setObjectivePoint(self,point):
@@ -41,8 +35,11 @@ class Reciever():
     self._fireingFlag = True
   def step(self):
     #todoとりあえず
+    self._position+=Coordinate(-1,-1)
+    '''
     self._direction += 0.1
     self._position += Coordinate( sin(self._direction), -cos(self._direction))*2
+    '''
     return self
   def getMessage(self):
     #todoとりあえず

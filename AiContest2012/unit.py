@@ -6,14 +6,16 @@ from bullet import Bullet
 # circurated reference
 # import gameManager
 class Unit(GameObject):
-  def __init__(self, position, direction, gameManager, teamFlag):
+  def __init__(self, position, direction, gameManager, teamFlag, reciever):
     super().__init__(position = position, direction = direction)
     self._startingPoint = position
     self._startingDirection = direction
     self.initialize()
     self._idForAi = 0
     self._teamFlag = teamFlag
-    self._reciever = Reciever(self, position, direction)
+    self._reciever = reciever
+    self._reciever.setPosition(position)
+    self._reciever.setDirection(direction)
     self._gameManager = gameManager
   def initialize(self):
     self.setPosition(self._startingPoint)
@@ -23,8 +25,8 @@ class Unit(GameObject):
     self._hp = 100
     self._attackPower = 10
   def makeBullet(self):
-    bullets.append(Bullet(self));
-    self_timeNextFireing = 10;
+    self._gameManager.addBullet(Bullet(self))
+    self_timeNextFireing = self._timeNextFireing
   def changeState(self):
     if self._hp <= 0 :
       #死んだときの処理
@@ -47,22 +49,20 @@ class Unit(GameObject):
   def sendData(self):
     #todo
     self._reciever.setPosition(self.getPosition())
+    self._reciever.setDirection(self.getDirection())
   def recieveData(self):
     self.setPosition(self._reciever.getPosition())
     self.setDirection(self._reciever.getDirection())
     if self._term <= 0:
       if self._reciever.getFiring():
-        self._gameManager.addBullet(Bullet(self))
-        self._term = self._timeNextFireing
+        self.makeBullet()
   def step(self):
     if self._term > 0:
       self._term -= 1
-    self.setPosition(self.getPosition() - Coordinate(10,10))
-    '''
     self.sendData()
     self._reciever.step()
     self.recieveData()
-    '''
+
     super().step()
     
 
