@@ -6,6 +6,7 @@ class Reciever:
     super().__init__()
     self._id = _id
     self._fireingFlag = False
+    self.sendStartingMessage()
   def setPosition(self, position):
     self._position = position
   def setObjectivePoint(self,point):
@@ -35,7 +36,7 @@ class Reciever:
     self._fireingFlag = True
   def step(self):
     #todoとりあえず
-    self._position+=Coordinate(-1,-1)
+    self._position+=Coordinate(-10,-10)
     '''
     self._direction += 0.1
     self._position += Coordinate( sin(self._direction), -cos(self._direction))*2
@@ -44,3 +45,4 @@ class Reciever:
   def getMessage(self):
     #todoとりあえず
     pass    
+

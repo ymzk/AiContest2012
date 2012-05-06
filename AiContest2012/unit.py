@@ -33,11 +33,9 @@ class Unit(GameObject):
       self.initialize()
   def getTeamFlag(self):
     return self._teamFlag
-  def damage(self, attackObject):
-    if self.getTeamFlag() != attackObject.getTeamFlag():
-      self._hp -= attackObject.getAttackPower()
-      attackObject.end()
-      self.changeState()
+  def damage(self, damage):
+    self._hp -= damage
+    self.changeState()
   def setHp(self,_hp):
     self._hp = self._hp
   def getHp(self):

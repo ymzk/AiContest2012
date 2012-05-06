@@ -13,15 +13,13 @@ class Cell(Runnable):
     assert True,"CellCode is not defined"
   def effect(self, *args):
     pass
-  def run():
-    super().run()
+  def step():
+    super().step()
 
 class WallCell(Cell):  
   def __init__(self):
     super().__init__()
   def effect(self, runnableObject):
-    ##################################################
-    print("dead")
     runnableObject.end()
   def getCellCode(self, teamFlag):
     return CellCode.WALL
@@ -37,15 +35,18 @@ class OwnAriaCell(Cell):
   def __init__(self, teamFlag):
     super().__init__()
     self._teamFlag = teamFlag
+  def effect(self, runnableObject):
+    if runnableObject.getTeamFlag() != self._teamFlag:
+      runnableObject.end()
   def getCellCode(self, unit):
-    return CellCode.NOTHING if unit.getTeamFlag() == self.teamFlag else CellCode.WALL
+    return CellCode.NOTHING if unit.getTeamFlag() == self._teamFlag else CellCode.WALL
 
   
 
 class Field(Runnable):
   def __init__(self):
     super().__init__()
-    self.setFieldSize(100, 100, 25, 25)
+    self.setFieldSize(100, 100, 40, 40)
     self.testInitialize()
   def setFieldSize(self, fieldWidth, fieldHeight,cellWidth,cellHeight):
     self._fieldWidth = fieldWidth
@@ -55,7 +56,7 @@ class Field(Runnable):
     self._fieldData = [[NoneCell() for i in range(fieldWidth)] for j in range(fieldHeight)]
   def testInitialize(self):
     for i in range(self._fieldWidth):
-      self._fieldData[i][13] = WallCell()
+      self._fieldData[i][8] = OwnAriaCell("team0")
   def fieldEffect(self, runnableObject):
     x = int(runnableObject.getPosition().getX() / self._cellWidth)
     y = int(runnableObject.getPosition().getY() / self._cellHeight)
