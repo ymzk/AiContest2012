@@ -82,7 +82,7 @@ class Field(Runnable):
     self._cellHeight = cellHeight
     self._fieldData = [[NoneCell() for i in range(fieldWidth)] for j in range(fieldHeight)]
   def setCell(self, positionX, positionY, cell):
-    cell.setPosition((positionX * self._cellWidth + self._cellWidth/2, positionY * self._cellHeight + self._cellHeight))
+    cell.setPosition(Coordinate(positionX * self._cellWidth + self._cellWidth/2, positionY * self._cellHeight + self._cellHeight))
     self._fieldData[positionX][positionY] = cell
   def testInitialize(self):
     for i in range(self._fieldWidth):
@@ -153,7 +153,7 @@ class Field(Runnable):
   def getDataPoint(self, point):
     return ((int)(point.getx()/self._fieldWidth,(int)(point.gety()/self._fieldHeight)))
   def step(self):
-    pass
+    self._runnableList.step()
   def draw(self,serface):
     pygame.display.get_surface().fill((128, 128, 128))
     
