@@ -1,20 +1,26 @@
+
+from item import *
+
 import pygame
 from ymzkgame.runnable import Runnable
+from ymzkgame.runnableList import RunnableList
 from ymzkgame.coordinate import Coordinate
 from ymzkgame.gameObject import GameObject
 
 class CellCode:
   (NOTHING, WALL) = range(2)
 
-class Cell(Runnable):
-  def __init__(self):
-    super().__init__()
+class Cell(GameObject):
+  def __init__(self, position = Coordinate(0,0), direction = 0):
+    super().__init__(position = position, direction = direction)
   def getCellCode(self, unit):
     assert True,"CellCode is not defined"
   def effect(self, *args):
     pass
-  def step():
+  def step(self):
     super().step()
+  def draw(self, serface):
+    super().draw(serface)
 
 class WallCell(Cell):  
   def __init__(self):
@@ -41,22 +47,47 @@ class OwnAriaCell(Cell):
   def getCellCode(self, unit):
     return CellCode.NOTHING if unit.getTeamFlag() == self._teamFlag else CellCode.WALL
 
-  
+class ItemCell(Cell):
+  def __init__(self, gameManager, field, item, time = 20):
+    super().__init__()
+    self._gameManager = gameManager
+    self.item = item
+    self.time = time
+    self.remainingTime = 0
+    field.addRunnableCell(self)
+  def setPosition(self, position):
+    super().setPosition(position)
+    self.item.setPosition(position)
+  def getCellCode(self, unit):
+    return CellCode.NOTHING
+  def step(self):
+    if self.remainingTime > 0:
+       return
+    self.remainingTime = self.time
+    self._gameManager.addItem(self.item.clone())
 
 class Field(Runnable):
-  def __init__(self):
+  def __init__(self, gameManager):
     super().__init__()
     self.setFieldSize(100, 100, 40, 40)
+    self._runnableList = RunnableList()
+    self._gameManager = gameManager
+
     self.testInitialize()
+
   def setFieldSize(self, fieldWidth, fieldHeight,cellWidth,cellHeight):
     self._fieldWidth = fieldWidth
     self._fieldHeight = fieldHeight
     self._cellWidth = cellWidth
     self._cellHeight = cellHeight
     self._fieldData = [[NoneCell() for i in range(fieldWidth)] for j in range(fieldHeight)]
+  def setCell(self, positionX, positionY, cell):
+    cell.setPosition((positionX * self._cellWidth + self._cellWidth/2, positionY * self._cellHeight + self._cellHeight))
+    self._fieldData[positionX][positionY] = cell
   def testInitialize(self):
     for i in range(self._fieldWidth):
-      self._fieldData[i][8] = OwnAriaCell("team0")
+      self.setCell(i,8,OwnAriaCell("team0"))
+    self.setCell(0,0,ItemCell(self._gameManager,self,HpItem()))
   def fieldEffect(self, runnableObject):
     x = int(runnableObject.getPosition().getX() / self._cellWidth)
     y = int(runnableObject.getPosition().getY() / self._cellHeight)
@@ -65,7 +96,8 @@ class Field(Runnable):
       runnableObject.end()
       return
     self._fieldData[x][y].effect(runnableObject)
-
+  def addRunnableCell(self,cell):
+    self._runnableList.append(cell)
   def wallDistance(self, radius, unit):
     offsetX = unit.getPosition().getX() % self._cellWidth - self._cellWidth / 2
     offsetY = unit.getPosition().getY() % self._cellHeight - self._cellHeight /2
@@ -121,6 +153,8 @@ class Field(Runnable):
   def getDataPoint(self, point):
     return ((int)(point.getx()/self._fieldWidth,(int)(point.gety()/self._fieldHeight)))
   def step(self):
+    pass
+  def draw(self,serface):
     pygame.display.get_surface().fill((128, 128, 128))
     
 

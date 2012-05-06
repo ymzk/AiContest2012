@@ -36,8 +36,10 @@ class Unit(GameObject):
   def damage(self, damage):
     self._hp -= damage
     self.changeState()
-  def setHp(self,_hp):
-    self._hp = self._hp
+  def getHp(self):
+    return self._hp
+  def setHp(self, _hp):
+    self._hp = _hp
   def getHp(self):
     return self._hp
   def setAttackPower(self, _attackPower):

@@ -3,6 +3,7 @@
 from field import Field
 from unit import Unit
 from base import Base
+from item import *
 # import bullet
 # import item
 from reciever import Reciever
@@ -23,6 +24,7 @@ class DamyRunnable(Runnable):
 class GameManager(Runnable):
   _UNIT_RANGE = 16
   _BASE_RANGE = 20
+  _ITEM_RANGE = 10
   _PUSH_STRENGTH = 0.5
   _VISILITY = 100
   def __init__(self):
@@ -35,7 +37,7 @@ class GameManager(Runnable):
 #    self.items.append(None)
     self.bases = RunnableList()
 #    self.bases.append(None)    
-    self.field = Field()
+    self.field = Field(self)
     self.testInitialize()
   def testInitialize(self):
     self.field.setFieldSize(40, 40, 25, 25)
@@ -73,8 +75,10 @@ class GameManager(Runnable):
   def writeMessageBase(self,base,file):
     file.write(base.getHp())
     
-  def addBullet(self,bullet):
+  def addBullet(self, bullet):
     self.bullets.append(bullet)
+  def addItem(self, item):
+    self.items.append(item)
   def step(self):
     self.field.step()
     self.bases.step()
@@ -123,6 +127,16 @@ class GameManager(Runnable):
       self.field.fieldEffect(self.bullets[i])
     for i in range(len(self.items)):
       self.field.fieldEffect(self.items[i])
+    #item
+    for ii in range(len(self.items)):
+      i = self.items[ii].getPosition()
+      for jj in range(len(self.units)):
+        j = self.units[jj].getPosition()
+        if abs(i-j) < self._ITEM_RANGE + self._UNIT_RANGE:
+          #あたったとき
+          self.items[ii].effect(self.units[jj])
+          break
+    #bullet
     for ii in range(len(self.bullets)):
       i = self.bullets[ii].getPosition()
       for jj in range(len(self.units)):

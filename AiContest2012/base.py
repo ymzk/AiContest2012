@@ -2,7 +2,7 @@ from ymzkgame.gameObject import GameObject
 
 class Base(GameObject):
   def __init__(self, position, direction, teamFlag):
-    super().__init__()
+    super().__init__(image = "base.bmp")
     self.setPosition(position)
     self.setDirection(direction)
     self._teamFlag = teamFlag
