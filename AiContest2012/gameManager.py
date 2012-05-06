@@ -148,5 +148,11 @@ class GameManager(Runnable):
     if flag:
       print(endval)
       self.end()
-    
+  def draw(self, screan):
+    self.field.draw(screan)
+    self.bases.draw(screan)
+    self.units.draw(screan)
+    self.bullets.draw(screan)
+    self.items.draw(screan)
+
 run( GameManager())

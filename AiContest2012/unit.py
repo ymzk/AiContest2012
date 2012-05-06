@@ -49,11 +49,11 @@ class Unit(GameObject):
     self._reciever.setPosition(self.getPosition())
     self._reciever.setDirection(self.getDirection())
   def recieveData(self):
-    self.setPosition(self._reciever.getPosition())
-    self.setDirection(self._reciever.getDirection())
     if self._term <= 0:
       if self._reciever.getFiring():
         self.makeBullet()
+    self.setPosition(self._reciever.getPosition())
+    self.setDirection(self._reciever.getDirection())
   def step(self):
     if self._term > 0:
       self._term -= 1
