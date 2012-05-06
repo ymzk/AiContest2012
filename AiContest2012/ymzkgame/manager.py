@@ -1,7 +1,8 @@
 import pygame
-from ymzkgame.utility import toTuple
-from ymzkgame.coordinate import Coordinate
-from ymzkgame._keyData import KeyData
+from . utility import toTuple
+from . coordinate import Coordinate
+from . _keyData import KeyData
+from . image import Image
 
 class Manager:
   @staticmethod
@@ -9,14 +10,12 @@ class Manager:
     return pygame.display.get_caption()
   @staticmethod
   def getScreen():
-    return pygame.display.get_surface()
+    if not hasattr(Manager, '_screen'):
+      Manager._screen = Image(pygame.display.get_surface())
+    return Manager._screen
   @staticmethod
   def getScreenSize():
-    return Coordinate(*Manager.getScreen().get_size())
-  @staticmethod
-  def draw(position, image):
-    image.convert()
-    Manager.getScreen().blit(image.getSurface(), toTuple(position))
+    return Coordinate(*Manager.getScreen().getSize())
   '''
   @staticmethod
   def getRegistratedList():

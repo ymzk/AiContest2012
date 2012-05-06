@@ -1,4 +1,4 @@
-from ymzkgame.runnable import Runnable
+from . runnable import Runnable
 
 class RunnableList(list, Runnable):
     def __init__(self, *args):
@@ -20,3 +20,6 @@ class RunnableList(list, Runnable):
                 i += 1
         for i in self:
             i.step()
+    def draw(self, screen):
+        for i in self:
+            i.draw(screen)

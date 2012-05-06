@@ -1,12 +1,15 @@
 import pygame
 import os
-from ymzkgame.manager import Manager
-from ymzkgame.coordinate import Coordinate
 from math import pi as PI
+from . utility import toTuple
+from . coordinate import Coordinate
+from . import defaults
+# from . manager import Manager
 
 class Image:
   __loaded = {}
-  def __init__(self, image = 'ymzkgame/default.bmp', permeate = True):
+  def __init__(self, image = defaults.DEFAULT_IMAGE,
+                     permeate = defaults.DEFAULT_PERMEATE):
     if isinstance(image, Image):
       self.__image = image.__image
       self.__converted = True
@@ -26,10 +29,14 @@ class Image:
   def getSurface(self):
     return self.__image
   def getSize(self):
-    return Coordinate(*self.__image.get_size())
+    return Coordinate(self.__image.get_size())
   def convert(self):
     if not self.__converted:
       self.__image.convert()
       self.__converted = True
-  def rotate(self, angle):
+  def rotate(self, angle = 0):
     return Image(pygame.transform.rotate(self.__image, angle * 180 / PI))
+  def draw(self, image = defaults.DEFAULT_IMAGE, position = Coordinate(0, 0)):
+    image = Image(image)
+    position = Coordinate(position)
+    self.__image.blit(image.__image, toTuple(position))

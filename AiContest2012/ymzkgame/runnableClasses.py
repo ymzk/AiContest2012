@@ -1,4 +1,4 @@
-from ymzkgame.runnable import Runnable
+from . runnable import Runnable
 
 class Wait(Runnable):
   def __init__(self, length):

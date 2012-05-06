@@ -1,4 +1,4 @@
-from ymzkgame.coordinate import Coordinate
+from . coordinate import Coordinate
 
 _pushedKeys = set()
 _mousePosition = Coordinate()

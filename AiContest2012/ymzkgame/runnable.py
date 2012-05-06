@@ -1,4 +1,4 @@
-import ymzkgame.utility
+from . import utility
 
 class Runnable(object):
   def __init__(self, iterable = None):
@@ -19,6 +19,8 @@ class Runnable(object):
       return next(self.__iterable)
     except StopIteration:
       self.end()
+  def draw(self, screen):
+    pass
   def end(self):
     self.__finished = True
   def isValid(self):
