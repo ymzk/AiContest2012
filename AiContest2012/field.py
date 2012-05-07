@@ -6,25 +6,24 @@ from ymzkgame.runnable import Runnable
 from ymzkgame.runnableList import RunnableList
 from ymzkgame.coordinate import Coordinate
 from ymzkgame.gameObject import GameObject
+from ymzkgame.image import Image
 
 class CellCode:
   (NOTHING, WALL) = range(2)
 
 class Cell(GameObject):
-  def __init__(self, position = Coordinate(0,0), direction = 0):
-    super().__init__(position = position, direction = direction)
+  def __init__(self, image = Image(), position = Coordinate(0,0)):
+    super().__init__(image = Image(image = image, permeate = False),
+                     position = position)
   def getCellCode(self, unit):
-    assert True,"CellCode is not defined"
+#    assert True,"CellCode is not defined"
+    raise NotImplementedError('CellCode is not defined')
   def effect(self, *args):
     pass
-  def step(self):
-    super().step()
-  def draw(self, serface):
-    super().draw(serface)
 
 class WallCell(Cell):  
   def __init__(self):
-    super().__init__()
+    super().__init__(image = 'wallCell.bmp')
   def effect(self, runnableObject):
     runnableObject.end()
   def getCellCode(self, teamFlag):
@@ -33,13 +32,16 @@ class WallCell(Cell):
 
 class NoneCell(Cell):
   def __init__(self):
-    super().__init__()
+    super().__init__(image = 'noneCell.bmp')
   def getCellCode(self, unit):
     return CellCode.NOTHING
+  def draw(self, *args):
+#    print('draw:', self.getPosition())
+    super().draw(*args)
 
 class OwnAriaCell(Cell):
   def __init__(self, teamFlag):
-    super().__init__()
+    super().__init__(image = 'ownAreaCell.bmp')
     self._teamFlag = teamFlag
   def effect(self, runnableObject):
     if runnableObject.getTeamFlag() != self._teamFlag:
@@ -49,7 +51,7 @@ class OwnAriaCell(Cell):
 
 class ItemCell(Cell):
   def __init__(self, gameManager, field, item, time = 20):
-    super().__init__()
+    super().__init__(image = 'noneCell.bmp')
     self._gameManager = gameManager
     self.item = item
     self.time = time
@@ -72,7 +74,9 @@ class Field(Runnable):
     self.setFieldSize(100, 100, 40, 40)
     self._runnableList = RunnableList()
     self._gameManager = gameManager
-
+    self._image = Image(pygame.Surface((self._fieldWidth * self._cellWidth, self._fieldHeight * self._cellHeight)), permeate = False)
+    self._modified = False
+    
     self.testInitialize()
 
   def setFieldSize(self, fieldWidth, fieldHeight,cellWidth,cellHeight):
@@ -80,10 +84,14 @@ class Field(Runnable):
     self._fieldHeight = fieldHeight
     self._cellWidth = cellWidth
     self._cellHeight = cellHeight
-    self._fieldData = [[NoneCell() for i in range(fieldWidth)] for j in range(fieldHeight)]
+    self._fieldData = [[None for i in range(fieldWidth)] for j in range(fieldHeight)]
+    for i in range(fieldWidth):
+      for j in range(fieldHeight):
+        self.setCell(i, j, NoneCell())
   def setCell(self, positionX, positionY, cell):
-    cell.setPosition(Coordinate(positionX * self._cellWidth + self._cellWidth/2, positionY * self._cellHeight + self._cellHeight))
+    cell.setPosition(Coordinate(positionX * self._cellWidth + self._cellWidth/2, positionY * self._cellHeight + self._cellHeight/2))
     self._fieldData[positionX][positionY] = cell
+    self._modified = True
   def testInitialize(self):
     for i in range(self._fieldWidth):
       self.setCell(i,8,OwnAriaCell("team0"))
@@ -154,9 +162,20 @@ class Field(Runnable):
     return ((int)(point.getx()/self._fieldWidth,(int)(point.gety()/self._fieldHeight)))
   def step(self):
     self._runnableList.step()
+  def updateImage(self):
+    for i in self._fieldData:
+      for cell in i:
+        cell.draw(self._image)
   def draw(self,serface):
-    pygame.display.get_surface().fill((128, 128, 128))
-    
+    '''
+    for i in self._fieldData:
+      for cell in i:
+        cell.draw(serface)
+    '''
+    if self._modified:
+      self.updateImage()
+      self._modified = False
+    serface.draw(self._image)
 
 if __name__ == '__main__':
   pass

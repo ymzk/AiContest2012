@@ -20,7 +20,7 @@ class Image:
       self.__image = self.__load(image)
       self.__converted = False
       self.__filename = image
-    if permeate:
+    if not self.__converted and permeate:
       self.__image.set_colorkey(self.__image.get_at((0, 0)))
   def __load(self, filename):
     if filename not in self.__loaded:
@@ -40,3 +40,5 @@ class Image:
     image = Image(image)
     position = Coordinate(position)
     self.__image.blit(image.__image, toTuple(position))
+  def fill(self, color = (0, 0, 0)):
+    self.__image.fill(color)
