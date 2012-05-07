@@ -1,21 +1,22 @@
 # from ymzkgame import *
 from ymzkgame.gameObject import GameObject
 from ymzkgame.coordinate import Coordinate
-from reciever import Reciever
+from aiManager import AiManager
 from bullet import Bullet
 # circurated reference
 # import gameManager
 class Unit(GameObject):
-  def __init__(self, position, direction, gameManager, teamFlag, reciever):
+  _SPEED = 10
+  def __init__(self, position, direction, gameManager, teamFlag, aiManager):
     super().__init__(position = position, direction = direction)
     self._startingPoint = position
     self._startingDirection = direction
     self.initialize()
     self._idForAi = 0
     self._teamFlag = teamFlag
-    self._reciever = reciever
-    self._reciever.setPosition(position)
-    self._reciever.setDirection(direction)
+    self._aiManager = aiManager
+    self._aiManager.setPosition(position)
+    self._aiManager.setDirection(direction)
     self._gameManager = gameManager
   def initialize(self):
     self.setPosition(self._startingPoint)
@@ -48,20 +49,30 @@ class Unit(GameObject):
     return self._attackPower
   def sendData(self):
     #todo
-    self._reciever.setPosition(self.getPosition())
-    self._reciever.setDirection(self.getDirection())
+    self._gameManager.writeMessage(self, self._aiManager.getProcess())
+    self._aiManager.setPosition(self.getPosition())
+    self._aiManager.setDirection(self.getDirection())
   def recieveData(self):
+    '''
+    #無限ループ
+    process = self._aiManager.getProcess()
+    for i in process:
+      pass
+    '''
     if self._term <= 0:
-      if self._reciever.getFiring():
+      if self._aiManager.getFiring():
         self.makeBullet()
-    self.setPosition(self._reciever.getPosition())
-    self.setDirection(self._reciever.getDirection())
+    distinationVector = self._aiManager.getPosition() - self.getPosition()
+    if abs(distinationVector) > self._SPEED:
+      distinationVector = distinationVector/abs(distinationVector) * self._SPEED
+    self.setPosition(self.getPosition() + distinationVector)
+    self.setDirection(self._aiManager.getDirection())
   def step(self):
     if self._term > 0:
       self._term -= 1
-    self.sendData()
-    self._reciever.step()
+    self._aiManager.step()
     self.recieveData()
+    self.sendData()
 
     super().step()
     

@@ -1,4 +1,5 @@
 
+
 # import coordinate
 from field import Field
 from unit import Unit
@@ -6,7 +7,7 @@ from base import Base
 from item import *
 # import bullet
 # import item
-from reciever import Reciever
+from aiManager import AiManager
 from ymzkgame.runnableList import RunnableList
 from ymzkgame.coordinate import Coordinate
 from ymzkgame.runnable import Runnable
@@ -44,37 +45,41 @@ class GameManager(Runnable):
     self.field.testInitialize()
     self.bases.append(Base(Coordinate(60,120),1,"team0"))
     self.bases.append(Base(Coordinate(100,120),0,"team1"))
-    self.units.append(Unit(Coordinate(200,200),1,self,"team0",Reciever(1)))
-    self.units.append(Unit(Coordinate(201,201),1,self,"team1",Reciever(2)))
-    self.units.append(Unit(Coordinate(302,302),1,self,"team0",Reciever(3)))
-    self.units.append(Unit(Coordinate(600,400),0,self,"team1",Reciever(4)))
-    self.units.append(Unit(Coordinate(601,401),0,self,"team0",Reciever(5)))
-    self.units.append(Unit(Coordinate(602,402),0,self,"team1",Reciever(6)))
+    self.units.append(Unit(Coordinate(200,200),1,self,"team0",AiManager("hoge.py")))
+    self.units.append(Unit(Coordinate(201,201),0,self,"team1",AiManager("hoge.py")))
+    self.units.append(Unit(Coordinate(302,302),1,self,"team0",AiManager("hoge.py")))
+    self.units.append(Unit(Coordinate(600,400),0,self,"team1",AiManager("hoge.py")))
+    self.units.append(Unit(Coordinate(601,401),1,self,"team0",AiManager("hoge.py")))
+    self.units.append(Unit(Coordinate(602,402),0,self,"team1",AiManager("hoge.py")))
   def writeMessage(self,unit,file):
     for i in self.bases:
       self.writeMessageBase(i,file)
     for i in self.units:
-      if i.getTeamflag() == unit.getTeamFlag():
-        self.writeMessageUnit(i)
+      if i.getTeamFlag() == unit.getTeamFlag():
+        self.writeMessageUnit(i,file)
         continue
       if abs(i.getPosition() - unit.getPosition()) < self._VISILITY:
-        self.writeMessageUnit(i)
+        self.writeMessageUnit(i,file)
         continue
     for i in self.bullets:
       if abs(i.getPosition() - unit.getPosition()) <self._VISILITY:
-        self.writeMessageBullet(i)
+        self.writeMessageBullet(i,file)
+    file.flush()
     
   def writeMessageUnit(self,unit,file):
-    file.write(unit.getHp())
-    file.write(unit.getPosition())
-    file.write(unit.getDirection())
+    file.write("unit".encode())
+    file.write(str(unit.getHp()).encode())
+    file.write(str(unit.getPosition()).encode())
+    file.write(str(unit.getDirection()).encode())
   def writeMessageBullet(self,bullet,file):
-    file.write(bullet.getTeamFlag())
-    file.write(bullet.getPosition())
-    file.write(bullet.getDirection())
+    file.write("bullet".encode())
+    file.write(str(bullet.getTeamFlag()).encode())
+    file.write(str(bullet.getPosition()).encode())
+    file.write(str(bullet.getDirection()).encode())
   def writeMessageBase(self,base,file):
-    file.write(base.getHp())
-    
+    file.write("base".encode())
+    file.write(str(base.getHp()).encode())
+  
   def addBullet(self, bullet):
     self.bullets.append(bullet)
   def addItem(self, item):
