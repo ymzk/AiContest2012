@@ -1,11 +1,15 @@
 import sys
 import time
 
-print("hoge")
-sys.stdout.flush()
 while True:
-  sys.stdin.readline()
-  time.sleep(1)
+  while sys.stdin.readline() == "end\n":
+    print("start")
+    print("fire")
+    print("move 10")
+    print("rotate 0.1")
+    print("end")
+    sys.stdout.flush()
+  time.sleep(0.01)
 '''
 while True:
   

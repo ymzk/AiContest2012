@@ -11,3 +11,4 @@ while True:
     print (i)
     sys.stdout.flush()
   print ("endfile")
+  sys.stdout.flush()

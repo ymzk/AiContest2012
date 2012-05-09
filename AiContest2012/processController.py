@@ -1,5 +1,6 @@
 import subprocess
 import re
+import sys
 
 class ProcessController():
   def __init__(self, executableName):
@@ -31,22 +32,29 @@ class ProcessController():
     return self._subprocess.stdout.getchar(*arg)
   def readline(self, *arg):
     return self._subprocess.stdout.readline(*arg)
+  def end(self):
+    self._subprocess.kill()
+
+  
 if __name__ == "__main__":
   pc = ProcessController("hoge.py")
-  while True:
-    pc.write("hoge\n".encode())
-    print("wrote")
-    pc.flush()
+  pc.write("end\n".encode())
+  pc.flush()
+  print("wrote end")
+  sys.stdout.flush()
 #  pc.p.stdin.write(b"hoge\n")
 #  pc.p.stdin.flush()
   for j in pc:
+    print("stdout = ", j.decode())
+    sys.stdout.flush()
     if j == b"\n":
+      print("only return")
+      sys.stdout.flush()
       continue
-    print("step")
-    print("stdout = ", j.decode('cp932'))
-    print(pc)
-    print(pc._subprocess)
-    print(pc._subprocess.stdin)
-    pc.write("foo".encode())
-    
+    print("write foo")
+    pc.write("foo\n".encode())
+    pc.flush()
+    sys.stdout.flush()
+  print("end pc\n")
+  sys.stdout.flush()
     
