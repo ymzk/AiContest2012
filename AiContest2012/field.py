@@ -7,95 +7,33 @@ from ymzkgame.runnableList import RunnableList
 from ymzkgame.coordinate import Coordinate
 from ymzkgame.gameObject import GameObject
 from ymzkgame.image import Image
-
-class CellCode:
-  (NOTHING, WALL) = range(2)
-
-class Cell(GameObject):
-  def __init__(self, image = Image(), position = Coordinate(0,0)):
-    super().__init__(image = Image(image = image, permeate = False),
-                     position = position)
-  def getCellCode(self, unit):
-#    assert True,"CellCode is not defined"
-    raise NotImplementedError('CellCode is not defined')
-  def effect(self, *args):
-    pass
-
-class WallCell(Cell):  
-  def __init__(self):
-    super().__init__(image = 'wallCell.bmp')
-  def effect(self, runnableObject):
-    runnableObject.end()
-  def getCellCode(self, teamFlag):
-    return CellCode.WALL
-      
-
-class NoneCell(Cell):
-  def __init__(self):
-    super().__init__(image = 'noneCell.bmp')
-  def getCellCode(self, unit):
-    return CellCode.NOTHING
-  def draw(self, *args):
-#    print('draw:', self.getPosition())
-    super().draw(*args)
-
-class OwnAriaCell(Cell):
-  def __init__(self, teamFlag):
-    super().__init__(image = 'ownAreaCell.bmp')
-    self._teamFlag = teamFlag
-  def effect(self, runnableObject):
-    if runnableObject.getTeamFlag() != self._teamFlag:
-      runnableObject.end()
-  def getCellCode(self, unit):
-    return CellCode.NOTHING if unit.getTeamFlag() == self._teamFlag else CellCode.WALL
-
-class ItemCell(Cell):
-  def __init__(self, gameManager, field, item, time = 20):
-    super().__init__(image = 'noneCell.bmp')
-    self._gameManager = gameManager
-    self.item = item
-    self.time = time
-    self.remainingTime = 0
-    field.addRunnableCell(self)
-  def setPosition(self, position):
-    super().setPosition(position)
-    self.item.setPosition(position)
-  def getCellCode(self, unit):
-    return CellCode.NOTHING
-  def step(self):
-    if self.remainingTime > 0:
-       return
-    self.remainingTime = self.time
-    self._gameManager.addItem(self.item.clone())
+from cell import *
 
 class Field(Runnable):
   def __init__(self, gameManager):
     super().__init__()
     self.setFieldSize(100, 100, 40, 40)
-    self._runnableList = RunnableList()
     self._gameManager = gameManager
     self._image = Image(pygame.Surface((self._fieldWidth * self._cellWidth, self._fieldHeight * self._cellHeight)), permeate = False)
     self._modified = False
-    
-    self.testInitialize()
-
   def setFieldSize(self, fieldWidth, fieldHeight,cellWidth,cellHeight):
     self._fieldWidth = fieldWidth
     self._fieldHeight = fieldHeight
     self._cellWidth = cellWidth
     self._cellHeight = cellHeight
-    self._fieldData = [[None for i in range(fieldWidth)] for j in range(fieldHeight)]
-    for i in range(fieldWidth):
-      for j in range(fieldHeight):
-        self.setCell(i, j, NoneCell())
   def setCell(self, positionX, positionY, cell):
     cell.setPosition(Coordinate(positionX * self._cellWidth + self._cellWidth/2, positionY * self._cellHeight + self._cellHeight/2))
     self._fieldData[positionX][positionY] = cell
     self._modified = True
   def testInitialize(self):
+    self._fieldData = [[None for i in range(self._fieldWidth)] for j in range(self._fieldHeight)]
+    for i in range(self._fieldWidth):
+      for j in range(self._fieldHeight):
+        self.setCell(i, j, NoneCell())
     for i in range(self._fieldWidth):
       self.setCell(i,8,OwnAriaCell("team0"))
-    self.setCell(0,0,ItemCell(self._gameManager,self,HpItem()))
+    self.setCell(0,0,ItemCell(self._gameManager,HpItem()))
+    self.setCell(1,0,ItemCell(self._gameManager,AttackItem()))
   def fieldEffect(self, runnableObject):
     x = int(runnableObject.getPosition().getX() / self._cellWidth)
     y = int(runnableObject.getPosition().getY() / self._cellHeight)
@@ -105,7 +43,7 @@ class Field(Runnable):
       return
     self._fieldData[x][y].effect(runnableObject)
   def addRunnableCell(self,cell):
-    self._runnableList.append(cell)
+    pass
   def wallDistance(self, radius, unit):
     offsetX = unit.getPosition().getX() % self._cellWidth - self._cellWidth / 2
     offsetY = unit.getPosition().getY() % self._cellHeight - self._cellHeight /2
@@ -161,12 +99,12 @@ class Field(Runnable):
   def getDataPoint(self, point):
     return ((int)(point.getx()/self._fieldWidth,(int)(point.gety()/self._fieldHeight)))
   def step(self):
-    self._runnableList.step()
+    pass
   def updateImage(self):
     for i in self._fieldData:
       for cell in i:
         cell.draw(self._image)
-  def draw(self,serface):
+  def draw(self,serface,viewPoint):
     '''
     for i in self._fieldData:
       for cell in i:
@@ -176,6 +114,37 @@ class Field(Runnable):
       self.updateImage()
       self._modified = False
     serface.draw(self._image)
+  def loadFeild(self, filename):
+    def convert(token,team):
+      if c == 'N':
+        return NoneCell()
+      elif c == 'W':
+        return WallCell()
+      elif c == 'B1':
+        return BaseCell(self._gameManager,Base(1))
+      elif c == 'B2':
+        return BaseCell(self._gameManager,Base(2))
+      elif c == 'O2':
+        return OwnAreaCell(1)
+      elif c == 'O1':
+        return OwnAreaCell(2)
+      elif c == 'Ia':
+        return AttackItemCell(self._gameManager,HpItem())
+      elif c == 'Ih':
+        return HpItemCell(self._gameManager,HpItem())
+    file = open(filename, "r")
+    lines = [line.split() for line in file.readlines()]
+    h = len(lines)
+    w = max(len(line) for line in lines)
+    self._field = [[None for i in range(h)] for j in range(w)]
+    team = [0,1]
+    for i, line in enumerate(lines):
+      for j, token in enumerate(line):
+        self.setCell(j, i, convert(token,team[0]))
+      
+
+
+
 
 if __name__ == '__main__':
   pass

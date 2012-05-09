@@ -1,32 +1,35 @@
 # from ymzkgame import *
 from ymzkgame.gameObject import GameObject
 from ymzkgame.coordinate import Coordinate
-from reciever import Reciever
+from aiManager import AiManager
 from bullet import Bullet
 # circurated reference
 # import gameManager
 class Unit(GameObject):
-  def __init__(self, position, direction, gameManager, teamFlag, reciever):
-    super().__init__(position = position, direction = direction)
+  _SPEED = 10
+  def __init__(self, position, direction, gameManager, teamFlag, aiManager):
+    super().__init__(position = position, direction = direction, image = "unit.bmp")
     self._startingPoint = position
     self._startingDirection = direction
     self.initialize()
     self._idForAi = 0
     self._teamFlag = teamFlag
-    self._reciever = reciever
-    self._reciever.setPosition(position)
-    self._reciever.setDirection(direction)
+    self._aiManager = aiManager
+    '''
+    self._aiManager.setPosition(position)
+    self._aiManager.setDirection(direction)
+    '''
     self._gameManager = gameManager
   def initialize(self):
     self.setPosition(self._startingPoint)
     self.setDirection(self._startingDirection)
-    self._timeNextFireing = 1
+    self._timeNextFireing = 10
     self._term = 0
     self._hp = 100
     self._attackPower = 10
   def makeBullet(self):
     self._gameManager.addBullet(Bullet(self))
-    self_timeNextFireing = self._timeNextFireing
+    self._term = self._timeNextFireing
   def changeState(self):
     if self._hp <= 0 :
       #死んだときの処理
@@ -48,22 +51,29 @@ class Unit(GameObject):
     return self._attackPower
   def sendData(self):
     #todo
-    self._reciever.setPosition(self.getPosition())
-    self._reciever.setDirection(self.getDirection())
+    self._gameManager.writeMessage(self, self._aiManager.getProcess())
+    '''
+    self._aiManager.setPosition(self.getPosition())
+    '''
+    self._aiManager.setDirection(self.getDirection())
   def recieveData(self):
+
+    self._aiManager.readMessage()
+    self._aiManager.step()
+
     if self._term <= 0:
-      if self._reciever.getFiring():
+      if self._aiManager.getFiring():
         self.makeBullet()
-    self.setPosition(self._reciever.getPosition())
-    self.setDirection(self._reciever.getDirection())
+    self.setPosition(self.getPosition() + self._aiManager.getMove())
+    self.setDirection(self._aiManager.getDirection())
   def step(self):
     if self._term > 0:
       self._term -= 1
-    self.sendData()
-    self._reciever.step()
     self.recieveData()
-
+    self.sendData()
     super().step()
-    
+  def end(self):
+    self._aiManager.end()
+    super().end()
 
 

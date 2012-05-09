@@ -1,10 +1,8 @@
 from ymzkgame.gameObject import GameObject
-
+from ymzkgame.coordinate import Coordinate
 class Base(GameObject):
-  def __init__(self, position, direction, teamFlag):
-    super().__init__(image = "base.bmp")
-    self.setPosition(position)
-    self.setDirection(direction)
+  def __init__(self, teamFlag, position = Coordinate(0,0), direction = Coordinate(0,0)):
+    super().__init__(position = position,direction = direction, image = "base.bmp")
     self._teamFlag = teamFlag
     self._hp = 1000
   def getHp(self):
