@@ -8,7 +8,7 @@ class ProcessController():
 
     match = re.match(r"(.*).py",executableName)
     if match is not None:
-      cmdline = ["C:\Python32\python.exe",executableName]
+      cmdline = ["C:\Python31\python.exe",executableName]
     match = re.match(r"(.*).exe",executableName)
     if match is not None:
       cmdline = ["./" + executableName]

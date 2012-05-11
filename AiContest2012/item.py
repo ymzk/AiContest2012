@@ -1,5 +1,6 @@
 from ymzkgame.gameObject import GameObject
 from ymzkgame.coordinate import Coordinate
+from ymzkgame.manager import Manager
 class Item(GameObject):
   def __init__(self, position = Coordinate(0,0), image = "item.bmp",time = 60):
     super().__init__(image = image)
@@ -12,9 +13,16 @@ class Item(GameObject):
   def checkAvailable(self):
     return self._remainingTime < 0
     
-  def draw(self,screan):
-    if self.checkAvailable():
-      super().draw(screan)
+  def draw(self, screen, viewPoint):
+    if not self.checkAvailable():
+      return
+    image = self.getImage().rotate(viewPoint.getDirection() - self.getDirection())
+    screen.draw(image = image,
+                position = (self.getPosition() -
+                            viewPoint.getPosition()
+                            ).rotate(-viewPoint.getDirection()) -
+                            image.getSize() / 2 +
+                            Manager.getScreenSize() / 2)
   def step(self):
     super().step()
     self._remainingTime -= 1

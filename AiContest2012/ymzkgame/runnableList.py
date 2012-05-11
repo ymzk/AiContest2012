@@ -11,7 +11,7 @@ class RunnableList(list, Runnable):
         else:
             list.__init__(self, args)
             Runnable.__init__(self)
-    def step(self):
+    def step(self, *args):
         i = 0
         while i < len(self):
             if not self[i].isValid():
@@ -19,10 +19,10 @@ class RunnableList(list, Runnable):
             else:
                 i += 1
         for i in self:
-            i.step()
-    def draw(self, screen):
+            i.step(*args)
+    def draw(self, screen, *args):
         for i in self:
-            i.draw(screen)
+            i.draw(screen, *args)
     def end(self):
         for i in self:
             i.end()

@@ -44,11 +44,11 @@ class GameManager(Runnable):
     self.bases.append(Base("team0",Coordinate(60,120),1))
     self.bases.append(Base("team1",Coordinate(100,120),0))
 
-    self.debugUnit = Unit(Coordinate(200,200),1,self,"team0")
+    self.debugUnit = Unit(Coordinate(200,300),1,self,"team1")
     self.debugUnit.setMove(MoveByKeyAsUnit(velocity = 10))
     self.units.append(self.debugUnit)
 
-    self.units.append(Unit(Coordinate(200,200),1,self,"team0",AiManager("hoge.py")))
+    # self.units.append(Unit(Coordinate(200,200),1,self,"team0",AiManager("hoge.py")))
     '''
     self.units.append(Unit(Coordinate(201,201),0,self,"team1",AiManager("hoge.py")))
     self.units.append(Unit(Coordinate(302,302),1,self,"team0",AiManager("hoge.py")))
@@ -195,10 +195,10 @@ class GameManager(Runnable):
   def draw(self, screan):
     self._viewPoint = self.debugUnit
     self.field.draw(screan,self._viewPoint)
-    self.bases.draw(screan)
-    self.units.draw(screan)
-    self.bullets.draw(screan)
-    self.items.draw(screan)
+    self.bases.draw(screan, self._viewPoint)
+    self.units.draw(screan, self._viewPoint)
+    self.bullets.draw(screan, self._viewPoint)
+    self.items.draw(screan, self._viewPoint)
   def end(self):
     self.field.end()
     self.bases.end()

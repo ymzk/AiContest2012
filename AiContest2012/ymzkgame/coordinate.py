@@ -1,3 +1,4 @@
+from math import sin, cos
 
 class Coordinate:
   def __init__(self, *args):
@@ -48,3 +49,6 @@ class Coordinate:
     return self.getX() ** 2 + self.getY() ** 2
   def __abs__(self):
     return self.norm() ** (1 / 2)
+  def rotate(self, angle = 0):
+    return Coordinate(self.getX() * cos(angle) - self.getY() * sin(angle),
+                      self.getX() * sin(angle) + self.getY() * cos(angle))

@@ -1,4 +1,5 @@
 # from ymzkgame import *
+from ymzkgame.manager import Manager
 from ymzkgame.gameObject import GameObject
 from ymzkgame.coordinate import Coordinate
 from aiManager import *
@@ -83,6 +84,14 @@ class Unit(GameObject):
     yield str(self.getDirection())
     yield str(self._term)
 
+  def draw(self, screen, viewPoint):
+    image = self.getImage().rotate(viewPoint.getDirection() - self.getDirection())
+    screen.draw(image = image,
+                position = (self.getPosition() -
+                            viewPoint.getPosition()
+                            ).rotate(-viewPoint.getDirection()) -
+                            image.getSize() / 2 +
+                            Manager.getScreenSize() / 2)
 
 
 

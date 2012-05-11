@@ -46,6 +46,8 @@ class Image:
   def fill(self, color = (0, 0, 0)):
     self.__image.fill(color)
   def getSubImage(self, leftup, size):
-    return Image(self.__image.subsurface(pygame.Rect(toTuple(leftup), toTuple(size))))
+    result = Image(pygame.Surface(toTuple(size)))
+    result.draw(self, toTuple(-leftup))
+    return result
   def copy(self):
     return Image(self.__image.subsurface(self._getRect()))
