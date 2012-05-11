@@ -7,6 +7,7 @@ class Bullet(GameObject):
     self._master = unit
     self._vector = 20 * Coordinate(cos(unit.getDirection()),sin(unit.getDirection()))
     self._attackPower = unit.getAttackPower()
+    self._counter = 30
   def getAttackPower(self):
     return self._attackPower
   def getTeamFlag(self):
@@ -23,5 +24,14 @@ class Bullet(GameObject):
 
   def step(self):
     self.setPosition(self.getPosition() + self._vector)
+    if self._counter < 0:
+      self.end()
+    self._counter -= 1
     super().step()
+    
+  def encode(self):
+    yield str(self.getTeamFlag())
+    yield str(self.getPosition())
+    yield str(self.getDirection())
+    yield str(self._vector)
   

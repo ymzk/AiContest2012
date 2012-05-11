@@ -83,15 +83,27 @@ class MoveByKey(Move):
         dx = Coordinate(1, 0)
         dy = Coordinate(0, 1)
         d = Coordinate(0, 0)
+        arg = 0
+        flag = False
         if Manager.getKeyStatus(Manager.K_UP):
             d -= dy
-        if Manager.getKeyStatus(Manager.K_LEFT):
-            d -= dx
+            arg = -1.57079633
+            flag = True
         if Manager.getKeyStatus(Manager.K_DOWN):
             d += dy
+            arg =  1.57079633
+            flag = True
+        if Manager.getKeyStatus(Manager.K_LEFT):
+            d -= dx
+            arg = 3.14159265 - arg / 2
+            flag = True
         if Manager.getKeyStatus(Manager.K_RIGHT):
             d += dx
+            arg /= 2
+            flag = True
         if d.norm() > EPS:
             d *= self._velocity / abs(d)
             position += d
+        if flag:
+            direction = arg
         return self, position, direction

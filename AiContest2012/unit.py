@@ -1,13 +1,13 @@
 # from ymzkgame import *
 from ymzkgame.gameObject import GameObject
 from ymzkgame.coordinate import Coordinate
-from aiManager import AiManager
+from aiManager import *
 from bullet import Bullet
 # circurated reference
 # import gameManager
 class Unit(GameObject):
   _SPEED = 10
-  def __init__(self, position, direction, gameManager, teamFlag, aiManager):
+  def __init__(self, position, direction, gameManager, teamFlag, aiManager = DefaultAiManager()):
     super().__init__(position = position, direction = direction, image = "unit.bmp")
     self._startingPoint = position
     self._startingDirection = direction
@@ -51,11 +51,11 @@ class Unit(GameObject):
     return self._attackPower
   def sendData(self):
     #todo
-    self._gameManager.writeMessage(self, self._aiManager.getProcess())
+    self._aiManager.writeMessage(self, self._gameManager)
     '''
     self._aiManager.setPosition(self.getPosition())
-    '''
     self._aiManager.setDirection(self.getDirection())
+    '''
   def recieveData(self):
 
     self._aiManager.readMessage()
@@ -65,7 +65,7 @@ class Unit(GameObject):
       if self._aiManager.getFiring():
         self.makeBullet()
     self.setPosition(self.getPosition() + self._aiManager.getMove())
-    self.setDirection(self._aiManager.getDirection())
+    self.setDirection(self.getDirection() + self._aiManager.getRotate())
   def step(self):
     if self._term > 0:
       self._term -= 1
@@ -75,5 +75,14 @@ class Unit(GameObject):
   def end(self):
     self._aiManager.end()
     super().end()
+  def encode(self):
+    yield str(self._hp)
+    #yield str(self._unitId)
+    yield str(self._teamFlag)
+    yield str(self.getPosition())
+    yield str(self.getDirection())
+    yield str(self._term)
+
+
 
 

@@ -28,6 +28,8 @@ class GameObject(Runnable):
     return self.__position
   def getDirection(self):
     return self.__direction
+  def getImage(self):
+    return self.__image
   def setPosition(self, position):
     self.__position = position
   def setDirection(self, direction):
