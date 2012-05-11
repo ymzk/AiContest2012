@@ -4,5 +4,6 @@ from ymzkgame.gameObject import GameObject
 from ymzkgame.moveClasses import *
 from ymzkgame.manager import Manager
 from ymzkgame.coordinate import Coordinate
+from ymzkgame.image import Image
 
-run(GameObject(move = MoveByKey(velocity = 2)))
+run(GameObject(image = Image().getSubImage((16, 16), (16, 16)), move = MoveByKey(velocity = 2)))
