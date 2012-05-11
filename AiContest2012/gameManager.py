@@ -30,17 +30,13 @@ class GameManager(Runnable):
   _VISILITY = 100
   def __init__(self):
     super().__init__()
-    self.bullets = RunnableList()
-#    self.bullets.append(None)
-    self.units = RunnableList()
-#    self.units.append(None)
-    self.items = RunnableList()
-#    self.items.append(None)
-    self.bases = RunnableList()
-#    self.bases.append(None)    
-    self.field = Field(self)
     self.testInitialize()
   def testInitialize(self):
+    self.bullets = RunnableList()
+    self.units = RunnableList()
+    self.items = RunnableList()
+    self.bases = RunnableList()
+    self.field = Field(self)
 
     self.field.setFieldSize(40, 40, 25, 25)
     self.field.testInitialize()
@@ -197,7 +193,8 @@ class GameManager(Runnable):
       print(endval)
       self.end()
   def draw(self, screan):
-    self.field.draw(screan,self.debugUnit.getPosition())
+    self._viewPoint = self.debugUnit
+    self.field.draw(screan,self._viewPoint)
     self.bases.draw(screan)
     self.units.draw(screan)
     self.bullets.draw(screan)

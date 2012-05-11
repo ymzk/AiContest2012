@@ -113,7 +113,11 @@ class Field(Runnable):
     if self._modified:
       self.updateImage()
       self._modified = False
-    serface.draw(self._image)
+    maxLength = abs(Manager.getScreenSize())
+    areaSize = Coordinate(maxLength, maxLength)
+    image = self._image.getSubImage(viewPoint.getPosition() - areaSize, areaSize).rotate(-viewPoint.getDirection())
+    serface.draw(image = image, position = -(image.getSize() - Manager.getScreenSize()) / 2)
+#    serface.draw(self._image)
   def loadFeild(self, filename):
     def convert(token,team):
       if c == 'NO':

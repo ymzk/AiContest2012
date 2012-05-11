@@ -15,7 +15,7 @@ class Manager:
     return Manager._screen
   @staticmethod
   def getScreenSize():
-    return Coordinate(*Manager.getScreen().getSize())
+    return Coordinate(Manager.getScreen().getSize())
   '''
   @staticmethod
   def getRegistratedList():
