@@ -1,12 +1,10 @@
-
-
-# import coordinate
 from field import Field
 from unit import Unit
 from base import Base
 from item import *
-# import bullet
-# import item
+
+from moveByKeyAsUnit import MoveByKeyAsUnit
+
 from aiManager import AiManager
 from ymzkgame.runnableList import RunnableList
 from ymzkgame.coordinate import Coordinate
@@ -48,10 +46,10 @@ class GameManager(Runnable):
     self.field.testInitialize()
 
     self.bases.append(Base("team0",Coordinate(60,120),1))
-    self.bases.append(Base("team0",Coordinate(100,120),0))
+    self.bases.append(Base("team1",Coordinate(100,120),0))
 
-    self.debugUnit = Unit(Coordinate(200,200),1,self,"team0",AiManager("hoge.py"))
-    self.debugUnit.setMove(MoveByKey(velocity = 10))
+    self.debugUnit = Unit(Coordinate(200,200),1,self,"team0")
+    self.debugUnit.setMove(MoveByKeyAsUnit(velocity = 10))
     self.units.append(self.debugUnit)
 
     self.units.append(Unit(Coordinate(200,200),1,self,"team0",AiManager("hoge.py")))
@@ -64,6 +62,8 @@ class GameManager(Runnable):
     '''
   def writeMessage(self,unit,file):
     file.write("start\n".encode())
+    if self.getBase(unit.getTeamFlag()).checkDamaged():
+      file.write("Your base is attacked.".encode())
     for i in self.bases:
       self.writeMessageBase(i,file)
     for i in self.units:
@@ -81,34 +81,41 @@ class GameManager(Runnable):
     
   def writeMessageUnit(self,unit,file):
     file.write("unit".encode())
-    file.write(str(unit.getHp()).encode())
-    file.write(" ".encode())
-    file.write(str(unit.getPosition()).encode())
-    file.write(" ".encode())
-    file.write(str(unit.getDirection()).encode())
+    for i in unit.encode():
+      file.write(" ".encode())
+      file.write(str(i).encode())
     file.write("\n".encode())
   def writeMessageBullet(self,bullet,file):
-    file.write("bullet ".encode())
-    file.write(str(bullet.getTeamFlag()).encode())
-    file.write(" ".encode())
-    file.write(str(bullet.getPosition()).encode())
-    file.write(" ".encode())
-    file.write(str(bullet.getDirection()).encode())
+    file.write("bullet".encode())
+    for i in bullet.encode():
+      file.write(" ".encode())
+      file.write(str(i).encode())
     file.write("\n".encode())
   def writeMessageBase(self,base,file):
-    file.write("base ".encode())
-    file.write(str(base.getHp()).encode())
+    file.write("base".encode())
+    for i in base.encode():
+      file.write(" ".encode())
+      file.write(str(i).encode())
     file.write("\n".encode())
+
+
+    
   def addBullet(self, bullet):
     self.bullets.append(bullet)
   def addItem(self, item):
     self.items.append(item)
   def addBase(self, base):
     self.bases.append(base)
+  def getBase(self, teamFlag):
+    for i in self.bases:
+      if i.getTeamFlag() == teamFlag:
+        #baseはひとつだと仮定
+        return i
   def step(self):
     self.field.step()
-    self.bases.step()
     self.units.step()
+    #baseはunitの後
+    self.bases.step()
     self.bullets.step()
     self.items.step()
 
@@ -141,7 +148,7 @@ class GameManager(Runnable):
 
       flag = True
       for i in range(len(self.units)):
-        if powerList[i].norm() > 1e-6:
+        if powerList[i].norm() >= 1:
           self.units[i].setPosition(self.units[i].getPosition() + powerList[i] * self._PUSH_STRENGTH)
           flag = False
       if flag:
@@ -201,6 +208,7 @@ class GameManager(Runnable):
     self.units.end()
     self.bullets.end()
     self.items.end()
+    Runnable.end(self)
     
 
 

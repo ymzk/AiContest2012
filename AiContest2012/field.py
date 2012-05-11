@@ -116,18 +116,18 @@ class Field(Runnable):
     serface.draw(self._image)
   def loadFeild(self, filename):
     def convert(token,team):
-      if c == 'N':
+      if c == 'NO':
         return NoneCell()
-      elif c == 'W':
+      elif c == 'WA':
         return WallCell()
       elif c == 'B1':
-        return BaseCell(self._gameManager,Base(1))
+        return BaseCell(self._gameManager,Base(0))
       elif c == 'B2':
-        return BaseCell(self._gameManager,Base(2))
+        return BaseCell(self._gameManager,Base(1))
+      elif c == 'O1':
+        return OwnAreaCell(0)
       elif c == 'O2':
         return OwnAreaCell(1)
-      elif c == 'O1':
-        return OwnAreaCell(2)
       elif c == 'Ia':
         return AttackItemCell(self._gameManager,HpItem())
       elif c == 'Ih':

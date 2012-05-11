@@ -15,7 +15,7 @@ class ProcessController():
     
     assert cmdline != "","processController can't run this program"
     self._subprocess = subprocess.Popen(cmdline,
-                         shell = True,
+                         shell = False,
                          stdin = subprocess.PIPE,
                          stdout = subprocess.PIPE,
                          stderr = subprocess.PIPE,
@@ -37,7 +37,11 @@ class ProcessController():
 
   
 if __name__ == "__main__":
-  pc = ProcessController("hoge.py")
+  pc = ProcessController("echo.py")
+  pc.end()
+  while True:
+    pass
+  '''
   pc.write("end\n".encode())
   pc.flush()
   print("wrote end")
@@ -57,4 +61,4 @@ if __name__ == "__main__":
     sys.stdout.flush()
   print("end pc\n")
   sys.stdout.flush()
-    
+    '''

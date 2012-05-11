@@ -3,6 +3,32 @@ from ymzkgame.coordinate import Coordinate
 from ymzkgame.runnable import Runnable
 from processController import ProcessController
 
+
+class DefaultAiManager(Runnable):
+  def __init__(self):
+    super().__init__()
+    self._fireingFlag = True
+  def setFiring(self,flag):
+    self._fireingFlag = flag
+  def getMove(self):
+    return Coordinate(0, 0)
+  def getRotate(self):
+    return 0
+  def getFiring(self):
+    return self._fireingFlag
+  def sendStartingMessage(self):
+    pass
+  def step(self):
+    pass
+  def writeMessage(self,unit,message):
+    pass
+  def readMessage(self):
+    pass
+  def end(self):
+    pass
+
+
+  
 class AiManager(Runnable):
   def __init__(self, excutableName):
     super().__init__()
@@ -12,8 +38,6 @@ class AiManager(Runnable):
     self._rotate = 0
     self._direction = 0
     self.sendStartingMessage()
-  def getProcess(self):
-    return self._processController
   def setFiring(self,flag):
     #trueになると打っている
     #毎フレームチェックされる。
@@ -25,10 +49,10 @@ class AiManager(Runnable):
   #毎フレームunit.step()が呼び出すもの
   def setPosition(self, position):
     self._position = position
-  '''
   def setDirection(self, arg):
     #方向を変える
     self._direction = arg
+  '''
   def getMove(self):
     return Coordinate(cos(self._direction),sin(self._direction)) * self._move
   def getRotate(self):
@@ -43,6 +67,8 @@ class AiManager(Runnable):
   def getDirection(self):
     return self._direction
   #通信用
+  def writeMessage(self, unit, gameManager):
+    gameManager.writeMessage(unit,self._processController)
     
   def sendStartingMessage(self):
     #todoとりあえず
@@ -66,24 +92,25 @@ class AiManager(Runnable):
       if pc.readline() == b"start\n":
         sys.stdout.flush()
         for i in range(20):
-          if self.matchMessage(pc.readline()):
+          if self._matchMessage(pc.readline()):
             continue
           break
         break
-  def matchMessage(self,message):
+  def _matchMessage(self,message):
     factorList = message.decode().split()
+    if len(factorList) == 0:
+      return True
     if factorList[0] == "end":
       return False
-    if factorList[0] == "fire":
+    elif factorList[0] == "fire":
       self._fireingFlag = True
-    if factorList[0] == "move":
+    elif factorList[0] == "move":
       self._move = float(factorList[1])
-    if factorList[0] == "rotate":
+    elif factorList[0] == "rotate":
       self._rotate = float(factorList[1])
-    if factorList[0] == "stop":
+    elif factorList[0] == "stop":
       if factorList[1] == "fire":
         self._fireingFlag = False
-    
     return True  
   def end(self):
     self._processController.end()

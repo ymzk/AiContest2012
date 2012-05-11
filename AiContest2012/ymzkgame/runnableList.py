@@ -23,3 +23,7 @@ class RunnableList(list, Runnable):
     def draw(self, screen):
         for i in self:
             i.draw(screen)
+    def end(self):
+        for i in self:
+            i.end()
+        Runnable.end(self)

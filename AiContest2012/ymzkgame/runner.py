@@ -27,7 +27,7 @@ class Runner:
       self.__bpsCount = 0
       self.__lastTime = currentTime
     self.__bpsCount += 1
-    print('bps:', self.__bps)
+#    print('bps:', self.__bps)
     while True:
       while len(self.__scenes) > 0 and not self.__scenes[-1].isValid():
         self.__scenes.pop()
@@ -49,7 +49,9 @@ class Runner:
       while self.step():
         for event in pygame.event.get():
           if event.type == pygame.QUIT:
-            del self.__scenes[:]
+            for scene in self.__scenes[::-1]:
+              scene.end()
+            print(self.__scenes)
           elif event.type == pygame.KEYDOWN:
             KeyData.setKeyStatus(event.key, True)
           elif event.type == pygame.KEYUP:
