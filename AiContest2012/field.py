@@ -8,6 +8,7 @@ from ymzkgame.coordinate import Coordinate
 from ymzkgame.gameObject import GameObject
 from ymzkgame.image import Image
 from cell import *
+from base import Base
 
 class Field(Runnable):
   def __init__(self, gameManager):
@@ -120,27 +121,30 @@ class Field(Runnable):
 #    serface.draw(self._image)
   def loadFeild(self, filename):
     def convert(token,team):
-      if c == 'NO':
+      if token == 'NO':
         return NoneCell()
-      elif c == 'WA':
+      elif token == 'WA':
         return WallCell()
-      elif c == 'B1':
+      elif token == 'B0':
         return BaseCell(self._gameManager,Base(0))
-      elif c == 'B2':
+      elif token == 'B1':
         return BaseCell(self._gameManager,Base(1))
-      elif c == 'O1':
+      elif token == 'O0':
         return OwnAreaCell(0)
-      elif c == 'O2':
+      elif token == 'O1':
         return OwnAreaCell(1)
-      elif c == 'Ia':
-        return AttackItemCell(self._gameManager,HpItem())
-      elif c == 'Ih':
-        return HpItemCell(self._gameManager,HpItem())
+      elif token == 'IA':
+        return ItemCell(self._gameManager,AttackItem())
+      elif token == 'IH':
+        return ItemCell(self._gameManager,HpItem())
+      else:
+        print(token)
+        assert False,"cellCodeError"
     file = open(filename, "r")
     lines = [line.split() for line in file.readlines()]
     h = len(lines)
     w = max(len(line) for line in lines)
-    self._field = [[None for i in range(h)] for j in range(w)]
+    self._fieldData = [[None for i in range(h)] for j in range(w)]
     team = [0,1]
     for i, line in enumerate(lines):
       for j, token in enumerate(line):

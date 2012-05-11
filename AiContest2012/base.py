@@ -2,7 +2,7 @@ from ymzkgame.gameObject import GameObject
 from ymzkgame.coordinate import Coordinate
 from ymzkgame.manager import Manager
 class Base(GameObject):
-  def __init__(self, teamFlag, position = Coordinate(0,0), direction = Coordinate(0,0)):
+  def __init__(self, teamFlag, position = Coordinate(0,0), direction = 0):
     super().__init__(position = position,direction = direction, image = "base.bmp")
     self._teamFlag = teamFlag
     self._damagedFlag = False

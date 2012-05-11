@@ -39,8 +39,8 @@ class GameManager(Runnable):
     self.field = Field(self)
 
     self.field.setFieldSize(40, 40, 25, 25)
-    self.field.testInitialize()
-
+    #self.field.testInitialize()
+    self.field.loadFeild("map.data")
     self.bases.append(Base("team0",Coordinate(60,120),1))
     self.bases.append(Base("team1",Coordinate(100,120),0))
 
@@ -48,7 +48,7 @@ class GameManager(Runnable):
     self.debugUnit.setMove(MoveByKeyAsUnit(velocity = 10))
     self.units.append(self.debugUnit)
 
-    # self.units.append(Unit(Coordinate(200,200),1,self,"team0",AiManager("hoge.py")))
+    self.units.append(Unit(Coordinate(200,200),1,self,"team0",AiManager("hoge.py")))
     '''
     self.units.append(Unit(Coordinate(201,201),0,self,"team1",AiManager("hoge.py")))
     self.units.append(Unit(Coordinate(302,302),1,self,"team0",AiManager("hoge.py")))

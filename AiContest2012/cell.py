@@ -32,7 +32,7 @@ class NoneCell(Cell):
 #    print('draw:', self.getPosition())
     super().draw(*args)
 
-class OwnAriaCell(Cell):
+class OwnAreaCell(Cell):
   def __init__(self, teamFlag):
     super().__init__(image = 'ownAreaCell.bmp')
     self._teamFlag = teamFlag
