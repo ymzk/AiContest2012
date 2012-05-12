@@ -28,6 +28,7 @@ class Image:
   def __load(self, filename):
     if filename not in self.__loaded:
       self.__loaded[filename] = pygame.image.load(filename)
+#      print(filename, self.__loaded[filename].get_size())
     return self.__loaded[filename]
 #  def _getSurface(self):
 #    return self.__image

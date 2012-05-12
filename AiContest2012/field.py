@@ -27,22 +27,23 @@ class Field(Runnable):
     self._fieldData[positionX][positionY] = cell
     self._modified = True
   def testInitialize(self):
+    #self.setFieldSize(40, 40, 25, 25)
     self._fieldData = [[None for i in range(self._fieldWidth)] for j in range(self._fieldHeight)]
     for i in range(self._fieldWidth):
       for j in range(self._fieldHeight):
         self.setCell(i, j, NoneCell())
     for i in range(self._fieldWidth):
-      self.setCell(i,8,OwnAriaCell("team0"))
+      self.setCell(i,8,OwnAreaCell("team0"))
     self.setCell(0,0,ItemCell(self._gameManager,HpItem()))
     self.setCell(1,0,ItemCell(self._gameManager,AttackItem()))
   def fieldEffect(self, runnableObject):
-    x = int(runnableObject.getPosition().getX() / self._cellWidth)
-    y = int(runnableObject.getPosition().getY() / self._cellHeight)
-    if x < 0 or y < 0 or x >= self._fieldWidth or y >= self._fieldHeight:
-      #場外に出たので消滅
-      runnableObject.end()
+    if 0 <= runnableObject.getPosition().getX() < self._fieldWidth * self._cellWidth and 0 <= runnableObject.getPosition().getY() < self._fieldHeight * self._cellHeight:
+      x = int(runnableObject.getPosition().getX() / self._cellWidth)
+      y = int(runnableObject.getPosition().getY() / self._cellHeight)
+      self._fieldData[x][y].effect(runnableObject)
       return
-    self._fieldData[x][y].effect(runnableObject)
+    #場外に出たので消滅
+    runnableObject.end()
   def addRunnableCell(self,cell):
     pass
   def wallDistance(self, radius, unit):
@@ -149,7 +150,6 @@ class Field(Runnable):
     for i, line in enumerate(lines):
       for j, token in enumerate(line):
         self.setCell(j, i, convert(token,team[0]))
-      
 
 
 

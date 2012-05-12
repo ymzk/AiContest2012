@@ -20,6 +20,8 @@ class GameObject(Runnable):
   def step(self):
     self.__move, self.__position, self.__direction = self.__move(self.__position, self.__direction)
   def draw(self, screen):
+    if not self.isValid():
+      return
     if self.__direction != self.__lastDirection:
       self.__lastDirection = self.__direction
       self.__lastImage = self.__image.rotate(-self.__direction)

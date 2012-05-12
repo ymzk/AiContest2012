@@ -22,7 +22,8 @@ class RunnableList(list, Runnable):
             i.step(*args)
     def draw(self, screen, *args):
         for i in self:
-            i.draw(screen, *args)
+            if i.isValid():
+                i.draw(screen, *args)
     def end(self):
         for i in self:
             i.end()

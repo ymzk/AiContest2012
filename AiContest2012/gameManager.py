@@ -38,7 +38,6 @@ class GameManager(Runnable):
     self.bases = RunnableList()
     self.field = Field(self)
 
-    self.field.setFieldSize(40, 40, 25, 25)
     #self.field.testInitialize()
     self.field.loadFeild("map.data")
     self.bases.append(Base("team0",Coordinate(60,120),1))
