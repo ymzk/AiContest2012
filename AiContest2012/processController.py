@@ -1,46 +1,93 @@
-import subprocess
+from subprocess import Popen, PIPE
 import re
 import sys
+from time import time, sleep
+from queue import Full, Empty
+from threading import Thread, Event
+from mythreading.synchronized_queue import SynchronizedQueue
+
+def processControllerCore(command, sendQueue, recvQueue, invalid):
+  subprocess = Popen(command,
+                     shell = False,
+                     stdin = PIPE,
+                     stdout = PIPE,
+                     stderr = None)
+  try:
+    while not invalid.isSet():
+      while sendQueue.empty():
+        sleep(0.01)
+      while not sendQueue.empty():
+        flag, sendMessage = sendQueue.pop()
+      print('sendMessage: ' + str(sendMessage) + '\n', end = '')
+      subprocess.stdin.write(sendMessage.encode())
+      subprocess.stdin.write(b'\n')
+      subprocess.stdin.flush()
+      recvMessage = subprocess.stdout.readline().decode().strip()
+      recvQueue.push(recvMessage)
+  finally:
+    subprocess.kill()
 
 class ProcessController():
   def __init__(self, executableName):
-    cmdline = ""
-
-    match = re.match(r"(.*).py",executableName)
-    if match is not None:
-      cmdline = ["C:\Python32\python.exe",executableName]
-    match = re.match(r"(.*).exe",executableName)
-    if match is not None:
-      cmdline = ["./" + executableName]
-    
-    assert cmdline != "","processController can't run this program"
-    self._subprocess = subprocess.Popen(cmdline,
-                         shell = False,
-                         stdin = subprocess.PIPE,
-                         stdout = subprocess.PIPE,
-                         stderr = subprocess.PIPE,
-                         close_fds = False)
-  def write(self, *arg):
-    return self._subprocess.stdin.write(*arg)
-  def flush(self, *arg):
-    return self._subprocess.stdin.flush(*arg)
-  def __iter__(self, *arg):
-    return self._subprocess.stdout.__iter__(*arg)
-  def __next__(self, *arg):
-    return self._subprocess.stdout.__next__(*arg)
-  def getchar(self, *arg):
-    return self._subprocess.stdout.getchar(*arg)
-  def readline(self, *arg):
-    return self._subprocess.stdout.readline(*arg)
+    if executableName[-3:] == '.py':
+      command = ["C:\\Python32\\python.exe",executableName]
+    elif executableName[-4:] == '.exe':
+      command = ["./" + executableName]
+    else:
+      raise RuntimeError('ProcessController can\'t run this program')
+    sendQueue, recvQueue = SynchronizedQueue(3), SynchronizedQueue()
+    terminate = Event()
+    t = Thread(target = processControllerCore, args = (command, sendQueue, recvQueue, terminate))
+    t.start()
+    self._terminate = terminate
+    self._childThread = t
+    self._sendQueue = sendQueue
+    self._recvQueue = recvQueue
+  def write(self, message):
+    if self._sendQueue.full():
+      self._sendQueue.noWaitPop()
+    self._sendQueue.noWaitPush(message)
+  def flush(self):
+    pass
+  def __iter__(self):
+    return self
+  def __next__(self):
+    return self.readline()
+  def readline(self):
+    flag, result = self._recvQueue.pop()
+    if not flag:
+      return None
+    else:
+      return result
+  def close(self):
+    pass
   def end(self):
-    self._subprocess.kill()
+    self._terminate.set()
 
   
 if __name__ == "__main__":
+  def f(terminater):
+    counter = 0
+    while not terminater.isSet():
+      counter += 1
+#    print(counter)
+  terminater = Event()
+  ts = [Thread(target = f, args = (terminater,)) for i in range(20)]
+  [t.start() for t in ts]
   pc = ProcessController("echo.py")
-  pc.end()
+  sleep(3)
+  for i in range(10):
+    pc.write('hoge' + str(i))
+    sleep(0.01)
+    tmp = pc.readline()
+    print(tmp)
   while True:
-    pass
+    msg = pc.readline()
+    if msg == None:
+      break
+    print(msg)
+  pc.end()
+  terminater.set()
   '''
   pc.write("end\n".encode())
   pc.flush()

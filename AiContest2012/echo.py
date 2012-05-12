@@ -1,14 +1,20 @@
-import sys
+from sys import stdin, stdout
 
-
-while True:
-  '''
+with open('echo.log', 'w') as log:
+  print('start echo', file = log)
+  log.flush()
   while True:
-    print(sys.stdin.readline())
-    sys.stdout.flush()
     '''
-  for i in sys.stdin:
-    print (i)
+    while True:
+      print(sys.stdin.readline())
+      sys.stdout.flush()
+      '''
+    while not stdin.closed:
+      line = stdin.readline().strip()
+      print(line)
+      stdout.flush()
+      print(line, file = log)
+      log.flush()
+    print ("endfile")
+    log.flush()
     sys.stdout.flush()
-  print ("endfile")
-  sys.stdout.flush()
