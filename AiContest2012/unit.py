@@ -86,6 +86,7 @@ class Unit(GameObject):
     yield str(self.getPosition().getX())
     yield str(self.getPosition().getY())
     yield str(self.getDirection())
+    yield str(self.getAttackPower())
     yield str(self._term)
 
   def draw(self, screen, viewPoint):

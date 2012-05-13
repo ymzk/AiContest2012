@@ -143,13 +143,21 @@ class Field(Runnable):
         assert False,"cellCodeError"
     file = open(filename, "r")
     self.lines = [line.split() for line in file.readlines()]
-    h = len(self.lines)
-    w = max(len(line) for line in self.lines)
-    self._fieldData = [[None for i in range(h)] for j in range(w)]
+    self._fieldHeight = len(self.lines)
+    self._fieldWidth = max(len(line) for line in self.lines)
+    self._fieldData = [[None for i in range(self._fieldHeight)] for j in range(self._fieldWidth)]
     team = [0,1]
     for i, line in enumerate(self.lines):
       for j, token in enumerate(line):
         self.setCell(j, i, convert(token,team[0]))
+  def encode(self):
+    yield self._fieldWidth
+    yield self._fieldHeight
+    yield self._cellWidth
+    yield self._cellHeight
+    for h in range(self._fieldHeight):
+      for w in range(self._fieldHeight):
+        yield self.lines[w][h]
     
 
 

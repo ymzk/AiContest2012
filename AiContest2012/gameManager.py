@@ -59,8 +59,8 @@ class GameManager(Runnable):
       i.sendStartingMessage()
   def writeStartingMessage(self,unit,file):
     file.write("startInit")
-    self.writeMessageField(unit,file)
     self.writeMessageUnit(unit,file)
+    self.writeMessageField(self.field,file)
     file.write("endInit")
     self.writeMessage(unit,file)
   def writeMessage(self,unit,file):
@@ -98,9 +98,13 @@ class GameManager(Runnable):
     file.write("base")
     for i in base.encode():
       file.write(str(i))
-  def writeMessageField(self,base,file):
+  def writeMessageItem(self,item,file):
+    file.write("item")
+    for i in item.encode():
+      file.write(str(i))      
+  def writeMessageField(self,field,file):
     file.write("field")
-    for i in base.encode():
+    for i in field.encode():
       file.write(str(i))
 
 
