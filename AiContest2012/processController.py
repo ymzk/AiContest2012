@@ -36,14 +36,17 @@ def processControllerCore(subprocess, sendQueue, recvQueue):
       while not sendQueue.empty():
         flag, sendMessage = sendQueue.pop()
       print('sendMessage: ' + str(sendMessage) + '\n', end = '')
-      # subprocess.stdin.write(str(sendMessage).encode())
-      subprocess.stdin.write(str('end').encode())
+      subprocess.stdin.write(str(sendMessage).encode())
+      # subprocess.stdin.write(str('end').encode())
       subprocess.stdin.write(b'\n')
       subprocess.stdin.flush()
       recvMessage = subprocess.stdout.readline().decode().strip()
+      print('recvMessage: ' + str(recvMessage) + '\n', end = '')
       recvQueue.push(recvMessage)
 #  except:
 #    pass
+
+#def sender(stdin, sendQueue):
 
 class ProcessController():
   def __init__(self, executableName):
@@ -83,10 +86,12 @@ class ProcessController():
       raise StopIteration()
     return self.readline()
   def readline(self):
+    print('ProcessController.readline()\n', end = '')
     flag, result = self._recvQueue.pop()
     if not flag:
       return None
     else:
+      print('pop: ' + str(result) + '\n', end = '')
       return result
   def close(self):
     pass

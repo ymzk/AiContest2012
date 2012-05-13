@@ -55,11 +55,16 @@ class GameManager(Runnable):
     self.units.append(Unit(Coordinate(601,401),1,self,0,AiManager("hoge.py")))
     self.units.append(Unit(Coordinate(602,402),0,self,1,AiManager("hoge.py")))
     '''
+    for i in self.units:
+      i.sendStartingMessage()
+  def writeStartingMessage(self,unit,file):
+    file.write("startInit")
+    self.writeMessageField(unit,file)
+    self.writeMessageUnit(unit,file)
+    file.write("endInit")
+    self.writeMessage(unit,file)
   def writeMessage(self,unit,file):
-    '''
-    file.write("start\n".encode())
-    if self.getBase(unit.getTeamFlag()).checkDamaged():
-      file.write("Your base is attacked.".encode())
+    file.write("start")
     for i in self.bases:
       self.writeMessageBase(i,file)
     for i in self.units:
@@ -72,28 +77,31 @@ class GameManager(Runnable):
     for i in self.bullets:
       if abs(i.getPosition() - unit.getPosition()) <self._VISILITY:
         self.writeMessageBullet(i,file)
-        '''
-    file.write("end\n")
-    file.flush()
+    for i in self.items:
+      if abs(i.getPosition() - unit.getPosition()) <self._VISILITY:
+        self.writeMessageItem(i,file)
+    file.write("end")
     
   def writeMessageUnit(self,unit,file):
-    file.write("unit".encode())
+    file.write("item")
+    for i in item.encode():
+      file.write(str(i))
+  def writeMessageUnit(self,unit,file):
+    file.write("unit")
     for i in unit.encode():
-      file.write(" ".encode())
-      file.write(str(i).encode())
-    file.write("\n".encode())
+      file.write(str(i))
   def writeMessageBullet(self,bullet,file):
-    file.write("bullet".encode())
+    file.write("bullet")
     for i in bullet.encode():
-      file.write(" ".encode())
-      file.write(str(i).encode())
-    file.write("\n".encode())
+      file.write(str(i))
   def writeMessageBase(self,base,file):
-    file.write("base".encode())
+    file.write("base")
     for i in base.encode():
-      file.write(" ".encode())
-      file.write(str(i).encode())
-    file.write("\n".encode())
+      file.write(str(i))
+  def writeMessageField(self,base,file):
+    file.write("field")
+    for i in base.encode():
+      file.write(str(i))
 
 
     

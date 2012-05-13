@@ -33,7 +33,7 @@ class Field(Runnable):
       for j in range(self._fieldHeight):
         self.setCell(i, j, NoneCell())
     for i in range(self._fieldWidth):
-      self.setCell(i,8,OwnAreaCell("team0"))
+      self.setCell(i,8,OwnAreaCell(1))
     self.setCell(0,0,ItemCell(self._gameManager,HpItem()))
     self.setCell(1,0,ItemCell(self._gameManager,AttackItem()))
   def fieldEffect(self, runnableObject):

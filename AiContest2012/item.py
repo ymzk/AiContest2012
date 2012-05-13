@@ -12,7 +12,11 @@ class Item(GameObject):
     self._remainingTime = self._nextTime
   def checkAvailable(self):
     return self._remainingTime < 0
-    
+  def encode(self):
+    if checkAvailable:
+      yield self.getPosition().getX()
+      yield self.getPosition().getY()
+      yield self.getItemType()
   def draw(self, screen, viewPoint):
     if not self.checkAvailable():
       return
@@ -35,10 +39,12 @@ class HpItem(Item):
       super().effect(unit)
       unit.setHp(unit.getHp() + self._power)
       print("inclease hp",unit.getHp())
-      '''
+  def getItemType(self):
+    return "IH"
+    '''
   def clone(self):
     return HpItem(self.getPosition())
-      '''
+    '''
 class AttackItem(Item):
   def __init__(self, position = Coordinate(0,0)):
     super().__init__(position,image = "attackItem.bmp")
@@ -48,6 +54,8 @@ class AttackItem(Item):
       super().effect(unit)
       unit.setAttackPower((unit.getAttackPower() + self._power))
       print("inclease attack",unit.getAttackPower())
+  def getItemType(self):
+    return "IA"
   def clone(self):
     return AttackItem(self.getPosition)
   

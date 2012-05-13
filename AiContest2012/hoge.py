@@ -8,16 +8,14 @@ def log(*messages):
 
 log("start")
 while True:
-  message = sys.stdin.readline().strip()
+  message = sys.stdin.readline().split()
   log('Meesage:', message)
-  if message == 'end':
-    log('action')
-    print("start")
-    print("fire")
-    print("move 10")
-    print("rotate 0.1")
-    print("end")
-    sys.stdout.flush()
+  flag = True
+  if 'end' in message:
+    print("10 0.1 1")
+  else:
+    print("0 0 0")
+  sys.stdout.flush()
   time.sleep(0.01)
 log('end')
 logfile.close()

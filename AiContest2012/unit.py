@@ -28,6 +28,8 @@ class Unit(GameObject):
     self._term = 0
     self._hp = 100
     self._attackPower = 10
+  def sendStartingMessage(self):
+    self._aiManager.sendStartingMessage(self,self._gameManager)
   def makeBullet(self):
     self._gameManager.addBullet(Bullet(self))
     self._term = self._timeNextFireing
@@ -65,8 +67,9 @@ class Unit(GameObject):
     if self._term <= 0:
       if self._aiManager.getFiring():
         self.makeBullet()
-    self.setPosition(self.getPosition() + self._aiManager.getMove())
-    self.setDirection(self.getDirection() + self._aiManager.getRotate())
+    d = self.getDirection()
+    self.setPosition(self.getPosition() + Coordinate(cos(d), sin(d)) * self._aiManager.getMove())
+    self.setDirection(d + self._aiManager.getRotate())
   def step(self):
     if self._term > 0:
       self._term -= 1
@@ -80,7 +83,8 @@ class Unit(GameObject):
     yield str(self._hp)
     #yield str(self._unitId)
     yield str(self._teamFlag)
-    yield str(self.getPosition().getX(),self.getPosition().getY())
+    yield str(self.getPosition().getX())
+    yield str(self.getPosition().getY())
     yield str(self.getDirection())
     yield str(self._term)
 

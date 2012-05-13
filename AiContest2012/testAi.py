@@ -77,15 +77,15 @@ class main:
     self.items = []
     self.bases = []
   def run(self,file):
-    if file.readline() == "startinit":
+    if file.readline() == "startInit":
       data = file.readline().split()
       while True:
         top = data.pop(0)
-        if top == "end":
+        if top == "endInit":
           break
-        if top == "yourunit":
+        if top == "unit":
           self.myunit = Unit(data)
-        if top == "fielddata":
+        if top == "field":
           self.field = Field(data)
     else:
       assert Fasle,"init err"
