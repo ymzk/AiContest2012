@@ -80,7 +80,7 @@ class Unit(GameObject):
     yield str(self._hp)
     #yield str(self._unitId)
     yield str(self._teamFlag)
-    yield str(self.getPosition())
+    yield str(self.getPosition().getX(),self.getPosition().getY())
     yield str(self.getDirection())
     yield str(self._term)
 

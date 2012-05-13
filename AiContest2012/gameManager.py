@@ -40,22 +40,23 @@ class GameManager(Runnable):
 
     #self.field.testInitialize()
     self.field.loadFeild("map.data")
-    self.bases.append(Base("team0",Coordinate(60,120),1))
-    self.bases.append(Base("team1",Coordinate(100,120),0))
+    self.bases.append(Base(0,Coordinate(60,120),1))
+    self.bases.append(Base(1,Coordinate(100,120),0))
 
-    self.debugUnit = Unit(Coordinate(200,300),1,self,"team1")
+    self.debugUnit = Unit(Coordinate(200,300),1,self,1)
     self.debugUnit.setMove(MoveByKeyAsUnit(velocity = 10))
     self.units.append(self.debugUnit)
 
-    self.units.append(Unit(Coordinate(200,200),1,self,"team0",AiManager("hoge.py")))
+    self.units.append(Unit(Coordinate(200,200),1,self,0,AiManager("hoge.py")))
     '''
-    self.units.append(Unit(Coordinate(201,201),0,self,"team1",AiManager("hoge.py")))
-    self.units.append(Unit(Coordinate(302,302),1,self,"team0",AiManager("hoge.py")))
-    self.units.append(Unit(Coordinate(600,400),0,self,"team1",AiManager("hoge.py")))
-    self.units.append(Unit(Coordinate(601,401),1,self,"team0",AiManager("hoge.py")))
-    self.units.append(Unit(Coordinate(602,402),0,self,"team1",AiManager("hoge.py")))
+    self.units.append(Unit(Coordinate(201,201),0,self,1,AiManager("hoge.py")))
+    self.units.append(Unit(Coordinate(302,302),1,self,0,AiManager("hoge.py")))
+    self.units.append(Unit(Coordinate(600,400),0,self,1,AiManager("hoge.py")))
+    self.units.append(Unit(Coordinate(601,401),1,self,0,AiManager("hoge.py")))
+    self.units.append(Unit(Coordinate(602,402),0,self,1,AiManager("hoge.py")))
     '''
   def writeMessage(self,unit,file):
+    '''
     file.write("start\n".encode())
     if self.getBase(unit.getTeamFlag()).checkDamaged():
       file.write("Your base is attacked.".encode())
@@ -71,7 +72,8 @@ class GameManager(Runnable):
     for i in self.bullets:
       if abs(i.getPosition() - unit.getPosition()) <self._VISILITY:
         self.writeMessageBullet(i,file)
-    file.write("end\n".encode())
+        '''
+    file.write("end\n")
     file.flush()
     
   def writeMessageUnit(self,unit,file):
