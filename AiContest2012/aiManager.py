@@ -16,6 +16,8 @@ class DefaultAiManager(Runnable):
     return 0
   def getFiring(self):
     return self._fireingFlag
+  def sendEndMessage(self,unit,gmeManager):
+    pass
   def sendStartingMessage(self,unit,gmeManager):
     pass
   def step(self):
@@ -80,6 +82,11 @@ class AiManager(Runnable):
     gameManager.writeMessage(unit,string)
     self._processController.write(string)
     
+  def sendEndMessage(self,unit,gameManager):
+    string = CatString()
+    
+    gameManager.writeEndMessage(unit,string)
+    self._processController.write(string)
   def sendStartingMessage(self,unit,gameManager):
     string = CatString()
     

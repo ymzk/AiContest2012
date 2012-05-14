@@ -1,4 +1,8 @@
-f = open("map.data","r")
-for string in f:
-  charList = string.sprit()
-  for
+class hogec:
+  def name(self):
+    print(self.__module__)
+
+class fooc(hogec):
+  pass
+hoge = fooc()
+hoge.name()

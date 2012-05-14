@@ -9,12 +9,14 @@ def log(*messages):
 log("start")
 while True:
   message = sys.stdin.readline().split()
-  log('Meesage:', message)
   flag = True
   if 'end' in message:
     print("10 0.1 1")
   else:
+    log('Meesage:', message)
     print("0 0 0")
+  if "endGame" in message:
+    break
   sys.stdout.flush()
   time.sleep(0.01)
 log('end')

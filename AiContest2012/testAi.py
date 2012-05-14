@@ -110,45 +110,69 @@ class Field:
       string += " " + str(i) 
     return string
   
-class main:
+class TestAi:
   def __init__(self):
     self.clear()
+    self._logFile = open(str(self.__class__.__name__) + ".log","w")
+  def log(self, *arg):
+    print(*arg,file = self._logFile)
+    self._logFile.flush()
   def clear(self):
     self.units = []
     self.bullets = []
     self.items = []
     self.bases = []
-  def run(self,file):
+  def receiveInit(self,file):
     data = file.readline().split()
-
     if data.pop(0) == "startInit":
       while True:
         top = data.pop(0)
         if top == "endInit":
           break
-        if top == "unit":
+        elif top == "unit":
           self.myunit = Unit(data)
           self.units.append(self.myunit)
-        if top == "field":
+        elif top == "field":
           self.field = Field(data, self.myunit)
+        else:
+          self.log("miss to read init")
+          self.log("message=", top, data)
     else:
       assert False,"init err"
-    while True:
-      self.clear()
-      if data.pop(0) == "start":
-        while True:
-          top = data.pop(0)
-          if top == "end":
-            break
-          elif top == "unit":
-            self.units.append(Unit(data))
-          elif top == "bullet":
-            self.bullets.append(Bullet(data))
-          elif top == "item":
-            self.items.append(Item(data))
-          elif top == "base":
-            self.bases.append(Base(data))
-      '''
+  def receive(self,file):
+    data = file.readline().split()
+    self.clear()
+    if len(data) == 0:
+      self.log("missed to read:null data")
+      return True
+    self.log("rawdata=", data)
+    top = data.pop(0)
+    if top == "endGame":
+      self.log("endGame")
+      return False
+    if top == "start":
+      while True:
+        if len(data) == 0:
+          break
+        top = data.pop(0)
+        if top == "end":
+          break
+        elif top == "unit":
+          self.units.append(Unit(data))
+        elif top == "bullet":
+          self.bullets.append(Bullet(data))
+        elif top == "item":
+          self.items.append(Item(data))
+        elif top == "base":
+          self.bases.append(Base(data))
+        else:
+          self.log("miss to read identify")
+          self.log("message=top:", top," data=", data)
+      return True
+    self.log("miss to read start")
+    self.log("message=", top,"data=", data)
+    return True
+    '''
       for i in self.units:
         print(i)
       for i in self.bullets:
@@ -160,7 +184,16 @@ class main:
       sys.stdout.flush()
       break
       '''
-      
-hoge.run(sys.stdin)
-
+  def run(self,initfile = sys.stdin,file = sys.stdin):
+    self.receiveInit(initfile)
+    print(0,0,0)
+    sys.stdout.flush()
+    while self.receive(file):
+      self.send()
+      sys.stdout.flush()
+  def send(self):
+    print(10,0.3,1)
+hoge = TestAi()
+#hoge.run(open("initMessage","r"),open("message","r"))
+hoge.run()
 

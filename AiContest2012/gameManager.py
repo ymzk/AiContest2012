@@ -46,17 +46,16 @@ class GameManager(Runnable):
     self.debugUnit = Unit(Coordinate(200,300),1,self,1)
     self.debugUnit.setMove(MoveByKeyAsUnit(velocity = 10))
     self.units.append(self.debugUnit)
-
     self.units.append(Unit(Coordinate(200,200),1,self,0,AiManager("hoge.py")))
-    '''
     self.units.append(Unit(Coordinate(201,201),0,self,1,AiManager("hoge.py")))
     self.units.append(Unit(Coordinate(302,302),1,self,0,AiManager("hoge.py")))
     self.units.append(Unit(Coordinate(600,400),0,self,1,AiManager("hoge.py")))
     self.units.append(Unit(Coordinate(601,401),1,self,0,AiManager("hoge.py")))
-    self.units.append(Unit(Coordinate(602,402),0,self,1,AiManager("hoge.py")))
-    '''
+    self.units.append(Unit(Coordinate(602,402),0,self,1,AiManager("testAi.py")))
     for i in self.units:
       i.sendStartingMessage()
+  def writeEndMessage(self,unit,file):
+    file.write("endGame")
   def writeStartingMessage(self,unit,file):
     file.write("startInit")
     self.writeMessageUnit(unit,file)
@@ -213,6 +212,8 @@ class GameManager(Runnable):
     self.bullets.draw(screan, self._viewPoint)
     self.items.draw(screan, self._viewPoint)
   def end(self):
+    for i in self.units:
+      i.sendEndMessage()
     self.field.end()
     self.bases.end()
     self.units.end()

@@ -28,6 +28,8 @@ class Unit(GameObject):
     self._term = 0
     self._hp = 100
     self._attackPower = 10
+  def sendEndMessage(self):
+    self._aiManager.sendEndMessage(self,self._gameManager)
   def sendStartingMessage(self):
     self._aiManager.sendStartingMessage(self,self._gameManager)
   def makeBullet(self):
