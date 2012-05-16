@@ -70,6 +70,11 @@ class Unit(GameObject):
       if self._aiManager.getFiring():
         self.makeBullet()
     d = self.getDirection()
+    print(d)
+    
+    print(self.getPosition(),Coordinate(cos(d), sin(d)),self._aiManager.getMove())
+    import sys
+    sys.stdout.flush()
     self.setPosition(self.getPosition() + Coordinate(cos(d), sin(d)) * self._aiManager.getMove())
     self.setDirection(d + self._aiManager.getRotate())
   def step(self):

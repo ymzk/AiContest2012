@@ -120,7 +120,7 @@ class Field(Runnable):
     image = self._image.getSubImage(viewPoint.getPosition() - areaSize / 2, areaSize).rotate(viewPoint.getDirection())
     serface.draw(image = image, position = -(image.getSize() - Manager.getScreenSize()) / 2)
 #    serface.draw(self._image)
-  def loadFeild(self, filename):
+  def loadField(self, filename):
     def convert(token,team):
       if token == 'NO':
         return NoneCell()
@@ -142,14 +142,23 @@ class Field(Runnable):
         print(token)
         assert False,"cellCodeError"
     file = open(filename, "r")
+    self._fieldWidth, self._fieldHeight = file.readline().split()
+    self._fieldWidth, self._fieldHeight = int(self._fieldWidth), int(self._fieldHeight)
+    self._unitPosition = [[],[]]
+    for i in (0,1):
+      positionAndDirectionList = [i.strip()[1:].split(",") for i in file.readline().strip()[:-1].split(")")]
+      for positionAndDirection in positionAndDirectionList:
+        print([Coordinate(positionAndDirection[0], positionAndDirection[1]),positionAndDirection[2]])
+        self._unitPosition[i].append([Coordinate(float(positionAndDirection[0].strip()) * self._fieldWidth, float(positionAndDirection[1].strip()) * self._fieldHeight), float(positionAndDirection[2].strip())])
     self.lines = [line.split() for line in file.readlines()]
-    self._fieldHeight = len(self.lines)
-    self._fieldWidth = max(len(line) for line in self.lines)
     self._fieldData = [[None for i in range(self._fieldHeight)] for j in range(self._fieldWidth)]
     team = [0,1]
     for i, line in enumerate(self.lines):
       for j, token in enumerate(line):
         self.setCell(j, i, convert(token,team[0]))
+  def getUnitPosition(self, team):
+    for i in self._unitPosition[team]:
+      yield i
   def encode(self):
     yield self._fieldWidth
     yield self._fieldHeight

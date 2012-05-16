@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "testAi.py", line 198, in <module>
+    hoge.run()
+  File "testAi.py", line 188, in run
+    self.receiveInit(initfile)
+  File "testAi.py", line 141, in receiveInit
+    assert False,"init err"
+AssertionError: init err

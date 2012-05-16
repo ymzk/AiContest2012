@@ -55,7 +55,7 @@ class ProcessController():
     elif executableName[-4:] == '.exe':
       command = ["./" + executableName]
     else:
-      raise RuntimeError('ProcessController can\'t run this program')
+      raise RuntimeError("ProcessController can\'t run this program " + executableName)
     print(command)
     self._childError = open('processControllerChild.log', 'w')
     subprocess = Popen(command,
