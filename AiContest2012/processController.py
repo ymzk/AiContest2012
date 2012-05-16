@@ -35,13 +35,13 @@ def processControllerCore(subprocess, sendQueue, recvQueue):
         sleep(0.001)
       while not sendQueue.empty():
         flag, sendMessage = sendQueue.pop()
-      print('sendMessage: ' + str(sendMessage) + '\n', end = '')
+      # print('sendMessage: ' + str(sendMessage) + '\n', end = '')
       subprocess.stdin.write(str(sendMessage).encode())
       # subprocess.stdin.write(str('end').encode())
       subprocess.stdin.write(b'\n')
       subprocess.stdin.flush()
       recvMessage = subprocess.stdout.readline().decode().strip()
-      print('recvMessage: ' + str(recvMessage) + '\n', end = '')
+      # print('recvMessage: ' + str(recvMessage) + '\n', end = '')
       recvQueue.push(recvMessage)
 #  except:
 #    pass
@@ -55,8 +55,8 @@ class ProcessController():
     elif executableName[-4:] == '.exe':
       command = ["./" + executableName]
     else:
-      raise RuntimeError('ProcessController can\'t run this program')
-    print(command)
+      raise RuntimeError("ProcessController can\'t run this program " + executableName)
+    # print(command)
     self._childError = open('processControllerChild.log', 'w')
     subprocess = Popen(command,
                        stdin = PIPE,
@@ -86,12 +86,12 @@ class ProcessController():
       raise StopIteration()
     return self.readline()
   def readline(self):
-    print('ProcessController.readline()\n', end = '')
+    # print('ProcessController.readline()\n', end = '')
     flag, result = self._recvQueue.pop()
     if not flag:
       return None
     else:
-      print('pop: ' + str(result) + '\n', end = '')
+      # print('pop: ' + str(result) + '\n', end = '')
       return result
   def close(self):
     pass

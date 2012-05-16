@@ -3,16 +3,15 @@ from priorityQueue import PriorityQueue
 
 _INF = float('inf')
 _EPS = 1e-6
-ROAD, WALL, ALLY_TERITORY, ENEMY_TERITORY = range(4)
 
 def aroundOf(field, position):
     moves = ((0, 1), (1, 1), (1, 0), (1, -1), (0, -1), (-1, -1), (-1, 0), (-1, 1))
     for move in moves:
         candidate = (position[0] + move[0], position[1] + move[1])
         try:
-            if field[position[0]][candidate[1]] not in (ROAD, ALLY_TERITORY) or\
-               field[candidate[0]][position[1]] not in (ROAD, ALLY_TERITORY) or\
-               field[candidate[0]][candidate[1]] not in (ROAD, ALLY_TERITORY):
+            if not field.isPassable(position[0], candidate[1])or\
+               not field.isPassable(candidate[0], position[1]) or\
+               not field.isPassable(candidate[0], candidate[1]):
                 continue
             yield candidate
         except IndexError:
@@ -39,11 +38,10 @@ def aStar(field, source, destination, getNexts = aroundOf, getCost = distance, e
         currentCost = currentState[1]
         currentEstimation = currentState[2]
         if currentPosition[0] == destination[0] and currentPosition[1] == destination[1]:
-            result = []
             while currentPosition[0] != destination[0] or currentPosition[1] != destination[1]:
-                result.append((currentPosition[0] * tileHeight, currentPosition[1] * tileWidth))
+                yield (currentPosition[0] * tileHeight, currentPosition[1] * tileWidth)
                 currentPosition = route[currentPosition[0]][currentPosition[1]]
-            return result
+            return
         if memo[currentPosition[0]][currentPosition[1]] < currentEstimation - _EPS:
             continue
         for nextPosition in getNexts(currentState[0]):
@@ -56,4 +54,4 @@ def aStar(field, source, destination, getNexts = aroundOf, getCost = distance, e
                         nextEstimation))
             memo[nextPosition[0]][nextPosition[1]] = nextEstimation
             route[nextPosition[0]][nextPosition[1]] = currentPosition
-    return None
+    raise RuntimeError('no path is found')

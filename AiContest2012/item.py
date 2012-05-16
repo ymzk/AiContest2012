@@ -13,7 +13,7 @@ class Item(GameObject):
   def checkAvailable(self):
     return self._remainingTime < 0
   def encode(self):
-    if checkAvailable:
+    if self.checkAvailable:
       yield self.getPosition().getX()
       yield self.getPosition().getY()
       yield self.getItemType()

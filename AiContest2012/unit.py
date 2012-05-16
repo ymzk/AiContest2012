@@ -28,6 +28,8 @@ class Unit(GameObject):
     self._term = 0
     self._hp = 100
     self._attackPower = 10
+  def sendEndMessage(self):
+    self._aiManager.sendEndMessage(self,self._gameManager)
   def sendStartingMessage(self):
     self._aiManager.sendStartingMessage(self,self._gameManager)
   def makeBullet(self):
@@ -68,6 +70,11 @@ class Unit(GameObject):
       if self._aiManager.getFiring():
         self.makeBullet()
     d = self.getDirection()
+    # print(d)
+    
+    # print(self.getPosition(),Coordinate(cos(d), sin(d)),self._aiManager.getMove())
+    import sys
+    sys.stdout.flush()
     self.setPosition(self.getPosition() + Coordinate(cos(d), sin(d)) * self._aiManager.getMove())
     self.setDirection(d + self._aiManager.getRotate())
   def step(self):
@@ -86,6 +93,7 @@ class Unit(GameObject):
     yield str(self.getPosition().getX())
     yield str(self.getPosition().getY())
     yield str(self.getDirection())
+    yield str(self.getAttackPower())
     yield str(self._term)
 
   def draw(self, screen, viewPoint):
