@@ -1,3 +1,4 @@
+
 from field import Field
 from unit import Unit
 from base import Base
@@ -43,12 +44,12 @@ class GameManager(Runnable):
     self.debugUnit = Unit(Coordinate(200,300),1,self,1)
     self.debugUnit.setMove(MoveByKeyAsUnit(velocity = 10))
     self.units.append(self.debugUnit)
-    self.units.append(Unit(Coordinate(200,200),1,self,0,AiManager("hoge.py")))
-    self.units.append(Unit(Coordinate(201,201),0,self,1,AiManager("hoge.py")))
-    self.units.append(Unit(Coordinate(302,302),1,self,0,AiManager("hoge.py")))
-    self.units.append(Unit(Coordinate(600,400),0,self,1,AiManager("hoge.py")))
-    self.units.append(Unit(Coordinate(601,401),1,self,0,AiManager("hoge.py")))
-    self.units.append(Unit(Coordinate(602,402),0,self,1,AiManager("testAi.py")))
+    self.units.append(Unit(Coordinate(200,200),1,self,0,len(self.units),AiManager("hoge.py")))
+    self.units.append(Unit(Coordinate(201,201),0,self,1,len(self.units),AiManager("hoge.py")))
+    self.units.append(Unit(Coordinate(302,302),1,self,0,len(self.units),AiManager("hoge.py")))
+    self.units.append(Unit(Coordinate(600,400),0,self,1,len(self.units),AiManager("hoge.py")))
+    self.units.append(Unit(Coordinate(601,401),1,self,0,len(self.units),AiManager("hoge.py")))
+    self.units.append(Unit(Coordinate(602,402),0,self,1,len(self.units),AiManager("testAi.py")))
     for i in self.units:
       i.sendStartingMessage()
       '''
@@ -65,10 +66,12 @@ class GameManager(Runnable):
     for team in (0,1):
       gen = self.field.getUnitPosition(team)
       for aiName,(point,direction) in zip(file.readline().split(),gen):
-        self.units.append(Unit(point,direction,self,team,AiManager(aiName)))
-    self.debugUnit = Unit(Coordinate(200,300),1,self,1)
+        self.units.append(Unit(point,direction,self,team,len(self.units),AiManager(aiName)))
+    self.debugUnit = Unit(Coordinate(200,300),1,self,len(self.units),1)
     self.debugUnit.setMove(MoveByKeyAsUnit(velocity = 10))
     self.units.append(self.debugUnit)
+    for i in self.units:
+      i.sendStartingMessage()
 
     
       
@@ -100,11 +103,6 @@ class GameManager(Runnable):
         if abs(i.getPosition() - unit.getPosition()) <self._VISILITY:
           self.writeMessageItem(i,file)
     file.write("end")
-    
-  def writeMessageUnit(self,unit,file):
-    file.write("item")
-    for i in item.encode():
-      file.write(str(i))
   def writeMessageUnit(self,unit,file):
     file.write("unit")
     for i in unit.encode():
