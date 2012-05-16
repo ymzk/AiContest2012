@@ -37,7 +37,6 @@ def processControllerCore(subprocess, sendQueue, recvQueue):
         flag, sendMessage = sendQueue.pop()
       # print('sendMessage: ' + str(sendMessage) + '\n', end = '')
       subprocess.stdin.write(str(sendMessage).encode())
-      # subprocess.stdin.write(str('end').encode())
       subprocess.stdin.write(b'\n')
       subprocess.stdin.flush()
       recvMessage = subprocess.stdout.readline().decode().strip()
@@ -128,8 +127,8 @@ if __name__ == "__main__":
   pc = ProcessController('hoge.py')
   pc.write("end")
   pc.flush()
-  print("wrote end")
-  sys.stdout.flush()
+  #print("wrote end")
+  #sys.stdout.flush()
 #  pc.p.stdin.write(b"hoge\n")
 #  pc.p.stdin.flush()
   try:
