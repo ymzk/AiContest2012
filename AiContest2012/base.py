@@ -6,7 +6,7 @@ class Base(GameObject):
     super().__init__(position = position,direction = direction, image = "base.bmp")
     self._teamFlag = teamFlag
     self._damagedFlag = False
-    self._hp = 1000
+    self._hp = 600
   def getHp(self):
     return self._hp
   def getTeamFlag(self):

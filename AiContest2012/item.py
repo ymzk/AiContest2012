@@ -33,7 +33,7 @@ class Item(GameObject):
 class HpItem(Item):
   def __init__(self, position = Coordinate(0,0)):
     super().__init__(position,image = "hpItem.bmp");
-    self._power = 100
+    self._power = 30
   def effect(self, unit):
     if self.checkAvailable():
       super().effect(unit)
@@ -48,7 +48,7 @@ class HpItem(Item):
 class AttackItem(Item):
   def __init__(self, position = Coordinate(0,0)):
     super().__init__(position,image = "attackItem.bmp")
-    self._power = 10
+    self._power = 1
   def effect(self, unit):
     if self.checkAvailable():
       super().effect(unit)

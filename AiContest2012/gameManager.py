@@ -28,7 +28,7 @@ class DamyRunnable(Runnable):
 class GameManager(Runnable):
   _UNIT_RANGE = 16
   _BASE_RANGE = 20
-  _ITEM_RANGE = 10
+  _ITEM_RANGE = 20
   _PUSH_STRENGTH = 0.5
   _VISILITY = 100
   def __init__(self,settingFileName = "gameSettings"):
@@ -86,6 +86,7 @@ class GameManager(Runnable):
     elif self._defeatTeam == 0:
       file.write("canceled this Game")
     else:
+      file.write("team ")
       file.write(self._defeatTeam)
       file.write(" win")
   def writeStartingMessage(self,unit,file):

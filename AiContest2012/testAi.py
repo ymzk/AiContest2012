@@ -203,7 +203,7 @@ class TestAi:
       '''
   def run(self,initfile = sys.stdin,file = sys.stdin):
     self.receiveInit(initfile)
-    print(0,0,1)
+    #print(0,0,0)
     sys.stdout.flush()
     while self.receive(file):
       self.send()

@@ -7,7 +7,7 @@ from bullet import Bullet
 # circurated reference
 # import gameManager
 class Unit(GameObject):
-  _SPEED = 10
+  _SPEED = 3
   def __init__(self, position, direction, gameManager, teamFlag,unitId , aiManager = DefaultAiManager()):
     super().__init__(position = position, direction = direction, image = "unit.bmp")
     self._unitId = unitId
@@ -25,10 +25,10 @@ class Unit(GameObject):
   def initialize(self):
     self.setPosition(self._startingPoint)
     self.setDirection(self._startingDirection)
-    self._timeNextFireing = 10
+    self._timeNextFireing = 5
     self._term = 0
-    self._hp = 100
-    self._attackPower = 10
+    self._hp = 60
+    self._attackPower = 5
   def sendEndMessage(self):
     self._aiManager.sendEndMessage(self,self._gameManager)
   def sendStartingMessage(self):
