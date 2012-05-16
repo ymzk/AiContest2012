@@ -1,9 +1,11 @@
+import time
+
+
 
 from field import Field
 from unit import Unit
 from base import Base
 from item import *
-
 from moveByKeyAsUnit import MoveByKeyAsUnit
 
 from aiManager import AiManager
@@ -33,6 +35,7 @@ class GameManager(Runnable):
     super().__init__()
     #self.testInitialize()
     self.initialize(settingFileName)
+    time.sleep(1)
   '''
   def testInitialize(self):
     self.defaultInitialize()
@@ -78,6 +81,13 @@ class GameManager(Runnable):
         
   def writeEndMessage(self,unit,file):
     file.write("endGame")
+    if self._defeatTeam == 3:
+      file.write("drawGame")
+    elif self._defeatTeam == 0:
+      file.write("canceled this Game")
+    else:
+      file.write(self._defeatTeam)
+      file.write(" win")
   def writeStartingMessage(self,unit,file):
     file.write("startInit")
     self.writeMessageUnit(unit,file)
@@ -206,7 +216,7 @@ class GameManager(Runnable):
           self.bullets[ii].attack(self.units[jj])
           break
     flag = False
-    endval = 0
+    self._defeatTeam = 0
     for ii in range(len(self.bullets)):
       i = self.bullets[ii].getPosition()
       for jj in range(len(self.bases)):
@@ -217,11 +227,13 @@ class GameManager(Runnable):
           if self.bases[jj].checkAlive():
             continue
           flag = True
-          endval |= 1<<jj
+          self._defeatTeam |= 1<<jj
           break
     if flag:
-      print(endval)
+      for i in self.units:
+        self._defeatTeam = endval
       self.end()
+  
   def draw(self, screan):
     self._viewPoint = self.debugUnit
     self.field.draw(screan,self._viewPoint)
@@ -237,6 +249,7 @@ class GameManager(Runnable):
     self.units.end()
     self.bullets.end()
     self.items.end()
+    time.sleep(1)
     Runnable.end(self)
     
 

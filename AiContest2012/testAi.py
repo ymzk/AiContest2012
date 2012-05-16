@@ -123,6 +123,7 @@ class Field:
     
     
 class TestAi:
+  MAXSPEED = 3
   def __init__(self):
     self.clear()
     self._logFile = open(str(self.__class__.__name__) + ".log","w")
@@ -206,19 +207,23 @@ class TestAi:
     sys.stdout.flush()
     while self.receive(file):
       self.send()
+  def regularizeMove(self, moveFrom, moveTo):
+    val = (moveFrom[0] - moveTo[0]) + (moveFrom[1] - moveTo[1]) ** 0.5
+    if val > self.MAXSPEED:
+      return ((moveTo[i] - moveFrom[i])* self.MAXSPEED / val for i in (0,1))
   def sendData(self, speed = 0, angle = 0, fireing = False):
-    if speed > 3:
-      speed = 3
+    if speed > self.MAXSPEED:
+      speed = self.MAXSPEED
     elif speed < 0:
       speed = 0
-    angle = self.regularize(angle)
+    angle = self.regularizeAngle(angle)
     if angle > 0.3:
       angle = 0.3
     elif angle < -0.3:
       angle = -0.3
     print(speed,angle,1 if fireing else 0)
     sys.stdout.flush()
-  def regularize(self, angle):
+  def regularizeAngle(self, angle):
     if angle > 0:
       return (angle - (int((angle/3.14159265+1))-1)*3.14159265*2)
     else:

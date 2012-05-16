@@ -1,7 +1,8 @@
-todo by ymzk
+﻿todo by ymzk
 ・AIをコンフィグファイルから読み込むようにする
--gameSettingsに記述する。
-・ゲーム終了時、勝敗を表示してから死ぬ
+-gameSettingsに記述する。]
+//起動時各aiのためにsleepする
+//・ゲーム終了時、勝敗を表示してから死ぬ
 -todo make endmessage
 ・当たり判定は速くなりませんか？
 -todo c?
@@ -13,8 +14,11 @@ todo by ymzk
 -unneccesary todo ですね
 ・アイテムのサイズは40x40!!
 -え～ not todo?
-AiにIdを振る。
-class senderをAi側に追加
+//AiにIdを振る。
+//できたよ
+//Aiが自分を認識する
+//できたよ
+//class senderをAi側に追加
 入出力ドキュメント作成
 
 
