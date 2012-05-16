@@ -119,8 +119,6 @@ class Field:
     for i in gen():
       string += " " + str(i) 
     return string
-
-    
     
 class TestAi:
   MAXSPEED = 3
@@ -203,7 +201,7 @@ class TestAi:
       '''
   def run(self,initfile = sys.stdin,file = sys.stdin):
     self.receiveInit(initfile)
-    #print(0,0,0)
+    print(0,0,0)
     sys.stdout.flush()
     while self.receive(file):
       self.send()
