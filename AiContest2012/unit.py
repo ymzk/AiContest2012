@@ -17,6 +17,8 @@ class Unit(GameObject):
     self._idForAi = 0
     self._teamFlag = teamFlag
     self._aiManager = aiManager
+    if aiManager == None or aiManager == "None":
+      self._aiManager = DefaultAiManager()
     '''
     self._aiManager.setPosition(position)
     self._aiManager.setDirection(direction)
