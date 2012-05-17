@@ -1,4 +1,4 @@
-from getProcess import getProcess
+from . getProcess import getProcess
 
 def checkPassable(field, source, destination):
     for position in getProcess(source, destination):

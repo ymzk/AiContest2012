@@ -43,6 +43,8 @@ class PriorityQueue(list):
                     continue
             break
         return result
+    def empty(self):
+        return len(self._data) == 0
 
 if __name__ == '__main__':
     queue = PriorityQueue()

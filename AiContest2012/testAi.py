@@ -228,7 +228,8 @@ class TestAi:
       return (angle - (int((angle/3.14159265-1))+1)*3.14159265*2)
   def send(self):
     self.sendData(speed = 3, angle = 0.2, fireing = True)
-hoge = TestAi()
-#hoge.run(open("initMessage","r"),open("message","r"))
-hoge.run()
+if __name__ == '__main__':
+  hoge = TestAi()
+  #hoge.run(open("initMessage","r"),open("message","r"))
+  hoge.run()
 

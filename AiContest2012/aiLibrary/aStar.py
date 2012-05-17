@@ -1,5 +1,6 @@
 # -*- coding: cp932 -*-
-from priorityQueue import PriorityQueue
+from . priorityQueue import PriorityQueue
+import sys
 
 _INF = float('inf')
 _EPS = 1e-6
@@ -7,7 +8,7 @@ _EPS = 1e-6
 def aroundOf(field, position):
     moves = ((0, 1), (1, 1), (1, 0), (1, -1), (0, -1), (-1, -1), (-1, 0), (-1, 1))
     for move in moves:
-        candidate = (position[0] + move[0], position[1] + move[1])
+        candidate = (int(position[0] + move[0]), int(position[1] + move[1]))
         try:
             if not field.isPassable(position[0], candidate[1])or\
                not field.isPassable(candidate[0], position[1]) or\
@@ -28,9 +29,11 @@ def aStar(field, source, destination, getNexts = aroundOf, getCost = distance, e
         引数、戻り値はbfsを参照
     '''
     source, destination = destination, source
+    source = (int(source[0]), int(source[1]))
+    destination = (int(destination[0]), int(destination[1]))
     queue = PriorityQueue(key = lambda state: state[2])
-    memo = [[_INF for j in i] for i in field]
-    route = [[None for j in i] for i in field]
+    memo = [[_INF for j in i] for i in field.fielddata]
+    route = [[None for j in i] for i in field.fielddata]
     queue.push((source, 0, 0 + distance(source, destination)))
     while not queue.empty():
         currentState = queue.pop()
@@ -38,13 +41,13 @@ def aStar(field, source, destination, getNexts = aroundOf, getCost = distance, e
         currentCost = currentState[1]
         currentEstimation = currentState[2]
         if currentPosition[0] == destination[0] and currentPosition[1] == destination[1]:
-            while currentPosition[0] != destination[0] or currentPosition[1] != destination[1]:
-                yield (currentPosition[0] * tileHeight, currentPosition[1] * tileWidth)
+            while currentPosition[0] != source[0] or currentPosition[1] != source[1]:
+                yield currentPosition[0]
                 currentPosition = route[currentPosition[0]][currentPosition[1]]
             return
-        if memo[currentPosition[0]][currentPosition[1]] < currentEstimation - _EPS:
+        if memo[int(currentPosition[0])][int(currentPosition[1])] < currentEstimation - _EPS:
             continue
-        for nextPosition in getNexts(currentState[0]):
+        for nextPosition in getNexts(field, currentState[0]):
             nextCost = currentCost + getCost(currentPosition, nextPosition)
             nextEstimation = nextCost + estimateFunction(nextPosition, destination)
             if memo[nextPosition[0]][nextPosition[1]] < nextEstimation + _EPS:

@@ -1,5 +1,5 @@
 # -*- coding: cp932 -*-
-from queue import Queue
+from . queue import Queue
 
 ''' unchecked '''
 

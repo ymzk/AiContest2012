@@ -1,11 +1,12 @@
 from math import sin, cos
-from aStar import aStar
-from smoothPath import smoothPath
+from . aStar import aStar
+from . smoothPath import smoothPath
+import sys
 
 EPS = 1e-6
 
 def index(field, position):
-    return (position[0] / field.cellWidth, position[1] / field.cellHeight)
+    return (position[0] / field.cellwidth, position[1] / field.cellheight)
 
 def addPP(a, b):
     return (a[0] + b[0], a[1] + b[1])
@@ -43,26 +44,43 @@ def unit(vector):
 
 def cost(path, position, direction):
     return min(distancePS(position, s) for s in path) -\
-           max(dotPP(getUnitVector(direction), unit(subPP(s[1], s[0])) for s in path))
+           max(dotPP(getUnitVector(direction), unit(subPP(s[1], s[0]))) for s in path)
 
 SPEED = 10
 ROLL_SPEED = 10
 
-def straight(position, direction):
-    return (addPP(position, mulNP(SPEED, getUnitVector(direction))), direction)
-def rollRight(position, direction):
-    direction -= ROLL_SPEED
-    return straight(position, direction)
-def rollLeft(position, direction):
-    direction += ROLL_SPEED
-    return straight(position, direction)
+def simurate(position, direction, speed, roll):
+  direction += roll
+  position = addPP(position, mulNP(speed, getUnitVector(direction)))
+  return position, direction
 
-candidates = [straight, rollRight, rollLeft]
+candidates = [(10, 0, 0), (10, 0.1, 0), (10, -0.1, 0)]
 
-def moveTo(self, field, target):
-    if (self.position, self.direction, target) == moveTo._lastArgument:
-        path = smoothPath(field, aStar(field, index(self.position), index(target)))
-        path = list(zip(path, path[1:]))
-        moveTo._lastArgument = (self.position, self.direction, target)
-    return min(candidate(position, direction) for candidate in candidates,
-               key = lambda a: cost(a))
+class MoveTo:
+  '''
+    座標で指定された位置へ移動する為の入力を生成するクラス。
+    コンストラクタに現在地と目的地を渡すとルートを検索し、
+    その結果を繰り返し使用して移動する。
+    このクラスの戻り値を無視して移動した後再びこのクラスを利用しようとすると、
+    元のルートに戻そうとするため、新しいオブジェクトを作った方がいいかもしれない。
+    但し、コンストラクタの計算が重いため、繰り返し計算すると速度低下の原因になる。
+    __init__(self, field, unit, target):
+      コンストラクタ。
+      fieldにはフィールド情報(Fieldのインスタンス)を、
+      unitには自機(Unitのインスタンス)を、
+      targetには２要素(x, y)のタプル(Unit.positionでも可)を渡す。
+    get(self, unit) :
+      次にするべき行動を(speed, direction, fire)のタプルで返すメソッド。
+      ※このクラスは移動するだけで、fireは常にFalseが返る。
+        攻撃したいなら戻り値を解析すること。
+      unitには自機(Unitのインスタンス)を渡す。
+  '''
+  def __init__(self, field, unit, target):
+    self.target = target
+    self.path = aStar(field, index(field, unit.position), index(field, target))
+    self.path = list(smoothPath(field, self.path))
+    self.path = [(t[0] * field.cellwidth, t[1] * field.cellheight) for t in zip(self.path, self.path[1:])]
+    print(self.path, file = sys.stderr)
+  def get(self, unit):
+    return min(candidates,
+               key = lambda candidate: cost(self.path, *simurate(unit.position, unit.direction, candidate[0], candidate[1])))

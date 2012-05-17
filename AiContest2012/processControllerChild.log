@@ -1,0 +1,20 @@
+start smoothPath
+start binarySearch
+Traceback (most recent call last):
+  File "MoveToTestAi.py", line 46, in <module>
+    MoveToTestAi().run()
+  File "MoveToTestAi.py", line 41, in run
+    move = MoveTo(self.field, self.myunit, self.bases[1].position)
+  File "C:\cygwin\home\tetsu\git\AiContest2012\AiContest2012\aiLibrary\moveTo.py", line 81, in __init__
+    self.path = list(smoothPath(field, self.path))
+  File "C:\cygwin\home\tetsu\git\AiContest2012\AiContest2012\aiLibrary\smoothPath.py", line 25, in smoothPath
+    lambda a: not checkPassable(field, path[i], path[a]))
+  File "C:\cygwin\home\tetsu\git\AiContest2012\AiContest2012\aiLibrary\smoothPath.py", line 9, in binarySearch
+    if func(c):
+  File "C:\cygwin\home\tetsu\git\AiContest2012\AiContest2012\aiLibrary\smoothPath.py", line 25, in <lambda>
+    lambda a: not checkPassable(field, path[i], path[a]))
+  File "C:\cygwin\home\tetsu\git\AiContest2012\AiContest2012\aiLibrary\checkPassable.py", line 4, in checkPassable
+    for position in getProcess(source, destination):
+  File "C:\cygwin\home\tetsu\git\AiContest2012\AiContest2012\aiLibrary\getProcess.py", line 6, in getProcess
+    diff = (destination[0] - source[0], destination[1] - source[1])
+TypeError: 'int' object is not subscriptable
