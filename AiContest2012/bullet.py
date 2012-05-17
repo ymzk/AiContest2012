@@ -32,9 +32,11 @@ class Bullet(GameObject):
     
   def encode(self):
     yield str(self.getTeamFlag())
-    yield str(self.getPosition())
+    yield str(self.getPosition().getX())
+    yield str(self.getPosition().getY())
     yield str(self.getDirection())
-    yield str(self._vector)
+    yield str(self._vector.getX())
+    yield str(self._vector.getY())
   
   def draw(self, screen, viewPoint):
     image = self.getImage().rotate(viewPoint.getDirection() - self.getDirection())

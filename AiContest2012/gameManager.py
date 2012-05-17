@@ -35,7 +35,7 @@ class GameManager(Runnable):
     super().__init__()
     #self.testInitialize()
     self.initialize(settingFileName)
-    time.sleep(1)
+    time.sleep(2)
   def defaultInitialize(self):
     self.specialUnit = GameObject(move = MoveByKeyAsUnit(velocity = 50))
     self.bullets = RunnableList()

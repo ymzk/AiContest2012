@@ -35,12 +35,12 @@ def processControllerCore(subprocess, sendQueue, recvQueue):
         sleep(0.001)
       while not sendQueue.empty():
         flag, sendMessage = sendQueue.pop()
-      # print('sendMessage: ' + str(sendMessage) + '\n', end = '')
+      #print('sendMessage: ' + str(sendMessage) + '\n', end = '')
       subprocess.stdin.write(str(sendMessage).encode())
       subprocess.stdin.write(b'\n')
       subprocess.stdin.flush()
       recvMessage = subprocess.stdout.readline().decode().strip()
-      # print('recvMessage: ' + str(recvMessage) + '\n', end = '')
+      #print('recvMessage: ' + str(recvMessage) + '\n', end = '')
       recvQueue.push(recvMessage)
 #  except:
 #    pass

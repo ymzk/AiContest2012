@@ -32,7 +32,8 @@ class Base(GameObject):
     yield self._hp
     #yield str(self._unitId)
     yield str(self._teamFlag)
-    yield str(self.getPosition())
+    yield str(self.getPosition().getX())
+    yield str(self.getPosition().getY())
     #yield str(self.getDirection())
   def draw(self, screen, viewPoint):
     image = self.getImage().rotate(viewPoint.getDirection() - self.getDirection())
