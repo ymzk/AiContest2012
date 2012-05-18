@@ -32,8 +32,8 @@ def aStar(field, source, destination, getNexts = aroundOf, getCost = distance, e
     source = (int(source[0]), int(source[1]))
     destination = (int(destination[0]), int(destination[1]))
     queue = PriorityQueue(key = lambda state: state[2])
-    memo = [[_INF for j in i] for i in field.fielddata]
-    route = [[None for j in i] for i in field.fielddata]
+    memo = [[_INF for j in i] for i in field.fieldData]
+    route = [[None for j in i] for i in field.fieldData]
     queue.push((source, 0, 0 + distance(source, destination)))
     while not queue.empty():
         currentState = queue.pop()

@@ -35,9 +35,13 @@ class MoveToTestAi(AiInterface):
 #    print('start MoveToTestAi.send', file = self.log)
     if self.move == None:
 #      self.log.log('start initialize move')
-      self.move = MoveTo(self.field, self.myunit, self.bases[1].position)
+      self.move = MoveTo(self.field, self.myunit, self.bases[1 - self.myunit.team].position)
 #      self.log.log('sccess initialize move')
     self.sendData(*self.move.get(self.field, self.myunit))
 #      self.sendData(speed = INF, angle = 0, fire = False)
 
-MoveToTestAi().run()
+if __name__ == "__main__":
+  ai = MoveToTestAi()
+  #ai.run(open("initMessage","r"),open("message","r"))
+  ai.run()
+

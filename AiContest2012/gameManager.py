@@ -30,7 +30,7 @@ class GameManager(Runnable):
   _BASE_RANGE = 20
   _ITEM_RANGE = 20
   _PUSH_STRENGTH = 0.5
-  _VISILITY = 100
+  _VISILITY = 400
   def __init__(self,settingFileName = "gameSettings"):
     super().__init__()
     #self.testInitialize()
@@ -50,15 +50,25 @@ class GameManager(Runnable):
     for team in (0,1):
       gen = self.field.getUnitPosition(team)
       for aiName,(point,direction) in zip(file.readline().split(),gen):
-        self.units.append(Unit(point,direction,self,team,len(self.units),AiManager(aiName)))
-    self.addDebugUnit(0)
+        if aiName == "debug":
+          unit = Unit(point,direction,self,team,len(self.units))
+          self.addDebugUnit(unit)
+          self.units.append(unit)
+          continue
+        elif aiName == "player":
+          unit = Unit(point,direction,self,team,len(self.units))
+          self.addDebugUnit(unit,3)
+          self.units.append(unit)
+          continue
+        else:
+          self.units.append(Unit(point,direction,self,team,len(self.units),AiManager(aiName)))
+    debugmode = file.readline()    
     for i in self.units:
       i.sendStartingMessage()
 
-  def addDebugUnit(self,team):
-    self.debugUnit = Unit(Coordinate(200,300),1,self,team,len(self.units))
-    self.debugUnit.setMove(MoveByKeyAsUnit(velocity = 10))
-    self.units.append(self.debugUnit)
+  def addDebugUnit(self,unit,velocity = 10):
+    self.debugUnit = unit
+    self.debugUnit.setMove(MoveByKeyAsUnit(velocity = velocity))
     self._viewPoint = self.debugUnit
         
   def writeEndMessage(self,unit,file):

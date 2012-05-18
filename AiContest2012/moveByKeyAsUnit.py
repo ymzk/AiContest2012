@@ -12,7 +12,7 @@ class MoveByKeyAsUnit(Move):
         if Manager.getKeyStatus(Manager.K_z):
             pass
         if Manager.getKeyStatus(Manager.K_LEFT):
-            direction -= 0.1
+            direction -= 0.2
         if Manager.getKeyStatus(Manager.K_RIGHT):
-            direction += 0.1
+            direction += 0.2
         return self, position, direction

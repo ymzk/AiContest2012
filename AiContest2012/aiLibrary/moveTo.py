@@ -8,7 +8,7 @@ import sys
 EPS = 1e-6
 
 def index(field, position):
-    return (position[0] / field.cellwidth, position[1] / field.cellheight)
+    return (position[0] / field.cellWidth, position[1] / field.cellHeight)
 
 def addPP(a, b):
     return (a[0] + b[0], a[1] + b[1])
@@ -95,7 +95,7 @@ class MoveTo:
     self.path = list(aStar(field, index(field, unit.position), index(field, target)))
     print(self.path, file = sys.stderr)
     sys.stderr.flush()
-    self.path = [(p[0] * field.cellwidth + field.cellwidth // 2, p[1] * field.cellheight + field.cellheight // 2) for p in smoothPath(field, self.path)]
+    self.path = [(p[0] * field.cellWidth + field.cellWidth // 2, p[1] * field.cellHeight + field.cellHeight // 2) for p in smoothPath(field, self.path)]
     print(self.path, file = sys.stderr)
     sys.stderr.flush()
     self.path = list(zip(self.path, self.path[1:]))

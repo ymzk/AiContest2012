@@ -72,7 +72,7 @@ class Item:
       string += " " + str(i)
     return string
 class Field:
-  def __init__(self, fielddata,myTeam):
+  def __init__(self, fieldData,myTeam):
     def getdata(cell):
       if cell == 'IH':
         return -2
@@ -91,27 +91,31 @@ class Field:
       elif cell == 'WA':
         return 5
     self.myTeam = myTeam
-    self.width = int(fielddata.pop(0))
-    self.height = int(fielddata.pop(0))
-    self.cellwidth = int(fielddata.pop(0))
-    self.cellheight = int(fielddata.pop(0))
-    self.fielddata = [[None for i in range(self.height)] for j in range(self.width)]
-    self.fieldstringdata = fielddata[:-1]
+    self.width = int(fieldData.pop(0))
+    self.height = int(fieldData.pop(0))
+    self.cellWidth = int(fieldData.pop(0))
+    self.cellHeight = int(fieldData.pop(0))
+    self.fieldData = [[None for i in range(self.height)] for j in range(self.width)]
+    self.fieldstringdata = fieldData[:-1]
     for h in range(self.height):
       for w in range(self.width):
-        self.fielddata[w][h] = getdata(fielddata.pop(0))
+        self.fieldData[w][h] = getdata(fieldData.pop(0))
   def isPassable(self, x, y, team = None):
-    if self.fielddata[x][y] <= 0:
+    if self.fieldData[x][y] <= 0:
       return True
     elif team == None:
       team = self.myTeam.team
-    return self.fielddata[x][y] == 1 + team
+    return self.fieldData[x][y] == 1 + team
+  def isPassableCheck(self, x, y, team = None):
+    if 0 <= x < self.width and 0 <= y < self.height:
+      return isPassable(x, y, team)
+    return False
   def __str__(self):
     def gen():
       yield self.width
       yield self.height
-      yield self.cellwidth
-      yield self.cellheight
+      yield self.cellWidth
+      yield self.cellHeight
       yield self.fieldstringdata
     string = "field"
     for i in gen():
@@ -128,6 +132,9 @@ class AiInterface:
     self.bullets = []
     self.items = []
     self.bases = []
+  def __sendLastData(self):
+    print(self.__data[0],self.__data[1],self.__data[2])
+    sys.stdout.flush()    
   def __receiveInit(self,file):
     data = file.readline().split()
     if data.pop(0) == "startInit":
@@ -196,12 +203,12 @@ class AiInterface:
       '''
   def run(self,initfile = sys.stdin,file = sys.stdin):
     self.__receiveInit(initfile)
-    hoge=0
     print(0,0,0)
     sys.stdout.flush()
     self.initCalculation()
     while self.__receive(file):
       self.send()
+      self.__sendLastData()
   def sendData(self, speed = 0, angle = 0, fireing = False):
     if speed > self.MAXSPEED:
       speed = self.MAXSPEED
@@ -213,13 +220,12 @@ class AiInterface:
     elif angle < -0.2:
       angle = -0.2
     self.log("angle",angle)
-    print(speed,angle,1 if fireing else 0)
-    sys.stdout.flush()
+    self.__data = (speed,angle,1 if fireing else 0)
   def log(self, *arg):
     print(*arg,file = self._logFile)
     self._logFile.flush()
   def regularizeMove(self, moveFrom, moveTo):
-    val = ((moveFrom[0] - moveTo[0]) ** 2 + (moveFrom[1] - moveTo[1]) ** 2) ** 0.5
+    val = (moveFrom[0] - moveTo[0]) + (moveFrom[1] - moveTo[1]) ** 0.5
     if val > self.MAXSPEED:
       return ((moveTo[i] - moveFrom[i])* self.MAXSPEED / val for i in (0,1))
   def regularizeAngle(self, angle):
@@ -228,5 +234,5 @@ class AiInterface:
     #はじめに何かしたいときはここに書く
     pass
   def send(self):
-    #次の動きを計算し、送信する
+    #次の動きを計算し、sendDataへ送信する
     pass

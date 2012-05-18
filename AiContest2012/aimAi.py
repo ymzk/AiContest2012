@@ -2,6 +2,7 @@ from aiInterface import AiInterface
 from math import atan2
 class AimAi(AiInterface):
   def send(self):
+    self.log(len(self.units))
     for i in self.units:
       if i.team == self.myunit.team:
         continue
