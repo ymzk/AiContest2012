@@ -32,6 +32,7 @@ class DefaultAiManager(Runnable):
 
   
 class AiManager(Runnable):
+  SPEED = 3
   def __init__(self, excutableName):
     super().__init__()
     self._processController = ProcessController(excutableName)
@@ -55,16 +56,16 @@ class AiManager(Runnable):
     self._direction = arg
   '''
   def getMove(self):
-    if self._move >10:
-      return 10
+    if self._move > self.SPEED:
+      return self.SPEED
     if self._move <0:
       return 0
     return self._move
   def getRotate(self):
-    if self._rotate > 0.3:
-      return 0.3
-    if self._rotate < -0.3:
-      return -0.3
+    if self._rotate > 0.2:
+      return 0.2
+    if self._rotate < -0.2:
+      return -0.2
     return self._rotate
   def getFiring(self):
     return self._fireingFlag

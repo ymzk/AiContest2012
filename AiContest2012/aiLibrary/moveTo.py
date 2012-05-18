@@ -1,6 +1,8 @@
 from math import sin, cos
 from . aStar import aStar
 from . smoothPath import smoothPath
+from . binarySearch import binarySearch
+from . checkPassable import checkPassable
 import sys
 
 EPS = 1e-6
@@ -16,6 +18,8 @@ def mulNP(n, p):
     return (n * p[0], n * p[1])
 def mulPN(p, n):
     return mulNP(n, p)
+def divPN(p, n):
+    return (p[0] / n, p[1] / n)
 def dotPP(a, b):
     return a[0] * b[0] + a[1] * b[1]
 def crossPP(a, b):
@@ -28,23 +32,34 @@ def distancePP(a, b):
     return absP(subPP(a, b))
 
 def distancePS(p, s):
-    if dotPP(subPP(s[1], s[0]), subPP(position, s[0])) < -EPS:
-        return distancePP(position, s[0])
-    elif dotPP(subPP(s[0], s[1]), subPP(position, s[1])) < -EPS:
-        return distancePP(position, s[1])
+    if dotPP(subPP(s[1], s[0]), subPP(p, s[0])) < EPS:
+        return distancePP(p, s[0])
+    elif dotPP(subPP(s[0], s[1]), subPP(p, s[1])) < EPS:
+        return distancePP(p, s[1])
     else:
-        return crossPP(subPP(s[1], s[0]), subPP(position, s[0])) / distancePP(s[0], s[1])
+        return abs(crossPP(subPP(s[1], s[0]), subPP(p, s[0]))) / distancePP(s[0], s[1])
 def distanceSP(s, p):
     return distancePS(p, s)
 
 def getUnitVector(direction):
     return (cos(direction), sin(direction))
 def unit(vector):
-    return vector / absP(vector)
+    return divPN(vector, absP(vector))
+def regularizeAngle(angle):
+  return (angle%(6.2831853)+3.14159265)%(6.2831853)-3.14159265
 
-def cost(path, position, direction):
-    return min(distancePS(position, s) for s in path) -\
-           max(dotPP(getUnitVector(direction), unit(subPP(s[1], s[0]))) for s in path)
+def cost(field, path, position, direction):
+#    result =  min(distancePS(position, s) ** 2 - dotPP(getUnitVector(direction), unit(subPP(s[1], position))) for s in path)
+    target = min((i for i in path), key = lambda s: distancePS(position, s) ** 2 - dotPP(getUnitVector(direction), unit(subPP(s[1], position))))
+    print(position, getUnitVector(direction), file = sys.stderr)
+    print(target, file = sys.stderr)
+    distance = distancePS(position, target)
+    alternation = dotPP(getUnitVector(direction), unit(subPP(target[1], position))) * 10
+    print('distance=', distance, 'alternation=', alternation, file = sys.stderr)
+    result = distance - alternation
+    print(result, file = sys.stderr)
+    sys.stderr.flush()
+    return result
 
 SPEED = 10
 ROLL_SPEED = 10
@@ -52,7 +67,7 @@ ROLL_SPEED = 10
 def simurate(position, direction, speed, roll):
   direction += roll
   position = addPP(position, mulNP(speed, getUnitVector(direction)))
-  return position, direction
+  return position, regularizeAngle(direction)
 
 candidates = [(10, 0, 0), (10, 0.1, 0), (10, -0.1, 0)]
 
@@ -77,10 +92,13 @@ class MoveTo:
   '''
   def __init__(self, field, unit, target):
     self.target = target
-    self.path = aStar(field, index(field, unit.position), index(field, target))
-    self.path = list(smoothPath(field, self.path))
-    self.path = [(t[0] * field.cellwidth, t[1] * field.cellheight) for t in zip(self.path, self.path[1:])]
+    self.path = list(aStar(field, index(field, unit.position), index(field, target)))
     print(self.path, file = sys.stderr)
-  def get(self, unit):
+    sys.stderr.flush()
+    self.path = [(p[0] * field.cellwidth + field.cellwidth // 2, p[1] * field.cellheight + field.cellheight // 2) for p in smoothPath(field, self.path)]
+    print(self.path, file = sys.stderr)
+    sys.stderr.flush()
+    self.path = list(zip(self.path, self.path[1:]))
+  def get(self, field, unit):
     return min(candidates,
-               key = lambda candidate: cost(self.path, *simurate(unit.position, unit.direction, candidate[0], candidate[1])))
+               key = lambda candidate: cost(field, self.path, *simurate(unit.position, unit.direction, candidate[0], candidate[1])))

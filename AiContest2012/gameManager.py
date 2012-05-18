@@ -1,7 +1,7 @@
 import time
 
 
-
+from getKeyEvent import GetKeyEvent
 from field import Field
 from unit import Unit
 from base import Base
@@ -28,35 +28,16 @@ class DamyRunnable(Runnable):
 class GameManager(Runnable):
   _UNIT_RANGE = 16
   _BASE_RANGE = 20
-  _ITEM_RANGE = 10
+  _ITEM_RANGE = 20
   _PUSH_STRENGTH = 0.5
   _VISILITY = 100
   def __init__(self,settingFileName = "gameSettings"):
     super().__init__()
     #self.testInitialize()
     self.initialize(settingFileName)
-    time.sleep(1)
-  '''
-  def testInitialize(self):
-    self.defaultInitialize()
-    #self.field.testInitialize()
-    self.field.loadField("map.data")
-    self.bases.append(Base(0,Coordinate(60,120),1))
-    self.bases.append(Base(1,Coordinate(100,120),0))
-
-    self.debugUnit = Unit(Coordinate(200,300),1,self,1)
-    self.debugUnit.setMove(MoveByKeyAsUnit(velocity = 10))
-    self.units.append(self.debugUnit)
-    self.units.append(Unit(Coordinate(200,200),1,self,0,len(self.units),AiManager("hoge.py")))
-    self.units.append(Unit(Coordinate(201,201),0,self,1,len(self.units),AiManager("hoge.py")))
-    self.units.append(Unit(Coordinate(302,302),1,self,0,len(self.units),AiManager("hoge.py")))
-    self.units.append(Unit(Coordinate(600,400),0,self,1,len(self.units),AiManager("hoge.py")))
-    self.units.append(Unit(Coordinate(601,401),1,self,0,len(self.units),AiManager("hoge.py")))
-    self.units.append(Unit(Coordinate(602,402),0,self,1,len(self.units),AiManager("testAi.py")))
-    for i in self.units:
-      i.sendStartingMessage()
-      '''
+    time.sleep(2)
   def defaultInitialize(self):
+    self.specialUnit = GameObject(move = MoveByKeyAsUnit(velocity = 50))
     self.bullets = RunnableList()
     self.units = RunnableList()
     self.items = RunnableList()
@@ -70,14 +51,15 @@ class GameManager(Runnable):
       gen = self.field.getUnitPosition(team)
       for aiName,(point,direction) in zip(file.readline().split(),gen):
         self.units.append(Unit(point,direction,self,team,len(self.units),AiManager(aiName)))
-    self.debugUnit = Unit(Coordinate(200,300),1,self,len(self.units),1)
-    self.debugUnit.setMove(MoveByKeyAsUnit(velocity = 10))
-    self.units.append(self.debugUnit)
+    self.addDebugUnit(0)
     for i in self.units:
       i.sendStartingMessage()
 
-    
-      
+  def addDebugUnit(self,team):
+    self.debugUnit = Unit(Coordinate(200,300),1,self,team,len(self.units))
+    self.debugUnit.setMove(MoveByKeyAsUnit(velocity = 10))
+    self.units.append(self.debugUnit)
+    self._viewPoint = self.debugUnit
         
   def writeEndMessage(self,unit,file):
     file.write("endGame")
@@ -86,6 +68,7 @@ class GameManager(Runnable):
     elif self._defeatTeam == 0:
       file.write("canceled this Game")
     else:
+      file.write("team ")
       file.write(self._defeatTeam)
       file.write(" win")
   def writeStartingMessage(self,unit,file):
@@ -148,6 +131,8 @@ class GameManager(Runnable):
         #baseはひとつだと仮定
         return i
   def step(self):
+    self.readKeyEvent()
+    self.specialUnit.step()
     self.field.step()
     self.units.step()
     #baseはunitの後
@@ -230,17 +215,16 @@ class GameManager(Runnable):
           self._defeatTeam |= 1<<jj
           break
     if flag:
-      for i in self.units:
-        self._defeatTeam = endval
       self.end()
   
   def draw(self, screan):
-    self._viewPoint = self.debugUnit
     self.field.draw(screan,self._viewPoint)
     self.bases.draw(screan, self._viewPoint)
     self.units.draw(screan, self._viewPoint)
     self.bullets.draw(screan, self._viewPoint)
     self.items.draw(screan, self._viewPoint)
+  def readKeyEvent(self):
+    self._viewPoint = GetKeyEvent(self._viewPoint, self.units, self.specialUnit)
   def end(self):
     for i in self.units:
       i.sendEndMessage()

@@ -10,9 +10,9 @@ def aroundOf(field, position):
     for move in moves:
         candidate = (int(position[0] + move[0]), int(position[1] + move[1]))
         try:
-            if not field.isPassable(position[0], candidate[1])or\
-               not field.isPassable(candidate[0], position[1]) or\
-               not field.isPassable(candidate[0], candidate[1]):
+            if not field.isPassable(position[1], candidate[0])or\
+               not field.isPassable(candidate[1], position[0]) or\
+               not field.isPassable(candidate[1], candidate[0]):
                 continue
             yield candidate
         except IndexError:
@@ -42,19 +42,19 @@ def aStar(field, source, destination, getNexts = aroundOf, getCost = distance, e
         currentEstimation = currentState[2]
         if currentPosition[0] == destination[0] and currentPosition[1] == destination[1]:
             while currentPosition[0] != source[0] or currentPosition[1] != source[1]:
-                yield currentPosition[0]
-                currentPosition = route[currentPosition[0]][currentPosition[1]]
+                yield currentPosition
+                currentPosition = route[currentPosition[1]][currentPosition[0]]
             return
-        if memo[int(currentPosition[0])][int(currentPosition[1])] < currentEstimation - _EPS:
+        if memo[currentPosition[1]][currentPosition[0]] < currentEstimation - _EPS:
             continue
         for nextPosition in getNexts(field, currentState[0]):
             nextCost = currentCost + getCost(currentPosition, nextPosition)
             nextEstimation = nextCost + estimateFunction(nextPosition, destination)
-            if memo[nextPosition[0]][nextPosition[1]] < nextEstimation + _EPS:
+            if memo[nextPosition[1]][nextPosition[0]] < nextEstimation + _EPS:
                 continue
             queue.push((nextPosition,
                         nextCost,
                         nextEstimation))
-            memo[nextPosition[0]][nextPosition[1]] = nextEstimation
-            route[nextPosition[0]][nextPosition[1]] = currentPosition
+            memo[nextPosition[1]][nextPosition[0]] = nextEstimation
+            route[nextPosition[1]][nextPosition[0]] = currentPosition
     raise RuntimeError('no path is found')

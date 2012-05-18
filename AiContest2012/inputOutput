@@ -1,0 +1,42 @@
+
+
+
+input::入力データは大きく3つに分かれます。
+initialize_data:
+  "startInit"
+  Unit_data
+  Field_data
+  "endInit"
+
+initialize_dataに現れるUnit_dataが自機のデータになります。
+
+main_data:
+  "start"
+  Bases_data
+  Units_data
+  Bullets_data
+  Items_data
+  "end"
+
+end_data:
+  "endGame"
+  "drawGame" or "canceled this Game" or "team 0 win" or "team 1 win"
+
+
+Units_data:
+  Unit_data
+  Unit_data
+    ...
+  Unit_data
+
+数は0個以上
+
+Unit_data:
+  hp
+  team
+  position
+  direction
+  attack
+  reload
+  unitId
+
