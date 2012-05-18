@@ -2,6 +2,15 @@
 
 
 input::入力データは大きく3つに分かれます。
+input:
+  initialize_data
+  main_data
+  main_data
+  ...
+  main_data
+  end_data
+
+
 initialize_data:
   "startInit"
   Unit_data
@@ -17,11 +26,11 @@ main_data:
   Bullets_data
   Items_data
   "end"
-
+  "\n"          (改行)
 end_data:
   "endGame"
   "drawGame" or "canceled this Game" or "team 0 win" or "team 1 win"
-
+  "\n"
 
 Units_data:
   Unit_data
@@ -32,11 +41,76 @@ Units_data:
 数は0個以上
 
 Unit_data:
-  hp
-  team
-  position
-  direction
-  attack
-  reload
-  unitId
+  hp          int型
+  team        int型 0,1のいずれかの値です。
+  position    位置
+  direction   float型 -pi < direction <= pi の値のはず。
+  attack      int型
+  reload      int型
+  unitId      int型  0以上の値
+
+Field_data:
+  width       フィールドの横のセルの数
+  height      フィールドの縦のセルの数
+  cellWidth   フィールドのセルの幅
+  cellHeight  フィールドのセルの高さ
+  cell        field[0][0]からfield[1][0] field[2][0]の順にfield[width-1][height-1]のデータまでが並ぶ。
+  cell        値は"NO" = 何もないセル
+  cell        値は"WA" = 壁のセル
+  cell        値は"B0" = teamが0のベースのあるセル
+  cell        値は"B1" =       1
+  cell        値は"O0" = teamが0のunitとbulletだけが入ることができるエリアです。
+  cell        値は"O1" =       1
+  cell        値は"IA" = attackアイテムのおいてあるセルです
+  cell        値は"IH" = hpアイテムの置いてあるセルです。
+   ...        cellはwidth*height個あります
+  cell
+
+
+
+Base_data:
+  hp          int型
+  team        int型 0,1のいずれかの値です。
+  position    位置
+  
+
+Bullet_data:
+  team        int型 0,1のいずれかの値です。
+  position    位置
+  direction   float型 -pi < direction <= pi の値のはず。
+  position    進む方向です
+
+Item_data:
+  position    位置
+  itemType    IH ⇒hpアイテムです IA ⇒attackアイテムです
+
+position:
+  x           float型です
+  y           float型です
+
+文字列の区切り文字はすべてスペースがひとつだけ入ります
+
+
+Outputについて
+
+inputのmain_dataのセット一組に対し次のoutputを表示してください
+
+output:
+  speed       進みたい速度を0.0 <= speed <= 3.0 の値で返してください
+  angle       回りたい角度を-0.2 <= angle <= 0.2　のあたいで返してください。
+  firing      弾を撃ちたいなら1 そうでないなら0をただひとつだけ出力してください
+
+sampleInput
+分量が多いので
+initialize_dataに相当するものとしてinitMessageというファイルがあります。
+main_dataに相当するものとしてmessageというファイルがあります。
+end_dataについては↓のような入力が着ます。(現在時々スレッドが先に死んでデータが来ないことも(泣))
+endGame drawGame
+
+sampleOutput
+速度3で動き、0.1分回転し、弾を撃つ場合次のように一行で出力
+3 0.1 1
+
+
+
 
