@@ -10,9 +10,9 @@ def aroundOf(field, position):
     for move in moves:
         candidate = (int(position[0] + move[0]), int(position[1] + move[1]))
         try:
-            if not field.isPassable(position[1], candidate[0])or\
-               not field.isPassable(candidate[1], position[0]) or\
-               not field.isPassable(candidate[1], candidate[0]):
+            if not field.isPassable(position[0], candidate[1])or\
+               not field.isPassable(candidate[0], position[1]) or\
+               not field.isPassable(candidate[0], candidate[1]):
                 continue
             yield candidate
         except IndexError:

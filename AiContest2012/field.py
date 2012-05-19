@@ -121,7 +121,7 @@ class Field(Runnable):
     serface.draw(image = image, position = -(image.getSize() - Manager.getScreenSize()) / 2)
 #    serface.draw(self._image)
   def loadField(self, filename):
-    def convert(token,team):
+    def convert(token):
       if token == 'NO':
         return NoneCell()
       elif token == 'WA':
@@ -155,7 +155,7 @@ class Field(Runnable):
     team = [0,1]
     for i, line in enumerate(self.lines):
       for j, token in enumerate(line):
-        self.setCell(j, i, convert(token,team[0]))
+        self.setCell(j, i, convert(token))
   def getUnitPosition(self, team):
     for i in self._unitPosition[team]:
       yield i
@@ -166,7 +166,7 @@ class Field(Runnable):
     yield self._cellHeight
     for h in range(self._fieldHeight):
       for w in range(self._fieldHeight):
-        yield self.lines[w][h]
+        yield self.lines[h][w]
     
 
 

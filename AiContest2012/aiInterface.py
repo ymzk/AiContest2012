@@ -72,7 +72,11 @@ class Item:
       string += " " + str(i)
     return string
 class Field:
+  def log(self, *arg):
+    print(*arg, file = self.logfile)
+    self.logfile.flush()
   def __init__(self, fieldData,myTeam):
+    self.logfile = open("Field.log","w")
     def getdata(cell):
       if cell == 'IH':
         return -2
@@ -101,11 +105,18 @@ class Field:
       for w in range(self.width):
         self.fieldData[w][h] = getdata(fieldData.pop(0))
   def isPassable(self, x, y, team = None):
-    if self.fieldData[x][y] <= 0:
+    if self.fieldData[int(x)][int(y)] <= 0:
       return True
     elif team == None:
       team = self.myTeam.team
-    return self.fieldData[x][y] == 1 + team
+    return self.fieldData[int(x)][int(y)] == 1 + team
+  def isPassableSub(self, x, y, team = None):
+    self.log(x,y,self.fieldData[int(x)][int(y)])
+    if self.fieldData[int(x)][int(y)] <= 0:
+      return True
+    elif team == None:
+      team = self.myTeam.team
+    return self.fieldData[int(x)][int(y)] == 1 + team
   def isPassableCheck(self, x, y, team = None):
     if 0 <= x < self.width and 0 <= y < self.height:
       return isPassable(x, y, team)
@@ -209,7 +220,7 @@ class AiInterface:
     while self.__receive(file):
       self.send()
       self.__sendLastData()
-  def sendData(self, speed = 0, angle = 0, fireing = False):
+  def sendData(self, speed = 0, angle = 0, firing = False):
     if speed > self.MAXSPEED:
       speed = self.MAXSPEED
     elif speed < 0:
@@ -220,10 +231,65 @@ class AiInterface:
     elif angle < -0.2:
       angle = -0.2
     self.log("angle",angle)
-    self.__data = (speed,angle,1 if fireing else 0)
+    self.__data = (speed,angle,1 if firing else 0)
   def log(self, *arg):
     print(*arg,file = self._logFile)
     self._logFile.flush()
+  def canShoot(self, fromPosition, toPosition):
+    def nextDelta(first,remain):
+      yield first
+      while True:
+        yield remain
+    dx = toPosition[0] - fromPosition[0]
+    dy = toPosition[1] - fromPosition[1]
+    if dx == dy == 0:
+      return True
+    if abs(dx) > abs(dy):
+      if dx > 0:
+        delta = nextDelta(dy / dx * (self.field.cellWidth - fromPosition[0] % self.field.cellWidth), dy / dx * self.field.cellWidth)
+        py = fromPosition[1]
+        for ix in range(int(fromPosition[0] // self.field.cellWidth), int(toPosition[0] // self.field.cellWidth)):
+          if not self.field.isPassable(ix, py //self.field.cellHeight):
+            return False
+          py += next(delta)
+          if not self.field.isPassable(ix, py // self.field.cellHeight):
+            return False
+        return True
+      else:
+        delta = nextDelta(- dy / dx * (fromPosition[0] % self.field.cellWidth), dy / dx * self.field.cellWidth)
+        py = fromPosition[1]
+        for ix in range(int(fromPosition[0] // self.field.cellWidth), int(toPosition[0] // self.field.cellWidth), -1):
+          if not self.field.isPassable(ix, py //self.field.cellHeight):
+            return False
+          py -= next(delta)
+          if not self.field.isPassable(ix, py // self.field.cellHeight):
+            return False
+        return True
+    else:
+      if dy > 0:
+        delta = nextDelta(dx / dy * (self.field.cellHeight - fromPosition[1] % self.field.cellHeight), dx / dy * self.field.Height)
+        px = fromPosition[0]
+        for iy in range(int(fromPosition[1] // self.field.cellHeight), int(toPosition[1] // self.field.cellHeight)):
+          if not self.field.isPassable(px // self.field.cellWidth, iy):
+            return False
+          px += next(delta)
+          if not self.field.isPassable(px // self.field.cellWidth, iy):
+            return False
+        return True
+      else:
+        delta = nextDelta( - dx / dy * (fromPosition[1] % self.field.cellHeight), dx / dy * self.field.cellHeight)
+        px = fromPosition[0]
+        for iy in range(int(fromPosition[1] // self.field.cellHeight), int(toPosition[1] // self.field.cellHeight), -1):
+          if not self.field.isPassable(px // self.field.cellWidth, iy):
+            return False
+          px -= next(delta)
+          if not self.field.isPassable(px // self.field.cellWidth, iy):
+            return False
+        return True
+      
+          
+          
+    
   def regularizeMove(self, moveFrom, moveTo):
     val = (moveFrom[0] - moveTo[0]) + (moveFrom[1] - moveTo[1]) ** 0.5
     if val > self.MAXSPEED:

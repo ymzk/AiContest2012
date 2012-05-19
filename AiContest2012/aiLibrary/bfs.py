@@ -8,7 +8,7 @@ def neighborsOf(field, position):
     for move in moves:
         candidate = (position[0] + move[0], position[1] + move[1])
         try:
-            if field.isPassable(candidate[0], candidate[1]):
+            if field.isPassable(candidate[1], candidate[0]):
                 continue
             yield candidate
         except IndexError:
