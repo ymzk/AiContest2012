@@ -1,16 +1,7 @@
+AiInterface.main -- a Action is required
 Traceback (most recent call last):
-  File "moveToTestAi.py", line 51, in <module>
+  File "collectItemAi.py", line 45, in <module>
     ai.run()
-  File "C:\cygwin\home\tetsu\git\AiContest2012\AiContest2012\aiInterface.py", line 254, in run
-    action = self.main()
-  File "moveToTestAi.py", line 43, in main
-    return self.moveTo(self.bases[self.getOpponentTeamId()].position)
-  File "C:\cygwin\home\tetsu\git\AiContest2012\AiContest2012\aiInterface.py", line 348, in moveTo
-    return Action(*self.__move.get(self.field, self.myunit))
-  File "C:\cygwin\home\tetsu\git\AiContest2012\AiContest2012\aiLibrary\moveTo.py", line 104, in get
-    key = lambda candidate: cost(field, self.path, *simurate(unit.position, unit.direction, candidate[0], candidate[1])))
-  File "C:\cygwin\home\tetsu\git\AiContest2012\AiContest2012\aiLibrary\moveTo.py", line 104, in <lambda>
-    key = lambda candidate: cost(field, self.path, *simurate(unit.position, unit.direction, candidate[0], candidate[1])))
-  File "C:\cygwin\home\tetsu\git\AiContest2012\AiContest2012\aiLibrary\moveTo.py", line 53, in cost
-    target = min((i for i in path), key = lambda s: distancePS(position, s) ** 2 - dotPP(getUnitVector(direction), unit(subPP(s[1], position))))
-ValueError: min() arg is an empty sequence
+  File "C:\cygwin\home\tetsu\git\AiContest2012\AiContest2012\aiInterface.py", line 250, in run
+    self.__sendData(*action)
+TypeError: __sendData() argument after * must be a sequence, not NotImplementedType

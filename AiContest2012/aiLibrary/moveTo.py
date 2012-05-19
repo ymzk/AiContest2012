@@ -5,6 +5,7 @@ from . binarySearch import binarySearch
 from . checkPassable import checkPassable
 import sys
 
+INF = float('inf')
 EPS = 1e-6
 
 def index(field, position):
@@ -49,12 +50,14 @@ def regularizeAngle(angle):
   return (angle%(6.2831853)+3.14159265)%(6.2831853)-3.14159265
 
 def cost(field, path, position, direction):
-#    result =  min(distancePS(position, s) ** 2 - dotPP(getUnitVector(direction), unit(subPP(s[1], position))) for s in path)
-    target = min((i for i in path), key = lambda s: distancePS(position, s) ** 2 - dotPP(getUnitVector(direction), unit(subPP(s[1], position))))
+#    result =  min(distancePS(position, s) - dotPP(getUnitVector(direction), 10 * unit(subPP(s[1], position))) for s in path)
+    if len(path) <= 0:
+        return INF
+    target = min((i for i in path), key = lambda s: distancePS(position, s) - 10 * dotPP(getUnitVector(direction), unit(subPP(s[1], position))))
 #    print(position, getUnitVector(direction), file = sys.stderr)
 #    print(target, file = sys.stderr)
     distance = distancePS(position, target)
-    alternation = dotPP(getUnitVector(direction), unit(subPP(target[1], position))) * 10
+    alternation = 10 * dotPP(getUnitVector(direction), unit(subPP(target[1], position)))
 #    print('distance=', distance, 'alternation=', alternation, file = sys.stderr)
     result = distance - alternation
 #    print(result, file = sys.stderr)

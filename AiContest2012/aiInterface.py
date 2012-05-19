@@ -139,13 +139,6 @@ class Field:
     elif team == None:
       team = self.myTeam.team
     return self.fieldData[int(x)][int(y)] == 1 + team
-  def isPassableSub(self, x, y, team = None):
-    self.log(x,y,self.fieldData[int(x)][int(y)])
-    if self.fieldData[int(x)][int(y)] <= 0:
-      return True
-    elif team == None:
-      team = self.myTeam.team
-    return self.fieldData[int(x)][int(y)] == 1 + team
   def isPassableCheck(self, x, y, team = None):
     if 0 <= x < self.width and 0 <= y < self.height:
       return isPassable(x, y, team)
@@ -266,10 +259,10 @@ class AiInterface:
       angle = 0.2
     elif angle < -0.2:
       angle = -0.2
-    self.log("angle",angle)
     self.__data = (speed,angle,1 if firing else 0)
-  def log(self, *arg):
-    print(*arg,file = self._logFile)
+  def log(self, *arg, **keys):
+    keys["file"] = self._logFile
+    print(*arg, **keys)
     self._logFile.flush()
   def canShoot(self, fromPosition, toPosition):
     def nextDelta(first,remain):
@@ -303,7 +296,7 @@ class AiInterface:
         return True
     else:
       if dy > 0:
-        delta = nextDelta(dx / dy * (self.field.cellHeight - fromPosition[1] % self.field.cellHeight), dx / dy * self.field.Height)
+        delta = nextDelta(dx / dy * (self.field.cellHeight - fromPosition[1] % self.field.cellHeight), dx / dy * self.field.cellHeight)
         px = fromPosition[0]
         for iy in range(int(fromPosition[1] // self.field.cellHeight), int(toPosition[1] // self.field.cellHeight)):
           if not self.field.isPassable(px // self.field.cellWidth, iy):
