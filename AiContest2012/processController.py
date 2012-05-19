@@ -54,15 +54,20 @@ def processControllerCore(subprocess, sendQueue, recvQueue):
 #def sender(stdin, sendQueue):
 
 class ProcessController():
+  logIds = {}
   def __init__(self, executableName):
     if executableName[-3:] == '.py':
       command = ["C:\\Python32\\python.exe",executableName]
+      logName = executableName[:-3]
     elif executableName[-4:] == '.exe':
       command = ["./" + executableName]
+      logName = exectableName[:-4]
     else:
       raise RuntimeError("ProcessController can\'t run this program " + executableName)
     # print(command)
-    self._childError = open('processControllerChild.log', 'w')
+    logId = ProcessController.logIds.get(logName, 0)
+    ProcessController.logIds[logName] = logId + 1
+    self._childError = open('log/' + logName + '(' + str(logId) + ').log', 'w')
     subprocess = Popen(command,
                        stdin = PIPE,
                        stdout = PIPE,

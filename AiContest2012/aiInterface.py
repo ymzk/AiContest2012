@@ -101,11 +101,11 @@ class Item:
       string += " " + str(i)
     return string
 class Field:
-  def log(self, *arg):
-    print(*arg, file = self.logfile)
-    self.logfile.flush()
+  # def log(self, *arg):
+  #   print(*arg, file = self.logfile)
+  #   self.logfile.flush()
   def __init__(self, fieldData,myTeam):
-    self.logfile = open("Field.log","w")
+    # self.logfile = open("Field.log","w")
     def getdata(cell):
       if cell == 'IH':
         return -2
@@ -159,7 +159,8 @@ class AiInterface:
   MAXSPEED = 3
   def __init__(self):
     self.__clear()
-    self._logFile = open(str(self.__class__.__name__) + ".log","w")
+    # self.__logFile = open(str(self.__class__.__name__) + ".log","w")
+    self.__logFile = sys.stderr
   def __clear(self):
     self.units = []
     self.bullets = []
@@ -185,20 +186,21 @@ class AiInterface:
         elif top == "field":
           self.field = Field(data, self.myunit)
         else:
-          self.log("miss to read init")
-          self.log("message=", top, data)
+          # self.log("miss to read init")
+          # self.log("message=", top, data)
+          pass
     else:
       assert False,"init err"
   def __receive(self,file):
     data = file.readline().split()
     self.__clear()
     if len(data) == 0:
-      self.log("missed to read:null data")
+      # self.log("missed to read:null data")
       return True
     #self.log("rawdata=", data)
     top = data.pop(0)
     if top == "endGame":
-      self.log("endGame")
+      # self.log("endGame")
       return False
     if top == "start":
       while True:
@@ -220,11 +222,12 @@ class AiInterface:
         elif top == "base":
           self.bases.append(Base(data))
         else:
-          self.log("miss to read identify")
-          self.log("message=top:", top," data=", data)
+          # self.log("miss to read identify")
+          # self.log("message=top:", top," data=", data)
+          pass
       return True
-    self.log("miss to read start")
-    self.log("message=", top,"data=", data)
+    # self.log("miss to read start")
+    # self.log("message=", top,"data=", data)
     return True
     '''
       for i in self.units:
@@ -261,9 +264,9 @@ class AiInterface:
       angle = -0.2
     self.__data = (speed,angle,1 if firing else 0)
   def log(self, *arg, **keys):
-    keys["file"] = self._logFile
+    keys["file"] = self.__logFile
     print(*arg, **keys)
-    self._logFile.flush()
+    self.__logFile.flush()
   def canShoot(self, fromPosition, toPosition):
     def nextDelta(first,remain):
       yield first
