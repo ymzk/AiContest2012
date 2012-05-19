@@ -1,10 +1,35 @@
 import sys
 import time
+import gameConfig
+from aiLibrary.moveTo import MoveTo
 
-class Coordinate(list):
-  def __init__(self,data):
-    self.append(float(data.pop(0)[:-1]))
-    self.append(float(data.pop(0)))
+class Action(tuple):
+  def __new__(cls, speed, rollAngle, firing):
+    return tuple.__new__(cls, (speed, rollAngle, 1 if firing else 0))
+  def __init__(self, speed, rollAngle, firing):
+    tuple.__init__(self, (speed, rollAngle, 1 if firing else 0))
+  def getattr(self, name):
+    if name == 'speed':
+      return self[0]
+    elif name == 'rollAngle':
+      return self[1]
+    elif name == 'firing':
+      return self[2]
+    else:
+      raise AttributeError('\'Action\' has no attribute %s' % repr(name))
+  def setattr(self, name, value):
+    raise TypeError('\'Action\' object does not support attribute assignment')
+
+class Coordinate(tuple):
+  def __new__(cls, data):
+    return tuple.__new__(cls, (float(data[0][:-1]), float(data[1])))
+  def __init__(self, data):
+    tuple.__init__(self, (float(data[0][-1]), float(data[1])))
+    data.pop(0)
+    data.pop(0)
+#  def __init__(self,data):
+#    self.append(float(data.pop(0)[:-1]))
+#    self.append(float(data.pop(0)))
 class Unit:
   def __init__(self, data):
     self.hp = float(data.pop(0))
@@ -29,6 +54,10 @@ class Unit:
     return string
   def isSameUnit(self,unit):
     return self.unitId == unit.unitId
+  def __eq__(self, other):
+    return self.isSameUnit(other)
+  def isFirable(self):
+    return self.reload <= 0
 class Bullet:
   def __init__(self, data):
     self.team = float(data.pop(0))
@@ -143,6 +172,10 @@ class AiInterface:
     self.bullets = []
     self.items = []
     self.bases = []
+
+    # for moveTo
+    self.__move = None
+    self.__lastTarget = None
   def __sendLastData(self):
     print(self.__data[0],self.__data[1],self.__data[2])
     sys.stdout.flush()    
@@ -218,9 +251,12 @@ class AiInterface:
     sys.stdout.flush()
     self.initCalculation()
     while self.__receive(file):
-      self.send()
+      action = self.main()
+      if not isinstance(action, tuple):
+        print('AiInterface.main -- a Action is required', file = sys.stderr)
+      self.__sendData(*action)
       self.__sendLastData()
-  def sendData(self, speed = 0, angle = 0, firing = False):
+  def __sendData(self, speed = 0, angle = 0, firing = False):
     if speed > self.MAXSPEED:
       speed = self.MAXSPEED
     elif speed < 0:
@@ -291,14 +327,54 @@ class AiInterface:
           
     
   def regularizeMove(self, moveFrom, moveTo):
-    val = (moveFrom[0] - moveTo[0]) + (moveFrom[1] - moveTo[1]) ** 0.5
+    val = ((moveFrom[0] - moveTo[0]) ** 2 + (moveFrom[1] - moveTo[1]) ** 2) ** 0.5
     if val > self.MAXSPEED:
-      return ((moveTo[i] - moveFrom[i])* self.MAXSPEED / val for i in (0,1))
+      return tuple((moveTo[i] - moveFrom[i])* self.MAXSPEED / val for i in (0,1))
   def regularizeAngle(self, angle):
     return (angle%(6.2831853)+3.14159265)%(6.2831853)-3.14159265
   def initCalculation(self):
     #はじめに何かしたいときはここに書く
     pass
-  def send(self):
-    #次の動きを計算し、sendDataへ送信する
-    pass
+#  def send(self):
+#    #次の動きを計算し、sendDataへ送信する
+#    pass
+  def main(self):
+    #次の動きを計算し、Actionとして返す
+    return NotImplemented
+  def moveTo(self, target):
+    if target != self.__lastTarget:
+      self.__move = MoveTo(self.field, self.myunit, target)
+      self.__lastTarget = target
+    return Action(*self.__move.get(self.field, self.myunit))
+  def getAllyTeamId(self):
+    return self.myunit.team
+  def getOpponentTeamId(self):
+    return 1 - self.myunit.team
+  def simulate(self, action):
+    # self.myunitがactionの通りに移動した未来を返すメソッド。
+    # 壁は貫通します
+    if action.speed > self.MAXSPEED:
+      speed = self.MAXSPEED
+    elif action.speed < 0:
+      speed = 0
+    else:
+      speed = action.speed
+    rollAngle = self.regularizeAngle(action.rollAngle)
+    if rollAngle > 0.2:
+      rollAngle = 0.2
+    elif rollAngle < -0.2:
+      rollAngle = -0.2
+    result = object.__new__(Unit)
+    result.hp = self.myunit.hp
+    result.team = self.getAllyTeamId()
+    result.direction = self.myunit.direction + rollAngle
+    result.position = (self.myunit.position[0] + speed * cos(angle),
+                       self.myunit.position[1] + speed * sin(angle))
+    result.attack = self.myunit.attack
+    result.reload = self.myunit.reload
+    result.unitId = self.myunit.unitId
+    if result.reload > 0:
+      result.reload -= 1
+    if result.isFirable():
+      result.reload = gameConfig.UNIT_TIME_NEXT_FIRING
+    return result

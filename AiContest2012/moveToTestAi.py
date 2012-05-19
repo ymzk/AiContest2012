@@ -1,6 +1,7 @@
 from aiLibrary.moveTo import MoveTo
-from aiInterface import AiInterface
+from aiInterface import AiInterface, Action
 import sys
+import time
 
 INF = float('inf')
 '''
@@ -28,17 +29,21 @@ class MoveToTestAi(AiInterface):
   def __init__(self):
     AiInterface.__init__(self)
     self.move = None
+#    self.count = 0
+#    self.last = int(time.time()) + 1
 #    self.log = Log('moveToTest')
-  def send(self):
-    print(self.myunit.position, file = sys.stderr)
-    sys.stderr.flush()
-#    print('start MoveToTestAi.send', file = self.log)
-    if self.move == None:
-#      self.log.log('start initialize move')
-      self.move = MoveTo(self.field, self.myunit, self.bases[1 - self.myunit.team].position)
-#      self.log.log('sccess initialize move')
-    self.sendData(*self.move.get(self.field, self.myunit))
-#      self.sendData(speed = INF, angle = 0, fire = False)
+  def main(self):
+#    if time.time() > self.last:
+#      print(self.count, file = sys.stderr)
+#      self.count = 0
+#      self.last = int(time.time()) + 1
+#    self.count += 1
+#    print(self.myunit.position, file = sys.stderr)
+#    sys.stderr.flush()
+    return self.moveTo(self.bases[self.getOpponentTeamId()].position)
+#    if self.move == None:
+#      self.move = MoveTo(self.field, self.myunit, self.bases[1 - self.myunit.team].position)
+#    return Action(*self.move.get(self.field, self.myunit))
 
 if __name__ == "__main__":
   ai = MoveToTestAi()

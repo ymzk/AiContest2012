@@ -51,14 +51,14 @@ def regularizeAngle(angle):
 def cost(field, path, position, direction):
 #    result =  min(distancePS(position, s) ** 2 - dotPP(getUnitVector(direction), unit(subPP(s[1], position))) for s in path)
     target = min((i for i in path), key = lambda s: distancePS(position, s) ** 2 - dotPP(getUnitVector(direction), unit(subPP(s[1], position))))
-    print(position, getUnitVector(direction), file = sys.stderr)
-    print(target, file = sys.stderr)
+#    print(position, getUnitVector(direction), file = sys.stderr)
+#    print(target, file = sys.stderr)
     distance = distancePS(position, target)
     alternation = dotPP(getUnitVector(direction), unit(subPP(target[1], position))) * 10
-    print('distance=', distance, 'alternation=', alternation, file = sys.stderr)
+#    print('distance=', distance, 'alternation=', alternation, file = sys.stderr)
     result = distance - alternation
-    print(result, file = sys.stderr)
-    sys.stderr.flush()
+#    print(result, file = sys.stderr)
+#    sys.stderr.flush()
     return result
 
 SPEED = 10
@@ -84,7 +84,7 @@ class MoveTo:
       fieldにはフィールド情報(Fieldのインスタンス)を、
       unitには自機(Unitのインスタンス)を、
       targetには２要素(x, y)のタプル(Unit.positionでも可)を渡す。
-    get(self, unit) :
+    get(self, field, unit):
       次にするべき行動を(speed, direction, fire)のタプルで返すメソッド。
       ※このクラスは移動するだけで、fireは常にFalseが返る。
         攻撃したいなら戻り値を解析すること。
@@ -93,11 +93,11 @@ class MoveTo:
   def __init__(self, field, unit, target):
     self.target = target
     self.path = list(aStar(field, index(field, unit.position), index(field, target)))
-    print(self.path, file = sys.stderr)
-    sys.stderr.flush()
+#    print(self.path, file = sys.stderr)
+#    sys.stderr.flush()
     self.path = [(p[0] * field.cellWidth + field.cellWidth // 2, p[1] * field.cellHeight + field.cellHeight // 2) for p in smoothPath(field, self.path)]
-    print(self.path, file = sys.stderr)
-    sys.stderr.flush()
+#    print(self.path, file = sys.stderr)
+#    sys.stderr.flush()
     self.path = list(zip(self.path, self.path[1:]))
   def get(self, field, unit):
     return min(candidates,

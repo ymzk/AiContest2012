@@ -4,6 +4,7 @@ from ymzkgame.gameObject import GameObject
 from ymzkgame.coordinate import Coordinate
 from aiManager import *
 from bullet import Bullet
+import gameConfig
 # circurated reference
 # import gameManager
 class Unit(GameObject):
@@ -27,10 +28,10 @@ class Unit(GameObject):
   def initialize(self):
     self.setPosition(self._startingPoint)
     self.setDirection(self._startingDirection)
-    self._timeNextFireing = 5
+    self._timeNextFireing = gameConfig.UNIT_TIME_NEXT_FIRING
     self._term = 0
-    self._hp = 60
-    self._attackPower = 5
+    self._hp = gameConfig.UNIT_DEFAULT_HP
+    self._attackPower = gameConfig.UNIT_DEFAULT_ATTACK_POWER
   def sendEndMessage(self):
     self._aiManager.sendEndMessage(self,self._gameManager)
   def sendStartingMessage(self):
@@ -78,8 +79,8 @@ class Unit(GameObject):
     # print(d)
     
     # print(self.getPosition(),Coordinate(cos(d), sin(d)),self._aiManager.getMove())
-    import sys
-    sys.stdout.flush()
+    #import sys
+    #sys.stdout.flush()
     self.setPosition(self.getPosition() + Coordinate(cos(d), sin(d)) * self._aiManager.getMove())
     self.setDirection(d + self._aiManager.getRotate())
   def step(self):
