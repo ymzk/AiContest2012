@@ -5,7 +5,7 @@ from ymzkgame.manager import Manager
 from draw import draw
 class Bullet(GameObject):
   def __init__(self,unit):
-    super().__init__(image = "bullet.bmp",position = unit.getPosition(), direction = unit.getDirection())
+    super().__init__(image = r"graphic/bullet.bmp",position = unit.getPosition(), direction = unit.getDirection())
     self._master = unit
     self._vector = 20 * Coordinate(cos(unit.getDirection()),sin(unit.getDirection()))
     self._attackPower = unit.getAttackPower()

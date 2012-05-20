@@ -1,6 +1,5 @@
 import time
 
-
 from getKeyEvent import GetKeyEvent
 from field import Field
 from unit import Unit
@@ -31,7 +30,7 @@ class GameManager(Runnable):
   _ITEM_RANGE = 20
   _PUSH_STRENGTH = 0.5
   _VISILITY = 400
-  def __init__(self,settingFileName = "gameSettings"):
+  def __init__(self,settingFileName = r"gameSetting/gameSettings.conf"):
     super().__init__()
     #self.testInitialize()
     self.initialize(settingFileName)

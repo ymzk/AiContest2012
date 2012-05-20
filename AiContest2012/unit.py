@@ -11,7 +11,7 @@ from draw import draw
 class Unit(GameObject):
   _SPEED = 3
   def __init__(self, position, direction, gameManager, teamFlag,unitId , aiManager = DefaultAiManager()):
-    super().__init__(position = position, direction = direction, image = "unit.bmp")
+    super().__init__(position = position, direction = direction, image = "graphics/unit.bmp")
     self._unitId = unitId
     self._startingPoint = position
     self._startingDirection = direction

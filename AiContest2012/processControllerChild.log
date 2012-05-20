@@ -1,7 +1,0 @@
-AiInterface.main -- a Action is required
-Traceback (most recent call last):
-  File "collectItemAi.py", line 45, in <module>
-    ai.run()
-  File "C:\cygwin\home\tetsu\git\AiContest2012\AiContest2012\aiInterface.py", line 250, in run
-    self.__sendData(*action)
-TypeError: __sendData() argument after * must be a sequence, not NotImplementedType

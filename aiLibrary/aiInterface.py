@@ -1,7 +1,7 @@
 import sys
 import time
 import gameConfig
-from aiLibrary.moveTo import MoveTo
+from . moveTo import MoveTo
 
 class Action(tuple):
   def __new__(cls, speed = 0, rollAngle = 0, firing = False):

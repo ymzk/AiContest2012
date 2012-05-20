@@ -3,7 +3,7 @@ from ymzkgame.coordinate import Coordinate
 from ymzkgame.manager import Manager
 from draw import draw
 class Item(GameObject):
-  def __init__(self, position = Coordinate(0,0), image = "item.bmp",time = 60):
+  def __init__(self, position = Coordinate(0,0), image = "graphics/item.bmp",time = 60):
     super().__init__(image = image)
     self._nextTime = time
     self.setPosition(position)
@@ -37,13 +37,13 @@ class Item(GameObject):
     self._remainingTime -= 1
 class HpItem(Item):
   def __init__(self, position = Coordinate(0,0)):
-    super().__init__(position,image = "hpItem.bmp");
+    super().__init__(position,image = "graphics/hpItem.bmp");
     self._power = 30
   def effect(self, unit):
     if self.checkAvailable():
       super().effect(unit)
       unit.setHp(unit.getHp() + self._power)
-      print("inclease hp",unit.getHp())
+      #print("inclease hp",unit.getHp())
   def getItemType(self):
     return "IH"
     '''
@@ -52,13 +52,13 @@ class HpItem(Item):
     '''
 class AttackItem(Item):
   def __init__(self, position = Coordinate(0,0)):
-    super().__init__(position,image = "attackItem.bmp")
+    super().__init__(position,image = "graphics/attackItem.bmp")
     self._power = 1
   def effect(self, unit):
     if self.checkAvailable():
       super().effect(unit)
       unit.setAttackPower((unit.getAttackPower() + self._power))
-      print("inclease attack",unit.getAttackPower())
+      #print("inclease attack",unit.getAttackPower())
   def getItemType(self):
     return "IA"
   def clone(self):
