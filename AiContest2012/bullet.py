@@ -2,6 +2,7 @@ from math import *
 from ymzkgame.gameObject import GameObject
 from ymzkgame.coordinate import Coordinate
 from ymzkgame.manager import Manager
+from draw import draw
 class Bullet(GameObject):
   def __init__(self,unit):
     super().__init__(image = "bullet.bmp",position = unit.getPosition(), direction = unit.getDirection())
@@ -39,6 +40,9 @@ class Bullet(GameObject):
     yield str(self._vector.getY())
   
   def draw(self, screen, viewPoint):
+    draw(screen, self.getImage(), self.getPosition(), self.getDirection(),
+                                  viewPoint.getPosition(), viewPoint.getDirection())
+    '''
     image = self.getImage().rotate(viewPoint.getDirection() - self.getDirection())
     screen.draw(image = image,
                 position = (self.getPosition() -
@@ -46,3 +50,4 @@ class Bullet(GameObject):
                             ).rotate(-viewPoint.getDirection()) -
                             image.getSize() / 2 +
                             Manager.getScreenSize() / 2)
+    '''

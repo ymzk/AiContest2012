@@ -1,6 +1,7 @@
 from ymzkgame.gameObject import GameObject
 from ymzkgame.coordinate import Coordinate
 from ymzkgame.manager import Manager
+from draw import draw
 class Base(GameObject):
   MAX_HP, RECOVER_INTERVAL = 600, 60
   def __init__(self, teamFlag, position = Coordinate(0,0), direction = 0):
@@ -36,6 +37,9 @@ class Base(GameObject):
     yield str(self.getPosition().getY())
     #yield str(self.getDirection())
   def draw(self, screen, viewPoint):
+    draw(screen, self.getImage(), self.getPosition(), self.getDirection(),
+                                  viewPoint.getPosition(), viewPoint.getDirection())
+    '''
     image = self.getImage().rotate(viewPoint.getDirection() - self.getDirection())
     screen.draw(image = image,
                 position = (self.getPosition() -
@@ -43,4 +47,4 @@ class Base(GameObject):
                             ).rotate(-viewPoint.getDirection()) -
                             image.getSize() / 2 +
                             Manager.getScreenSize() / 2)
-
+    '''

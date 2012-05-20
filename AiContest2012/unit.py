@@ -5,6 +5,7 @@ from ymzkgame.coordinate import Coordinate
 from aiManager import *
 from bullet import Bullet
 import gameConfig
+from draw import draw
 # circurated reference
 # import gameManager
 class Unit(GameObject):
@@ -104,6 +105,9 @@ class Unit(GameObject):
     yield str(self._unitId)
 
   def draw(self, screen, viewPoint):
+    draw(screen, self.getImage(), self.getPosition(), self.getDirection(),
+                                  viewPoint.getPosition(), viewPoint.getDirection())
+    '''
     image = self.getImage().rotate(viewPoint.getDirection() - self.getDirection())
     screen.draw(image = image,
                 position = (self.getPosition() -
@@ -111,6 +115,4 @@ class Unit(GameObject):
                             ).rotate(-viewPoint.getDirection()) -
                             image.getSize() / 2 +
                             Manager.getScreenSize() / 2)
-
-
-
+    '''

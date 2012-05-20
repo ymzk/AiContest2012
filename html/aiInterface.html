@@ -1,0 +1,40 @@
+<html>
+ <head>
+  <title>AiContest2012について/reference/AiInterface</title>
+ </head>
+ <body>
+  <h1>aiInterface.AiInterface</h1>
+  このゲームで使用するAIの実装を補助する為の様々なメソッドを実装したクラスです。<br>
+  このクラスには大きく分けて二つの機能があります。<br>
+  <br>
+  一つは入出力の管理です。<br>
+  煩雑な入出力の整形を引き受けてくれます。<br>
+  <br>
+  もう一つはAI向けの便利ツール集としての機能です。<br>
+  メソッドとして様々な便利ツールが実装されているので、有効に活用すれば比較的楽にAIが実装できます。<br>
+  <br>
+  <h2>入出力の管理に使用するメソッド</h2>
+  <h3>AiInterface.__init__(self)</h3>
+  コンストラクタです。<br>
+  AiInterfaceを継承したすべてのサブクラスは、__init__をオーバーライドするならその中でAiInterfaceの__init__を呼ばなくてはなりません。<br>
+  <h3>AiInterface.run(self, initfile = sys.stdin, file = sys.stdin)</h3>
+  このメソッドを呼ぶと、AIが実行されます。<br>
+  オーバーライドしないでください。<br>
+  <h3>AiInterface.main(self)</h3>
+  このメソッドをオーバーライドし、AIのメインルーチンを記述します。<br>
+  戻り値はaiInterface.Actionのインスタンスであることが期待されます。<br>
+  戻り値の値が出力として利用されます。<br>
+  <h3>AiInterface.log(self, *args, **keys)</h3>
+  args、keysの内容はprint関数に従います。<br>
+  args、keysをほぼそのままprint関数に渡して、標準エラー出力に出力します。<br>
+  (標準エラー出力はAiContest2012/log/以下にログとして出力されます。)<br>
+  <h2>入力を記憶するメンバ</h2>
+  <h3>AiInterface.units</h3>
+  <a href="">Unit</a>のリストです。<br>
+  すべての味方、及び視界内の敵のユニットの情報が入っています。<br>
+  <h3>AiInterface.bullets</h3>
+  <a href="">Bullet</a>のリストです。<br>
+  <h3>AiInterface.items</h3>
+  <h3>AiInterface.bases</h3>
+ </body>
+</html>

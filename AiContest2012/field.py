@@ -107,6 +107,7 @@ class Field(Runnable):
       for cell in i:
         cell.draw(self._image)
   def draw(self,serface,viewPoint):
+    PI = 3.14159265
     '''
     for i in self._fieldData:
       for cell in i:
@@ -117,7 +118,7 @@ class Field(Runnable):
       self._modified = False
     maxLength = abs(Manager.getScreenSize())
     areaSize = Coordinate(maxLength, maxLength)
-    image = self._image.getSubImage(viewPoint.getPosition() - areaSize / 2, areaSize).rotate(viewPoint.getDirection())
+    image = self._image.getSubImage(viewPoint.getPosition() - areaSize / 2, areaSize).rotate(viewPoint.getDirection() + PI / 2)
     serface.draw(image = image, position = -(image.getSize() - Manager.getScreenSize()) / 2)
 #    serface.draw(self._image)
   def loadField(self, filename):

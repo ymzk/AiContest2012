@@ -4,9 +4,9 @@ import gameConfig
 from aiLibrary.moveTo import MoveTo
 
 class Action(tuple):
-  def __new__(cls, speed, rollAngle, firing):
+  def __new__(cls, speed = 0, rollAngle = 0, firing = False):
     return tuple.__new__(cls, (speed, rollAngle, 1 if firing else 0))
-  def __init__(self, speed, rollAngle, firing):
+  def __init__(self, speed = 0, rollAngle = 0, firing = 0):
     tuple.__init__(self, (speed, rollAngle, 1 if firing else 0))
   def getattr(self, name):
     if name == 'speed':
@@ -250,7 +250,10 @@ class AiInterface:
       action = self.main()
       if not isinstance(action, tuple):
         print('AiInterface.main -- a Action is required', file = sys.stderr)
-      self.__sendData(*action)
+      if action == None:
+        self.__sendData(0, 0, 0)
+      else:
+        self.__sendData(*action)
       self.__sendLastData()
   def __sendData(self, speed = 0, angle = 0, firing = False):
     if speed > self.MAXSPEED:
