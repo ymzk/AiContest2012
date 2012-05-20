@@ -1,9 +1,7 @@
 # coding: cp932
 import sys
 import os
-print(os.getcwd(), file = sys.stderr)
-print(os.path.abspath(''), file = sys.stderr)
-sys.path.append(os.path.abspath('..'))
+print(sys.path)
 from aiLibrary.moveTo import MoveTo
 from aiLibrary.aiInterface import AiInterface, Action
 from math import atan2

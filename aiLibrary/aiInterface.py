@@ -1,7 +1,8 @@
 # coding: cp932
 import sys
+print(sys.path)
 import time
-import gameConfig
+from config import gameConfig
 from . moveTo import MoveTo
 from . checkPassable import checkPassable
 from . index import index

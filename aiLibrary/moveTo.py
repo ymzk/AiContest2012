@@ -1,11 +1,12 @@
 # coding: cp932
+import sys
 from math import sin, cos
 from . aStar import aStar
 from . smoothPath import smoothPath
 from . binarySearch import binarySearch
 from . checkPassable import checkPassable
+print('hoge', file = sys.stderr)
 from . index import index
-import sys
 
 INF = float('inf')
 EPS = 1e-6
