@@ -1,4 +1,4 @@
-
+# coding: cp932
 from item import *
 
 import pygame
@@ -42,7 +42,7 @@ class Field(Runnable):
       y = int(runnableObject.getPosition().getY() / self._cellHeight)
       self._fieldData[x][y].effect(runnableObject)
       return
-    #場外に出たので消滅
+    #��O�ɏo���̂ŏ���
     runnableObject.end()
   def addRunnableCell(self,cell):
     pass
@@ -76,16 +76,16 @@ class Field(Runnable):
   def changeIndexToPosition(self,point):
     return Coordinate(point.getX() * self._cellWidth, point.getY() * self._cellHeight)
   def getVectorFromNearestPoint(self, x, y):
-    #近隣点からのベクトルを返す
+    #�ߗד_����̃x�N�g����Ԃ�
     if abs(x) <= self._cellWidth / 2:
       if abs(y) <= self._cellHeight / 2:
-        #pointがこのcell内部
+        #point������cell����
         if x > y:
           flag = 1 if x > 0 else -1
           return Coordinate(x - flag * self._cellWidth / 2, 0)
         flag = 1 if y > 0 else -1
         return Coordinate(0, y - flag * self._cellHeight / 2)
-      #最寄点はy軸方向への推薦の足
+      #�Ŋ�_��y�������ւ̐��E�̑�
       flag = 1 if y > 0 else -1
       return Coordinate(0, y - flag * self._cellHeight / 2)
     if abs(y) <= self._cellHeight / 2:

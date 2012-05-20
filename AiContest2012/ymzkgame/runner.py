@@ -49,9 +49,7 @@ class Runner:
       while self.step():
         for event in pygame.event.get():
           if event.type == pygame.QUIT:
-            for scene in self.__scenes[::-1]:
-              scene.end()
-            print(self.__scenes)
+            return
           elif event.type == pygame.KEYDOWN:
             KeyData.setKeyStatus(event.key, True)
           elif event.type == pygame.KEYUP:
@@ -61,6 +59,8 @@ class Runner:
         pygame.display.flip()
         clock.tick(self.__fps)
     finally:
+      for scene in self.__scenes[::-1]:
+        scene.end()
       pygame.quit()
 
 def run(firstScene, title = defaults.DEFAULT_TITLE,

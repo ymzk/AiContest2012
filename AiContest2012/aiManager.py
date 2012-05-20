@@ -1,3 +1,4 @@
+# coding: cp932
 from math import *
 from ymzkgame.coordinate import Coordinate
 from ymzkgame.runnable import Runnable
@@ -41,18 +42,18 @@ class AiManager(Runnable):
     self._rotate = 0
     self._direction = 0
   def setFiring(self,flag):
-    #trueã«ãªã‚‹ã¨æ‰“ã£ã¦ã„ã‚‹
-    #æ¯ãƒ•ãƒ¬ãƒ¼ãƒ ãƒã‚§ãƒƒã‚¯ã•ã‚Œã‚‹ã€‚
+    #true‚É‚È‚é‚Æ‘Å‚Á‚Ä‚¢‚é
+    #–ˆƒtƒŒ[ƒ€ƒ`ƒFƒbƒN‚³‚ê‚éB
     self._fireingFlag = flag
   '''
   def setObjectivePoint(self,point):
-    #ç›®çš„åœ°è¨­å®š
+    #–Ú“I’nİ’è
     self._objectivePoint = point
-  #æ¯ãƒ•ãƒ¬ãƒ¼ãƒ unit.step()ãŒå‘¼ã³å‡ºã™ã‚‚ã®
+  #–ˆƒtƒŒ[ƒ€unit.step()‚ªŒÄ‚Ño‚·‚à‚Ì
   def setPosition(self, position):
     self._position = position
   def setDirection(self, arg):
-    #æ–¹å‘ã‚’å¤‰ãˆã‚‹
+    #•ûŒü‚ğ•Ï‚¦‚é
     self._direction = arg
   '''
   def getMove(self):
@@ -71,12 +72,12 @@ class AiManager(Runnable):
     return self._fireingFlag
   '''
   def getPosition(self):
-    #todoå‹•ãæ–¹
+    #todo“®‚«•û
     return self._position
   def getDirection(self):
     return self._direction
     '''
-  #é€šä¿¡ç”¨
+  #’ÊM—p
   def writeMessage(self, unit, gameManager):
     string = CatString()
     
@@ -94,7 +95,7 @@ class AiManager(Runnable):
     gameManager.writeStartingMessage(unit,string)
     self._processController.write(string)
   def step(self):
-    #todoã¨ã‚Šã‚ãˆãš
+    #todo‚Æ‚è‚ ‚¦‚¸
     #self._direction += self._rotate
     
     '''

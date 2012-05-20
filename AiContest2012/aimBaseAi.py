@@ -1,3 +1,4 @@
+# coding: cp932
 from aiInterface import AiInterface, Action
 from aiLibrary.moveTo import MoveTo
 from math import atan2
@@ -6,7 +7,17 @@ class AimBaseAi(AiInterface):
     # self.move = None
     pass
   def main(self):
-    opponentBase = self.bases[self.getOpponentTeamId()]
+    for i in self.units:
+      if i.team == self.myunit.team:
+        continue
+      else:
+        if self.canShoot(self.myunit.position, i.position):
+          angle = atan2(i.position[1] - self.myunit.position[1], i.position[0] - self.myunit.position[0])
+          return Action(speed = 3, rollAngle = self.regularizeAngle(angle - self.myunit.direction),firing = True)
+    try:
+      opponentBase = self.bases[self.getOpponentTeamId()]
+    except (IndexError, AttributeError):
+      return Action()
     if (self.myunit.position[0] - opponentBase.position[0]) ** 2 + (self.myunit.position[1] - opponentBase.position[1]) ** 2 < 360000:
       if self.canShoot(self.myunit.position, opponentBase.position):
         return Action(0,self.regularizeAngle(atan2(opponentBase.position[1] - self.myunit.position[1], opponentBase.position[0] - self.myunit.position[0]) - self.myunit.direction),firing = True)
@@ -14,7 +25,7 @@ class AimBaseAi(AiInterface):
     #   self.move = MoveTo(self.field, self.myunit, self.bases[self.getOpponentTeamId()].position)
     return self.moveTo(self.bases[self.getOpponentTeamId()].position)
   '''
-    古い仕様　現在この仕様は利用できません
+    �Â��d�l�@���݂��̎d�l�͗��p�ł��܂���
   def send(self):
     for i in self.units:
       if i.team == self.myunit.team:

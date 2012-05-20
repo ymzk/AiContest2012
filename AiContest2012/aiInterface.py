@@ -1,7 +1,10 @@
+# coding: cp932
 import sys
 import time
 import gameConfig
 from aiLibrary.moveTo import MoveTo
+from aiLibrary.checkPassable import checkPassable
+from aiLibrary.index import index
 
 class Action(tuple):
   def __new__(cls, speed = 0, rollAngle = 0, firing = False):
@@ -118,11 +121,11 @@ class Field:
       elif cell == 'O1':
         return 2
       elif cell == 'B0':
-        return 3
+        return -3
       elif cell == 'B1':
-        return 4
+        return -4
       elif cell == 'WA':
-        return 5
+        return 3
     self.myTeam = myTeam
     self.width = int(fieldData.pop(0))
     self.height = int(fieldData.pop(0))
@@ -245,7 +248,10 @@ class AiInterface:
     self.__receiveInit(initfile)
     print(0,0,0)
     sys.stdout.flush()
+    self.__receive(file)
     self.initCalculation()
+    print(0, 0, 0)
+    sys.stdout.flush()
     while self.__receive(file):
       action = self.main()
       if not isinstance(action, tuple):
@@ -271,6 +277,14 @@ class AiInterface:
     print(*arg, **keys)
     self.__logFile.flush()
   def canShoot(self, fromPosition, toPosition):
+    f = index(self.field, fromPosition)
+    t = index(self.field, toPosition)
+    self.log(f, self.field.isPassable(*f))
+    self.log(t, self.field.isPassable(*t))
+    return checkPassable(self.field,
+                         index(self.field, fromPosition),
+                         index(self.field, toPosition))
+    '''
     def nextDelta(first,remain):
       yield first
       while True:
@@ -322,23 +336,26 @@ class AiInterface:
             return False
         return True
       
-          
+    '''
           
     
-  def regularizeMove(self, moveFrom, moveTo):
-    val = ((moveFrom[0] - moveTo[0]) ** 2 + (moveFrom[1] - moveTo[1]) ** 2) ** 0.5
-    if val > self.MAXSPEED:
-      return tuple((moveTo[i] - moveFrom[i])* self.MAXSPEED / val for i in (0,1))
+  def regularizeSpeed(self, speed):
+    if speed < 0:
+      return 0
+    elif speed > MAXSPEED:
+      return MAXSPEED
+    else:
+      return speed
   def regularizeAngle(self, angle):
     return (angle%(6.2831853)+3.14159265)%(6.2831853)-3.14159265
   def initCalculation(self):
-    #ã¯ã˜ã‚ã«ä½•ã‹ã—ãŸã„ã¨ãã¯ã“ã“ã«æ›¸ã
+    #‚Í‚¶‚ß‚É‰½‚©‚µ‚½‚¢‚Æ‚«‚Í‚±‚±‚É‘‚­
     pass
 #  def send(self):
-#    #æ¬¡ã®å‹•ãã‚’è¨ˆç®—ã—ã€sendDataã¸é€ä¿¡ã™ã‚‹
+#    #ŽŸ‚Ì“®‚«‚ðŒvŽZ‚µAsendData‚Ö‘—M‚·‚é
 #    pass
   def main(self):
-    #æ¬¡ã®å‹•ãã‚’è¨ˆç®—ã—ã€Actionã¨ã—ã¦è¿”ã™
+    #ŽŸ‚Ì“®‚«‚ðŒvŽZ‚µAAction‚Æ‚µ‚Ä•Ô‚·
     return NotImplemented
   def moveTo(self, target):
     if target != self.__lastTarget:
@@ -349,9 +366,11 @@ class AiInterface:
     return self.myunit.team
   def getOpponentTeamId(self):
     return 1 - self.myunit.team
-  def simulate(self, action):
-    # self.myunitãŒactionã®é€šã‚Šã«ç§»å‹•ã—ãŸæœªæ¥ã‚’è¿”ã™ãƒ¡ã‚½ãƒƒãƒ‰ã€‚
-    # å£ã¯è²«é€šã—ã¾ã™
+  def simulate(self, action, unit = None):
+    # self.myunit‚ªaction‚Ì’Ê‚è‚ÉˆÚ“®‚µ‚½–¢—ˆ‚ð•Ô‚·ƒƒ\ƒbƒhB
+    # •Ç‚ÍŠÑ’Ê‚µ‚Ü‚·
+    if unit == None:
+      unit = self.myunit
     if action.speed > self.MAXSPEED:
       speed = self.MAXSPEED
     elif action.speed < 0:
@@ -364,14 +383,14 @@ class AiInterface:
     elif rollAngle < -0.2:
       rollAngle = -0.2
     result = object.__new__(Unit)
-    result.hp = self.myunit.hp
-    result.team = self.getAllyTeamId()
-    result.direction = self.myunit.direction + rollAngle
-    result.position = (self.myunit.position[0] + speed * cos(angle),
-                       self.myunit.position[1] + speed * sin(angle))
-    result.attack = self.myunit.attack
-    result.reload = self.myunit.reload
-    result.unitId = self.myunit.unitId
+    result.hp = unit.hp
+    result.team = unit.team
+    result.direction = unit.direction + rollAngle
+    result.position = (unit.position[0] + speed * cos(angle),
+                       unit.position[1] + speed * sin(angle))
+    result.attack = unit.attack
+    result.reload = unit.reload
+    result.unitId = unit.unitId
     if result.reload > 0:
       result.reload -= 1
     if result.isFirable():

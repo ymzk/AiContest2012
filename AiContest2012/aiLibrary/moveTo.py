@@ -1,15 +1,14 @@
+#coding: cp932
 from math import sin, cos
 from . aStar import aStar
 from . smoothPath import smoothPath
 from . binarySearch import binarySearch
 from . checkPassable import checkPassable
+from . index import index
 import sys
 
 INF = float('inf')
 EPS = 1e-6
-
-def index(field, position):
-    return (position[0] / field.cellWidth, position[1] / field.cellHeight)
 
 def addPP(a, b):
     return (a[0] + b[0], a[1] + b[1])
@@ -76,22 +75,22 @@ candidates = [(10, 0, 0), (10, 0.1, 0), (10, -0.1, 0)]
 
 class MoveTo:
   '''
-    座標で指定された位置へ移動する為の入力を生成するクラス。
-    コンストラクタに現在地と目的地を渡すとルートを検索し、
-    その結果を繰り返し使用して移動する。
-    このクラスの戻り値を無視して移動した後再びこのクラスを利用しようとすると、
-    元のルートに戻そうとするため、新しいオブジェクトを作った方がいいかもしれない。
-    但し、コンストラクタの計算が重いため、繰り返し計算すると速度低下の原因になる。
+    ���W�Ŏw�肳�ꂽ�ʒu�ֈړ�����ׂ̓��͂𐶐�����N���X�B
+    �R���X�g���N�^�Ɍ��ݒn�ƖړI�n��n���ƃ��[�g���������A
+    ���̌��ʂ��J��Ԃ��g�p���Ĉړ�����B
+    ���̃N���X�̖߂�l�𖳎����Ĉړ�������Ăт��̃N���X�𗘗p���悤�Ƃ���ƁA
+    ���̃��[�g�ɖ߂����Ƃ��邽�߁A�V�����I�u�W�F�N�g�����������������������Ȃ��B
+    �A���A�R���X�g���N�^�̌v�Z���d�����߁A�J��Ԃ��v�Z����Ƒ��x�ቺ�̌����ɂȂ�B
     __init__(self, field, unit, target):
-      コンストラクタ。
-      fieldにはフィールド情報(Fieldのインスタンス)を、
-      unitには自機(Unitのインスタンス)を、
-      targetには２要素(x, y)のタプル(Unit.positionでも可)を渡す。
+      �R���X�g���N�^�B
+      field�ɂ̓t�B�[���h���(Field�̃C���X�^���X)���A
+      unit�ɂ͎��@(Unit�̃C���X�^���X)���A
+      target�ɂ͂Q�v�f(x, y)�̃^�v��(Unit.position�ł���)��n���B
     get(self, field, unit):
-      次にするべき行動を(speed, direction, fire)のタプルで返すメソッド。
-      ※このクラスは移動するだけで、fireは常にFalseが返る。
-        攻撃したいなら戻り値を解析すること。
-      unitには自機(Unitのインスタンス)を渡す。
+      ���ɂ���ׂ��s����(speed, direction, fire)�̃^�v���ŕԂ����\�b�h�B
+      �����̃N���X�͈ړ����邾���ŁAfire�͏��False���Ԃ�B
+        �U���������Ȃ�߂�l����͂��邱�ƁB
+      unit�ɂ͎��@(Unit�̃C���X�^���X)��n���B
   '''
   def __init__(self, field, unit, target):
     self.target = target

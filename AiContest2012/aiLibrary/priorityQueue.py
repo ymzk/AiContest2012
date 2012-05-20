@@ -1,3 +1,4 @@
+# coding: cp932
 
 class PriorityQueue(list):
     def __init__(self, *args,

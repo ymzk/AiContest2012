@@ -1,3 +1,4 @@
+# coding: cp932
 # from ymzkgame import *
 from ymzkgame.manager import Manager
 from ymzkgame.gameObject import GameObject
@@ -42,7 +43,7 @@ class Unit(GameObject):
     self._term = self._timeNextFireing
   def changeState(self):
     if self._hp <= 0 :
-      #æ­»ã‚“ã ã¨ãã®å‡¦ç†
+      #Ž€‚ñ‚¾‚Æ‚«‚Ìˆ—
       self.initialize()
   def getTeamFlag(self):
     return self._teamFlag

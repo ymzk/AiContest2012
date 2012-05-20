@@ -1,7 +1,8 @@
+# coding: cp932
 
 def getProcess(source, destination):
     '''
-        sourceã‹ã‚‰destinationã¸ç§»å‹•ã™ã‚‹æ™‚ã«é€šã‚‹åº§æ¨™ã®ãƒªã‚¹ãƒˆã‚’å¾—ã‚‹é–¢æ•°
+        source‚©‚çdestination‚ÖˆÚ“®‚·‚é‚É’Ê‚éÀ•W‚ÌƒŠƒXƒg‚ğ“¾‚éŠÖ”
     '''
     diff = (destination[0] - source[0], destination[1] - source[1])
     if abs(diff[0]) < abs(diff[1]):

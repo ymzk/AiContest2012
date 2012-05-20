@@ -1,3 +1,4 @@
+# coding: cp932
 from ymzkgame.gameObject import GameObject
 from ymzkgame.coordinate import Coordinate
 from ymzkgame.manager import Manager
@@ -16,7 +17,7 @@ class Base(GameObject):
     return self._teamFlag
   def damage(self, damage):
     self._damagedFlag = True
-    #繝繝｡繝ｼ繧ｸ繧貞女縺代◆縺九←縺�縺九�ｮ繝輔Λ繧ｰ
+    #ダメージを受けたかどうかのフラグ
     self._hp -= damage
   def checkDamaged(self):
     return self._damagedFlag

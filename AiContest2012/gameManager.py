@@ -1,3 +1,4 @@
+#coding: cp932
 import time
 
 
@@ -138,21 +139,21 @@ class GameManager(Runnable):
   def getBase(self, teamFlag):
     for i in self.bases:
       if i.getTeamFlag() == teamFlag:
-        #baseã¯ã²ã¨ã¤ã ã¨ä»®å®š
+        #base‚Í‚Ğ‚Æ‚Â‚¾‚Æ‰¼’è
         return i
   def step(self):
     self.readKeyEvent()
     self.specialUnit.step()
     self.field.step()
     self.units.step()
-    #baseã¯unitã®å¾Œ
+    #base‚Íunit‚ÌŒã
     self.bases.step()
     self.bullets.step()
     self.items.step()
 
     for counter in range(20):
-      #æŒ¯å‹•ã—ã¦ç„¡é™ãƒ«ãƒ¼ãƒ—ã«ãªã£ãŸã¨ãã€20å›ã§çµ‚äº†ã™ã‚‹ã‚ˆã†ã«ã—ã¦ã„ã‚‹ã€‚
-      #æŠ¼ã—åˆã„
+      #U“®‚µ‚Ä–³ŒÀƒ‹[ƒv‚É‚È‚Á‚½‚Æ‚«A20‰ñ‚ÅI—¹‚·‚é‚æ‚¤‚É‚µ‚Ä‚¢‚éB
+      #‰Ÿ‚µ‡‚¢
       powerList = [Coordinate(0,0) for i in range(len(self.units))]
       for ii in range(len(self.units)):
         for jj in range(ii):
@@ -162,7 +163,7 @@ class GameManager(Runnable):
             factor = (self._UNIT_RANGE * 2 - abs(i - j))/(abs(i - j) + 10 **(-7)) * (i - j)
             powerList[ii] += factor
             powerList[jj] -= factor
-            #é‡ãªã£ã¦ã„ã‚‹ã¨ã
+            #d‚È‚Á‚Ä‚¢‚é‚Æ‚«
       for ii in range(len(self.units)):
         for jj in range(len(self.bases)):
           i = self.units[ii].getPosition()
@@ -170,11 +171,11 @@ class GameManager(Runnable):
           if abs(i - j) < self._UNIT_RANGE + self._BASE_RANGE:
             factor = (self._UNIT_RANGE + self._BASE_RANGE - abs(i - j))/(abs(i - j) + 10 **(-7)) * (i - j)
             powerList[ii] += factor
-            #é‡ãªã£ã¦ã„ã‚‹ã¨ã
+            #d‚È‚Á‚Ä‚¢‚é‚Æ‚«
             
       for i in range(len(self.units)):
-        #å£ã¨ã®å½“ãŸã‚Šåˆ¤å®šå£ã¨ã®å½“ãŸã‚Šåˆ¤å®šã¯Feildã§è¡Œã†ã€‚
-        #è¿”ã‚Šå€¤ã¯ã‹ã‹ã‚‹åŠ›ãƒ™ã‚¯ãƒˆãƒ«(Coordinate)
+        #•Ç‚Æ‚Ì“–‚½‚è”»’è•Ç‚Æ‚Ì“–‚½‚è”»’è‚ÍFeild‚Ås‚¤B
+        #•Ô‚è’l‚Í‚©‚©‚é—ÍƒxƒNƒgƒ‹(Coordinate)
         powerList[i] += self.field.wallDistance(self._UNIT_RANGE, self.units[i])
 
       flag = True
@@ -185,7 +186,7 @@ class GameManager(Runnable):
       if flag:
         break
 
-    #å½“ãŸã‚Šåˆ¤å®š
+    #“–‚½‚è”»’è
     for i in range(len(self.units)):
       self.field.fieldEffect(self.units[i])
     for i in range(len(self.bullets)):
@@ -198,7 +199,7 @@ class GameManager(Runnable):
       for jj in range(len(self.units)):
         j = self.units[jj].getPosition()
         if abs(i-j) < self._ITEM_RANGE + self._UNIT_RANGE:
-          #ã‚ãŸã£ãŸã¨ã
+          #‚ ‚½‚Á‚½‚Æ‚«
           self.items[ii].effect(self.units[jj])
           break
     #bullet
@@ -207,7 +208,7 @@ class GameManager(Runnable):
       for jj in range(len(self.units)):
         j = self.units[jj].getPosition()
         if abs(i-j) < self._UNIT_RANGE:
-          #ã‚ãŸã£ãŸã¨ã
+          #‚ ‚½‚Á‚½‚Æ‚«
           self.bullets[ii].attack(self.units[jj])
           break
     flag = False
@@ -217,7 +218,7 @@ class GameManager(Runnable):
       for jj in range(len(self.bases)):
         j = self.bases[jj].getPosition()
         if abs(i-j) < self._BASE_RANGE:
-          #ã‚ãŸã£ãŸã¨ã
+          #‚ ‚½‚Á‚½‚Æ‚«
           self.bullets[ii].attack(self.bases[jj])
           if self.bases[jj].checkAlive():
             continue

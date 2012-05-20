@@ -2,39 +2,100 @@
  <head>
   <title>AiContest2012について/reference/AiInterface</title>
  </head>
+
  <body>
   <h1>aiInterface.AiInterface</h1>
   このゲームで使用するAIの実装を補助する為の様々なメソッドを実装したクラスです。<br>
-  このクラスには大きく分けて二つの機能があります。<br>
+  このクラスには大きく分けて三つの機能があります。<br>
   <br>
-  一つは入出力の管理です。<br>
+  一つ目は入出力の管理です。<br>
   煩雑な入出力の整形を引き受けてくれます。<br>
   <br>
-  もう一つはAI向けの便利ツール集としての機能です。<br>
-  メソッドとして様々な便利ツールが実装されているので、有効に活用すれば比較的楽にAIが実装できます。<br>
+  二つ目は定数の管理です。<br>
+  ゲームに関する”一部の”定数がAiInterfaceのメンバとして提供されます。<br>
   <br>
+  最後の一つはAI向けの便利ツール集としての機能です。<br>
+  メソッドとして様々な便利ツールが実装されているので、有効に活用すれば比較的楽にAIが実装できます。<br>
+
   <h2>入出力の管理に使用するメソッド</h2>
-  <h3>AiInterface.__init__(self)</h3>
+  <h3>aiInterface.AiInterface.__init__(self)</h3>
   コンストラクタです。<br>
   AiInterfaceを継承したすべてのサブクラスは、__init__をオーバーライドするならその中でAiInterfaceの__init__を呼ばなくてはなりません。<br>
-  <h3>AiInterface.run(self, initfile = sys.stdin, file = sys.stdin)</h3>
+
+  <h3>aiInterface.AiInterface.run(self, initfile = sys.stdin, file = sys.stdin)</h3>
   このメソッドを呼ぶと、AIが実行されます。<br>
   オーバーライドしないでください。<br>
-  <h3>AiInterface.main(self)</h3>
+
+  <h3>aiInterface.AiInterface.initCalculation(self)</h3>
+  このメソッドをオーバーライドしておくとメインルーチンの実行前に呼び出されます。<br>
+  ※__init__の時点では入力を記憶するメンバは生成されていません。初期化や、フィールドの解析はこれを利用して行なってください。<br>
+
+  <h3>aiInterface.AiInterface.main(self)</h3>
   このメソッドをオーバーライドし、AIのメインルーチンを記述します。<br>
   戻り値はaiInterface.Actionのインスタンスであることが期待されます。<br>
   戻り値の値が出力として利用されます。<br>
-  <h3>AiInterface.log(self, *args, **keys)</h3>
+
+  <h3>aiInterface.AiInterface.log(self, *args, **keys)</h3>
   args、keysの内容はprint関数に従います。<br>
   args、keysをほぼそのままprint関数に渡して、標準エラー出力に出力します。<br>
   (標準エラー出力はAiContest2012/log/以下にログとして出力されます。)<br>
+
   <h2>入力を記憶するメンバ</h2>
-  <h3>AiInterface.units</h3>
-  <a href="">Unit</a>のリストです。<br>
-  すべての味方、及び視界内の敵のユニットの情報が入っています。<br>
-  <h3>AiInterface.bullets</h3>
-  <a href="">Bullet</a>のリストです。<br>
-  <h3>AiInterface.items</h3>
-  <h3>AiInterface.bases</h3>
+  <h3>aiInterface.AiInterface.myunit</h3>
+  <a href = "">aiInterface.Unit</a>のインスタンスです。<br>
+  自機に関する情報が管理されます。<br>
+
+  <h3>aiInterface.AiInterface.units</h3>
+  <a href="">aiInterface.Unit</a>のリストです。<br>
+  自分以外のすべての味方、及び視界内の敵のユニットの情報が入っています。<br>
+
+  <h3>aiInterface.AiInterface.bullets</h3>
+  <a href="">aiInterface.Bullet</a>のリストです。<br>
+  視界内のすべての弾の情報が入っています。<br>
+
+  <h3>aiInterface.AiInterface.items</h3>
+  <a href="">aiInterface.Item</a>のリストです。<br>
+  視界内のすべてのアイテムが入っています。<br>
+
+  <h3>aiInterface.AiInterface.bases</h3>
+  <a href="">aiInterface.Base</a>のリストです。<br>
+  すべての基地の情報が入っています。<br>
+
+  <h3>aiInterface.AiInterface.field</h3>
+  <a href="">aiInterface.Field</a>のインスタンスです。<br>
+  フィールドのサイズ、セルのサイズ、各セルのIdなど、マップに関する様々な情報が入っています。<br>
+
+  <h2>ゲームに関する定数</h2>
+  <h3>aiInterface.AiInterface.MAXSPEED</h3>
+  ユニットの最高速度です。<br>
+  ユニットは、一フレームで最大MAXSPEEDピクセル移動します。<br>
+
+  <h2>AI向けの便利ツールのメソッド</h2>
+  <h3>aiInterface.AiInterface.canShoot(self, fromPosition, toPosition)</h3>
+  fromPositionとtoPositionをつなぐ線分が壁と触れるかどうかを調べる関数です。<br>
+  fromPosition、toPositionには、それぞれに二要素のタプルで座標を渡します。<br>
+  戻り値は壁と触れないならばTrue、壁と触れるならばFalseが返ります。<br>
+
+  <h3>aiInterface.AiInterface.regularizeSpeed(self, speed)</h3>
+  speedを[0, aiInterface.AiInterface.MAXSPEED]の範囲に正規化した結果を返す関数です。<br>
+
+  <h3>aiInterface.AiInterface.regularizeAngle(self, angle)</h3>
+  angleを[-PI, PI]の範囲に正規化した結果を返す関数です。<br>
+
+  <h3>aiInterface.AiInterface.getAllyTeamId(self)</h3>
+  自機の所属するチームのidを返す関数です。<br>
+
+  <h3>aiInterface.AiInterface.getOpponentTeamId(self)</h3>
+  自機の所属していない方のチームのidを返す関数です。<br>
+
+  <h3>aiInterface.AiInterface.moveTo(self, target)</h3>
+  targetへ移動する時に取るべきアクションを返す関数です。<br>
+  内部的ではaiLibrary.moveTo.MoveToを利用します。<br>
+  そのため、毎フレーム複数の候補への移動アクションを生成してから選択するようなAIを作ると速度が非常に遅くなります。<br>
+
+  <h3>aiInterface.AiInterface.simulate(self, action, unit = None)</h3>
+  unitをactionで移動させた結果のユニットを返す関数です。<br>
+  unitがNoneだった時は、self.myunitを移動させた結果を返します。<br>
+  actionはaiInterface.Actionのインスタンスであることが、また、unitはaiInterface.Unitのインスタンスであることが期待されます。<br>
  </body>
 </html>

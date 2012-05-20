@@ -1,3 +1,4 @@
+# coding: cp932
 from math import *
 from ymzkgame.gameObject import GameObject
 from ymzkgame.coordinate import Coordinate
