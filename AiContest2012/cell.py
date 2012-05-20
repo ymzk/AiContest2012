@@ -16,7 +16,7 @@ class Cell(GameObject):
 
 class WallCell(Cell):  
   def __init__(self):
-    super().__init__(image = 'wallCell.bmp')
+    super().__init__(image = "graphics/wallCell.bmp")
   def effect(self, runnableObject):
     runnableObject.end()
   def getCellCode(self, teamFlag):
@@ -25,7 +25,7 @@ class WallCell(Cell):
 
 class NoneCell(Cell):
   def __init__(self):
-    super().__init__(image = 'noneCell.bmp')
+    super().__init__(image = "graphics/noneCell.bmp")
   def getCellCode(self, unit):
     return CellCode.NOTHING
   def draw(self, *args):
@@ -34,7 +34,7 @@ class NoneCell(Cell):
 
 class OwnAreaCell(Cell):
   def __init__(self, teamFlag):
-    super().__init__(image = 'ownAreaCell.bmp')
+    super().__init__(image = "graphics/ownAreaCell.bmp")
     self._teamFlag = teamFlag
   def effect(self, runnableObject):
     if runnableObject.getTeamFlag() != self._teamFlag:
@@ -44,7 +44,7 @@ class OwnAreaCell(Cell):
 
 class ItemCell(Cell):
   def __init__(self, gameManager, item):
-    super().__init__(image = 'noneCell.bmp')
+    super().__init__(image = "graphics/noneCell.bmp")
     self.item = item
     gameManager.addItem(item)
   def setPosition(self, position):
@@ -55,7 +55,7 @@ class ItemCell(Cell):
 
 class BaseCell(Cell):
   def __init__(self, gameManager, base):
-    super().__init__(image = 'noneCell.bmp')
+    super().__init__(image = "graphics/noneCell.bmp")
     self.base = base
     gameManager.addBase(base)
   def setPosition(self, position):

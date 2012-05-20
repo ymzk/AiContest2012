@@ -5,14 +5,15 @@ from ymzkgame.gameObject import GameObject
 from ymzkgame.coordinate import Coordinate
 from aiManager import *
 from bullet import Bullet
-import gameConfig
+
+from gameConfig import *
+
 from draw import draw
 # circurated reference
 # import gameManager
 class Unit(GameObject):
-  _SPEED = 3
   def __init__(self, position, direction, gameManager, teamFlag,unitId , aiManager = DefaultAiManager()):
-    super().__init__(position = position, direction = direction, image = "unit.bmp")
+    super().__init__(position = position, direction = direction, image = "graphics/unit.bmp")
     self._unitId = unitId
     self._startingPoint = position
     self._startingDirection = direction
@@ -30,10 +31,10 @@ class Unit(GameObject):
   def initialize(self):
     self.setPosition(self._startingPoint)
     self.setDirection(self._startingDirection)
-    self._timeNextFireing = gameConfig.UNIT_TIME_NEXT_FIRING
+    self._timeNextFireing = UNIT_TIME_NEXT_FIRING
     self._term = 0
-    self._hp = gameConfig.UNIT_DEFAULT_HP
-    self._attackPower = gameConfig.UNIT_DEFAULT_ATTACK_POWER
+    self._hp = UNIT_DEFAULT_HP
+    self._attackPower = UNIT_DEFAULT_ATTACK_POWER
   def sendEndMessage(self):
     self._aiManager.sendEndMessage(self,self._gameManager)
   def sendStartingMessage(self):

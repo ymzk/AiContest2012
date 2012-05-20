@@ -1,5 +1,5 @@
 #coding: cp932
-from aiInterface import AiInterface
+from aiLibrary.aiInterface import AiInterface
 
 class TestAi(AiInterface):
   def main(self):

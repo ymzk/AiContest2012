@@ -1,6 +1,11 @@
 # coding: cp932
-from aiInterface import AiInterface, Action
+import sys
+import os
+print(os.getcwd(), file = sys.stderr)
+print(os.path.abspath(''), file = sys.stderr)
+sys.path.append(os.path.abspath('..'))
 from aiLibrary.moveTo import MoveTo
+from aiLibrary.aiInterface import AiInterface, Action
 from math import atan2
 class AimBaseAi(AiInterface):
   def initCalculation(self):

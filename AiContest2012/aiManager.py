@@ -4,6 +4,7 @@ from ymzkgame.coordinate import Coordinate
 from ymzkgame.runnable import Runnable
 from processController import ProcessController
 from catString import CatString
+from gameConfig import *
 
 class DefaultAiManager(Runnable):
   def __init__(self):
@@ -57,16 +58,16 @@ class AiManager(Runnable):
     self._direction = arg
   '''
   def getMove(self):
-    if self._move > self.SPEED:
-      return self.SPEED
+    if self._move > UNIT_MAX_SPEED:
+      return UNIT_MAX_SPEED
     if self._move <0:
       return 0
     return self._move
   def getRotate(self):
-    if self._rotate > 0.2:
-      return 0.2
-    if self._rotate < -0.2:
-      return -0.2
+    if self._rotate > UNIT_MAX_ROLL_ANGLE:
+      return UNIT_MAX_ROLL_ANGLE
+    if self._rotate < - UNIT_MAX_ROLL_ANGLE:
+      return - UNIT_MAX_ROLL_ANGLE
     return self._rotate
   def getFiring(self):
     return self._fireingFlag

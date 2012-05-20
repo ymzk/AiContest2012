@@ -10,24 +10,24 @@ from ymzkgame.image import Image
 from cell import *
 from base import Base
 
+import gameConfig
+
 class Field(Runnable):
   def __init__(self, gameManager):
     super().__init__()
-    self.setFieldSize(100, 100, 40, 40)
+    self.setFieldSize(100, 100)
     self._gameManager = gameManager
-    self._image = Image(pygame.Surface((self._fieldWidth * self._cellWidth, self._fieldHeight * self._cellHeight)), permeate = False)
+    self._image = Image(pygame.Surface((self._fieldWidth * FIELD_CELL_WIDTH, self._fieldHeight * FIELD_CELL_HEIGHT)), permeate = False)
     self._modified = False
-  def setFieldSize(self, fieldWidth, fieldHeight,cellWidth,cellHeight):
+  def setFieldSize(self, fieldWidth, fieldHeight):
     self._fieldWidth = fieldWidth
     self._fieldHeight = fieldHeight
-    self._cellWidth = cellWidth
-    self._cellHeight = cellHeight
   def setCell(self, positionX, positionY, cell):
-    cell.setPosition(Coordinate(positionX * self._cellWidth + self._cellWidth/2, positionY * self._cellHeight + self._cellHeight/2))
+    cell.setPosition(Coordinate(positionX * FIELD_CELL_WIDTH + FIELD_CELL_WIDTH/2, positionY * FIELD_CELL_HEIGHT + FIELD_CELL_HEIGHT/2))
     self._fieldData[positionX][positionY] = cell
     self._modified = True
   def testInitialize(self):
-    #self.setFieldSize(40, 40, 25, 25)
+    #self.setFieldSize(40, 40)
     self._fieldData = [[None for i in range(self._fieldWidth)] for j in range(self._fieldHeight)]
     for i in range(self._fieldWidth):
       for j in range(self._fieldHeight):
@@ -37,9 +37,9 @@ class Field(Runnable):
     self.setCell(0,0,ItemCell(self._gameManager,HpItem()))
     self.setCell(1,0,ItemCell(self._gameManager,AttackItem()))
   def fieldEffect(self, runnableObject):
-    if 0 <= runnableObject.getPosition().getX() < self._fieldWidth * self._cellWidth and 0 <= runnableObject.getPosition().getY() < self._fieldHeight * self._cellHeight:
-      x = int(runnableObject.getPosition().getX() / self._cellWidth)
-      y = int(runnableObject.getPosition().getY() / self._cellHeight)
+    if 0 <= runnableObject.getPosition().getX() < self._fieldWidth * FIELD_CELL_WIDTH and 0 <= runnableObject.getPosition().getY() < self._fieldHeight * FIELD_CELL_HEIGHT:
+      x = int(runnableObject.getPosition().getX() / FIELD_CELL_WIDTH)
+      y = int(runnableObject.getPosition().getY() / FIELD_CELL_HEIGHT)
       self._fieldData[x][y].effect(runnableObject)
       return
     #場外に出たので消滅
@@ -47,15 +47,15 @@ class Field(Runnable):
   def addRunnableCell(self,cell):
     pass
   def wallDistance(self, radius, unit):
-    offsetX = unit.getPosition().getX() % self._cellWidth - self._cellWidth / 2
-    offsetY = unit.getPosition().getY() % self._cellHeight - self._cellHeight /2
-    indexX = int(unit.getPosition().getX() / self._cellWidth)
-    indexY = int(unit.getPosition().getY() / self._cellHeight)
+    offsetX = unit.getPosition().getX() % FIELD_CELL_WIDTH - FIELD_CELL_WIDTH / 2
+    offsetY = unit.getPosition().getY() % FIELD_CELL_HEIGHT - FIELD_CELL_HEIGHT /2
+    indexX = int(unit.getPosition().getX() / FIELD_CELL_WIDTH)
+    indexY = int(unit.getPosition().getY() / FIELD_CELL_HEIGHT)
     minRange = radius
     minVector = Coordinate(0, 0)
-    rangeWidth = int(radius/self._cellWidth) + 1
+    rangeWidth = int(radius/FIELD_CELL_WIDTH) + 1
     for i in range(- rangeWidth, rangeWidth + 1):
-      val = (radius / self._cellHeight + 1) * (radius / self._cellHeight + 1) - i * i
+      val = (radius / FIELD_CELL_HEIGHT + 1) * (radius / FIELD_CELL_HEIGHT + 1) - i * i
       if val < 0:
         continue
       rangeHeight = int(val ** 0.5)
@@ -64,7 +64,7 @@ class Field(Runnable):
           continue
         if self.checkWall(indexX + i, indexY + j, unit) == CellCode.NOTHING:
           continue
-        vector = self.getVectorFromNearestPoint(offsetX - i * self._cellWidth, offsetY - j * self._cellHeight)
+        vector = self.getVectorFromNearestPoint(offsetX - i * FIELD_CELL_WIDTH, offsetY - j * FIELD_CELL_HEIGHT)
         if abs(vector) < minRange:
           minVector = vector
           minRange = abs(vector)
@@ -72,28 +72,28 @@ class Field(Runnable):
       return Coordinate(0, 0)
     return minVector/minRange * (radius - minRange)
   def changePositionToIndex(self,point):
-    return Coordinate((int)(point.getX() / self._cellWidth), (int)(point.getY() / self._cellHeight))
+    return Coordinate((int)(point.getX() / FIELD_CELL_WIDTH), (int)(point.getY() / FIELD_CELL_HEIGHT))
   def changeIndexToPosition(self,point):
-    return Coordinate(point.getX() * self._cellWidth, point.getY() * self._cellHeight)
+    return Coordinate(point.getX() * FIELD_CELL_WIDTH, point.getY() * FIELD_CELL_HEIGHT)
   def getVectorFromNearestPoint(self, x, y):
     #近隣点からのベクトルを返す
-    if abs(x) <= self._cellWidth / 2:
-      if abs(y) <= self._cellHeight / 2:
+    if abs(x) <= FIELD_CELL_WIDTH / 2:
+      if abs(y) <= FIELD_CELL_HEIGHT / 2:
         #pointがこのcell内部
         if x > y:
           flag = 1 if x > 0 else -1
-          return Coordinate(x - flag * self._cellWidth / 2, 0)
+          return Coordinate(x - flag * FIELD_CELL_WIDTH / 2, 0)
         flag = 1 if y > 0 else -1
-        return Coordinate(0, y - flag * self._cellHeight / 2)
+        return Coordinate(0, y - flag * FIELD_CELL_HEIGHT / 2)
       #最寄点はy軸方向への推薦の足
       flag = 1 if y > 0 else -1
-      return Coordinate(0, y - flag * self._cellHeight / 2)
-    if abs(y) <= self._cellHeight / 2:
+      return Coordinate(0, y - flag * FIELD_CELL_HEIGHT / 2)
+    if abs(y) <= FIELD_CELL_HEIGHT / 2:
       flag = 1 if x > 0 else -1
-      return Coordinate(x - flag * self._cellWidth / 2, 0)
+      return Coordinate(x - flag * FIELD_CELL_WIDTH / 2, 0)
     flagX = 1 if x > 0 else -1
     flagY = 1 if y > 0 else -1
-    return Coordinate(x - flagX * self._cellWidth / 2, y - flagY * self._cellHeight / 2)
+    return Coordinate(x - flagX * FIELD_CELL_WIDTH / 2, y - flagY * FIELD_CELL_HEIGHT / 2)
   def checkWall(self, x, y, unit):
     if x < 0 or y < 0 or x >= self._fieldWidth or y >= self._fieldHeight:
       return CellCode.WALL
@@ -163,8 +163,6 @@ class Field(Runnable):
   def encode(self):
     yield self._fieldWidth
     yield self._fieldHeight
-    yield self._cellWidth
-    yield self._cellHeight
     for h in range(self._fieldHeight):
       for w in range(self._fieldHeight):
         yield self.lines[h][w]

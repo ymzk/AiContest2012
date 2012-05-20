@@ -57,10 +57,10 @@ class ProcessController():
   logIds = {}
   def __init__(self, executableName):
     if executableName[-3:] == '.py':
-      command = ["C:\\Python32\\python.exe",executableName]
+      command = [r"C:\Python32\python.exe","ai/" + executableName]
       logName = executableName[:-3]
     elif executableName[-4:] == '.exe':
-      command = ["./" + executableName]
+      command = ["./ai/" + executableName]
       logName = exectableName[:-4]
     else:
       raise RuntimeError("ProcessController can\'t run this program " + executableName)

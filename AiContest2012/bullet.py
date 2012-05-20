@@ -4,13 +4,15 @@ from ymzkgame.gameObject import GameObject
 from ymzkgame.coordinate import Coordinate
 from ymzkgame.manager import Manager
 from draw import draw
+from gameConfig	import *
+
 class Bullet(GameObject):
   def __init__(self,unit):
-    super().__init__(image = "bullet.bmp",position = unit.getPosition(), direction = unit.getDirection())
+    super().__init__(image = 'graphics/bullet.bmp',position = unit.getPosition(), direction = unit.getDirection())
     self._master = unit
-    self._vector = 20 * Coordinate(cos(unit.getDirection()),sin(unit.getDirection()))
+    self._vector = BULLET_SPEED * Coordinate(cos(unit.getDirection()),sin(unit.getDirection()))
     self._attackPower = unit.getAttackPower()
-    self._counter = 30
+    self._counter = BULLET_RANGE / BULLET_SPEED
   def getAttackPower(self):
     return self._attackPower
   def getTeamFlag(self):

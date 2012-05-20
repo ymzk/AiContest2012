@@ -1,4 +1,4 @@
-from aiInterface import AiInterface
+from aiLibrary.aiInterface import AiInterface
 from math import atan2
 class AimAi(AiInterface):
   def main(self):

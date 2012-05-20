@@ -2,9 +2,9 @@
 import sys
 import time
 import gameConfig
-from aiLibrary.moveTo import MoveTo
-from aiLibrary.checkPassable import checkPassable
-from aiLibrary.index import index
+from . moveTo import MoveTo
+from . checkPassable import checkPassable
+from . index import index
 
 class Action(tuple):
   def __new__(cls, speed = 0, rollAngle = 0, firing = False):

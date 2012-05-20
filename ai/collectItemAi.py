@@ -1,4 +1,4 @@
-from aiInterface import AiInterface, Action
+from aiLibrary.aiInterface import AiInterface, Action
 from aiLibrary.moveTo import MoveTo
 from math import atan2
 class CollectItemAi(AiInterface):

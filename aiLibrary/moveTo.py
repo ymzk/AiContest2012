@@ -1,4 +1,4 @@
-#coding: cp932
+# coding: cp932
 from math import sin, cos
 from . aStar import aStar
 from . smoothPath import smoothPath
