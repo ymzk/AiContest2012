@@ -2,10 +2,12 @@ from ymzkgame.gameObject import GameObject
 from ymzkgame.coordinate import Coordinate
 from ymzkgame.manager import Manager
 from draw import draw
+from gameConfig import *
+
 class Item(GameObject):
-  def __init__(self, position = Coordinate(0,0), image = "graphics/item.bmp",time = 60):
+  def __init__(self, position = Coordinate(0,0), image = "graphics/item.bmp"):
     super().__init__(image = image)
-    self._nextTime = time
+    self._nextTime = ITEM_RESURRECTION_INTERVAL
     self.setPosition(position)
     self.setDirection(0)
     self._remainingTime = 0
@@ -38,7 +40,7 @@ class Item(GameObject):
 class HpItem(Item):
   def __init__(self, position = Coordinate(0,0)):
     super().__init__(position,image = "graphics/hpItem.bmp");
-    self._power = 30
+    self._power = ITEM_HP_INCREASE_AMOUNT
   def effect(self, unit):
     if self.checkAvailable():
       super().effect(unit)
@@ -53,7 +55,7 @@ class HpItem(Item):
 class AttackItem(Item):
   def __init__(self, position = Coordinate(0,0)):
     super().__init__(position,image = "graphics/attackItem.bmp")
-    self._power = 1
+    self._power = ITEM_ATTACK_INCREASE_AMOUNT
   def effect(self, unit):
     if self.checkAvailable():
       super().effect(unit)

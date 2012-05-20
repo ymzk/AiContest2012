@@ -57,7 +57,7 @@ class ProcessController():
   logIds = {}
   def __init__(self, executableName):
     if executableName[-3:] == '.py':
-      command = ["C:\\Python31\\python.exe","ai/" + executableName]
+      command = [r"C:\Python32\python.exe","ai/" + executableName]
       logName = executableName[:-3]
     elif executableName[-4:] == '.exe':
       command = ["./ai/" + executableName]

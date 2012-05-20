@@ -14,9 +14,9 @@ from ymzkgame.runnable import Runnable
 from ymzkgame.runner import run
 from ymzkgame.moveClasses import *
 from ymzkgame.gameObject import *
-#from backGroundDummy import BackGroundDummy as Field
-# for test
-#RunnableList = list
+
+from gameConfig import *
+
 '''
 class DamyRunnable(Runnable):
   def __init__(self):
@@ -25,12 +25,7 @@ class DamyRunnable(Runnable):
     pass
     '''
 class GameManager(Runnable):
-  _UNIT_RANGE = 16
-  _BASE_RANGE = 20
-  _ITEM_RANGE = 20
-  _PUSH_STRENGTH = 0.5
-  _VISILITY = 400
-  def __init__(self,settingFileName = r"gameSetting/gameSettings.conf"):
+  def __init__(self,settingFileName = "setting/gameSettings.conf"):
     super().__init__()
     #self.testInitialize()
     self.initialize(settingFileName)
@@ -94,15 +89,15 @@ class GameManager(Runnable):
       if i.getTeamFlag() == unit.getTeamFlag():
         self.writeMessageUnit(i,file)
         continue
-      if abs(i.getPosition() - unit.getPosition()) < self._VISILITY:
+      if abs(i.getPosition() - unit.getPosition()) < RADIUS_OF_THE_VISILITY_ARIA:
         self.writeMessageUnit(i,file)
         continue
     for i in self.bullets:
-      if abs(i.getPosition() - unit.getPosition()) <self._VISILITY:
+      if abs(i.getPosition() - unit.getPosition()) <RADIUS_OF_THE_VISILITY_ARIA:
         self.writeMessageBullet(i,file)
     for i in self.items:
       if i.checkAvailable:
-        if abs(i.getPosition() - unit.getPosition()) <self._VISILITY:
+        if abs(i.getPosition() - unit.getPosition()) <RADIUS_OF_THE_VISILITY_ARIA:
           self.writeMessageItem(i,file)
     file.write("end")
   def writeMessageUnit(self,unit,file):
@@ -157,8 +152,8 @@ class GameManager(Runnable):
         for jj in range(ii):
           i = self.units[ii].getPosition()
           j = self.units[jj].getPosition()
-          if abs(i - j) < self._UNIT_RANGE * 2 :
-            factor = (self._UNIT_RANGE * 2 - abs(i - j))/(abs(i - j) + 10 **(-7)) * (i - j)
+          if abs(i - j) < RADIUS_OF_THE_UNIT * 2 :
+            factor = (RADIUS_OF_THE_UNIT * 2 - abs(i - j))/(abs(i - j) + 10 **(-7)) * (i - j)
             powerList[ii] += factor
             powerList[jj] -= factor
             #重なっているとき
@@ -166,20 +161,20 @@ class GameManager(Runnable):
         for jj in range(len(self.bases)):
           i = self.units[ii].getPosition()
           j = self.bases[jj].getPosition()
-          if abs(i - j) < self._UNIT_RANGE + self._BASE_RANGE:
-            factor = (self._UNIT_RANGE + self._BASE_RANGE - abs(i - j))/(abs(i - j) + 10 **(-7)) * (i - j)
+          if abs(i - j) < RADIUS_OF_THE_UNIT + RADIUS_OF_THE_BASE:
+            factor = (RADIUS_OF_THE_UNIT + RADIUS_OF_THE_BASE - abs(i - j))/(abs(i - j) + 10 **(-7)) * (i - j)
             powerList[ii] += factor
             #重なっているとき
             
       for i in range(len(self.units)):
         #壁との当たり判定壁との当たり判定はFeildで行う。
         #返り値はかかる力ベクトル(Coordinate)
-        powerList[i] += self.field.wallDistance(self._UNIT_RANGE, self.units[i])
+        powerList[i] += self.field.wallDistance(RADIUS_OF_THE_UNIT, self.units[i])
 
       flag = True
       for i in range(len(self.units)):
         if powerList[i].norm() >= 1:
-          self.units[i].setPosition(self.units[i].getPosition() + powerList[i] * self._PUSH_STRENGTH)
+          self.units[i].setPosition(self.units[i].getPosition() + powerList[i] * PUSH_STRENGTH)
           flag = False
       if flag:
         break
@@ -196,7 +191,7 @@ class GameManager(Runnable):
       i = self.items[ii].getPosition()
       for jj in range(len(self.units)):
         j = self.units[jj].getPosition()
-        if abs(i-j) < self._ITEM_RANGE + self._UNIT_RANGE:
+        if abs(i-j) < RADIUS_OF_THE_ITEM + RADIUS_OF_THE_UNIT:
           #あたったとき
           self.items[ii].effect(self.units[jj])
           break
@@ -205,7 +200,7 @@ class GameManager(Runnable):
       i = self.bullets[ii].getPosition()
       for jj in range(len(self.units)):
         j = self.units[jj].getPosition()
-        if abs(i-j) < self._UNIT_RANGE:
+        if abs(i-j) < RADIUS_OF_THE_UNIT:
           #あたったとき
           self.bullets[ii].attack(self.units[jj])
           break
@@ -215,7 +210,7 @@ class GameManager(Runnable):
       i = self.bullets[ii].getPosition()
       for jj in range(len(self.bases)):
         j = self.bases[jj].getPosition()
-        if abs(i-j) < self._BASE_RANGE:
+        if abs(i-j) < RADIUS_OF_THE_BASE:
           #あたったとき
           self.bullets[ii].attack(self.bases[jj])
           if self.bases[jj].checkAlive():
@@ -242,7 +237,7 @@ class GameManager(Runnable):
     self.units.end()
     self.bullets.end()
     self.items.end()
-    time.sleep(1)
+    time.sleep(3)
     Runnable.end(self)
     
 
