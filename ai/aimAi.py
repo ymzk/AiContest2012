@@ -28,7 +28,6 @@ class AimAi(AiInterface):
     self.sendData(firing = True)
     return
   '''
-if __name__ == "__main__":
-  ai = AimAi()
-  #ai.run(open("initMessage","r"),open("message","r"))
-  ai.run()
+ai = AimAi()
+#ai.run(open("initMessage","r"),open("message","r"))
+ai.run()

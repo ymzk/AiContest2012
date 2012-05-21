@@ -5,7 +5,6 @@ from . aStar import aStar
 from . smoothPath import smoothPath
 from . binarySearch import binarySearch
 from . checkPassable import checkPassable
-print('hoge', file = sys.stderr)
 from . index import index
 
 INF = float('inf')

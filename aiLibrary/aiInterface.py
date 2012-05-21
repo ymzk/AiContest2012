@@ -1,11 +1,12 @@
 # coding: cp932
 import sys
-print(sys.path)
 import time
 from config import gameConfig
 from . moveTo import MoveTo
 from . checkPassable import checkPassable
 from . index import index
+
+from gameConfig import *
 
 class Action(tuple):
   def __new__(cls, speed = 0, rollAngle = 0, firing = False):
@@ -130,13 +131,15 @@ class Field:
     self.myTeam = myTeam
     self.width = int(fieldData.pop(0))
     self.height = int(fieldData.pop(0))
-    self.cellWidth = int(fieldData.pop(0))
-    self.cellHeight = int(fieldData.pop(0))
+    self.cellWidth = FIELD_CELL_WIDTH
+    self.cellHeight = FIELD_CELL_HEIGHT
     self.fieldData = [[None for i in range(self.height)] for j in range(self.width)]
     self.fieldstringdata = fieldData[:-1]
     for h in range(self.height):
       for w in range(self.width):
         self.fieldData[w][h] = getdata(fieldData.pop(0))
+
+
   def isPassable(self, x, y, team = None):
     if self.fieldData[int(x)][int(y)] <= 0:
       return True

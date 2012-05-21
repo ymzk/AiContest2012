@@ -1,7 +1,5 @@
-# coding: cp932
 import sys
 import os
-print(sys.path)
 from aiLibrary.moveTo import MoveTo
 from aiLibrary.aiInterface import AiInterface, Action
 from math import atan2
@@ -28,7 +26,7 @@ class AimBaseAi(AiInterface):
     #   self.move = MoveTo(self.field, self.myunit, self.bases[self.getOpponentTeamId()].position)
     return self.moveTo(self.bases[self.getOpponentTeamId()].position)
   '''
-    �Â��d�l�@���݂��̎d�l�͗��p�ł��܂���
+    古い仕様　現在この仕様は利用できません
   def send(self):
     for i in self.units:
       if i.team == self.myunit.team:
@@ -51,7 +49,6 @@ class AimBaseAi(AiInterface):
     return
   '''
 
-if __name__ == "__main__":
-  ai = AimBaseAi()
-  #ai.run(open("initMessage","r"),open("message","r"))
-  ai.run()
+ai = AimBaseAi()
+#ai.run(open("initMessage","r"),open("message","r"))
+ai.run()

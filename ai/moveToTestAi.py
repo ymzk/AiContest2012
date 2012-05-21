@@ -45,8 +45,7 @@ class MoveToTestAi(AiInterface):
 #      self.move = MoveTo(self.field, self.myunit, self.bases[1 - self.myunit.team].position)
 #    return Action(*self.move.get(self.field, self.myunit))
 
-if __name__ == "__main__":
-  ai = MoveToTestAi()
-  #ai.run(open("initMessage","r"),open("message","r"))
-  ai.run()
+ai = MoveToTestAi()
+#ai.run(open("initMessage","r"),open("message","r"))
+ai.run()
 

@@ -65,8 +65,7 @@ class CollectItemAi(AiInterface):
     self.sendData(*self.baseMove.get(self.field, self.myunit))
     return
     '''
-          
-if __name__ == "__main__":
-  ai = CollectItemAi()
-  #ai.run(open("initMessage","r"),open("message","r"))
-  ai.run()
+
+ai = CollectItemAi()
+#ai.run(open("initMessage","r"),open("message","r"))
+ai.run()
