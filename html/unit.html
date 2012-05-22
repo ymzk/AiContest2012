@@ -1,0 +1,58 @@
+<html>
+ <head>
+  <title>AiContest2012について/reference/Unit</title>
+ </head>
+ <body>
+  <h1>aiInterface.Unit</h1>
+  ゲーム中でAIの指示通りに行動するユニットの情報を記憶するためのクラスです。<br>
+
+  <h2>利用できるメソッド</h2>
+  <h3>aiInterface.Unit.isSameUnit(self, unit)</h3>
+  aiInterface.AiInterfaceでは毎フレームゲームの情報が再生成されるので、is演算子で同一判定することは出来ません。<br>
+  なので、二つのaiInterface.Unitのインスタンスが同一のユニットを表しているかどうかを調べるのにこのメソッドを利用する必要があります。<br>
+
+  <h3>aiInterface.Unit.__eq__(self, other)</h3>
+  self.isSameUnit(other)の結果を返します。<br>
+
+  <h3>aiInterface.Unit.isFirable(self)</h3>
+  ユニットが、そのフレーム中に攻撃することが可能かどうかを真偽値で返します。<br>
+
+  <h3>aiInterface.Unit.__str__(self)</h3>
+  入力データ中でそのユニットを表す文字列を返します。<br>
+
+  <h2>ユニットの状態を記憶するメンバ</h2>
+  <h3>aiInterface.Unit.hp</h3>
+  ユニットの残りＨＰを表す浮動小数です。<br>
+  これが０になるとスタート地点まで戻されます。<br>
+
+  <h3>aiInterface.Unit.team</h3>
+  ユニットのチームＩＤを表す整数です。<br>
+  この値を比較することで味方かどうか判定することができます。<br>
+
+  <h3>aiInterface.Unit.position</h3>
+  ユニットの座標を表す浮動小数のタプルです。<br>
+  x, y = aiInterface.Unit.positionなどの方法で座標にアクセスできます。<br>
+
+  <h3>aiInterface.AiInterface.direction</h3>
+  ユニットの向きを表す浮動小数です。<br>
+  ｘ軸正の方向を０として時計回り方向の、［－π，π］の範囲のラジアンで表現されます。<br>
+  ※このゲームではｘ軸正の方向を右とすると、ｙ軸正の方向は下になります。<br>
+    そのため、ｘ軸正の方向が０、ｙ軸正の方向はπ／２、ｘ軸負の方向はπ、ｙ軸負の方向は－π／２で表されることになります。<br>
+
+  <h3>aiInterface,AiInterface.attack</h3>
+  ユニットの攻撃力を表す浮動小数です。<br>
+  もしそのユニットがこのフレーム中に攻撃した場合、この値の攻撃力を持った弾が生成されます。<br>
+
+  <h3>aiInterface.AiInterface.reload</h3>
+  そのユニットが次に攻撃できるようになるまでのフレーム数を表す浮動小数です。<br>
+  この値が０以下の場合、このフレーム中に攻撃することが可能です。<br>
+
+  <h3>aiInterface.AiInterface.unitId</h3>
+  ユニットのゲーム内でのＩＤを表す整数です。<br>
+  この値を比較することで、同一のユニットかどうかを調べることができます。<br>
+  ※この値を利用するよりも、aiInterface.AiInterface.isSameUnit(self, unit)を利用することが推奨されます。<br>
+  <br>
+  <br>
+  <br>
+ </body>
+</html>

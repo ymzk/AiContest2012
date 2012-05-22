@@ -64,7 +64,7 @@ class Unit:
     return self.reload <= 0
 class Bullet:
   def __init__(self, data):
-    self.team = float(data.pop(0))
+    self.team = int(data.pop(0))
     self.position = Coordinate(data)
     self.direction = float(data.pop(0))
     self.move = Coordinate(data)
@@ -81,7 +81,7 @@ class Bullet:
 class Base:
   def __init__(self, data):
     self.hp = float(data.pop(0))
-    self.team = float(data.pop(0))
+    self.team = int(data.pop(0))
     self.position = Coordinate(data)
   def __str__(self):
     def gen():
@@ -132,11 +132,13 @@ class Field:
     self.height = int(fieldData.pop(0))
     self.cellWidth = int(fieldData.pop(0))
     self.cellHeight = int(fieldData.pop(0))
-    self.fieldData = [[None for i in range(self.height)] for j in range(self.width)]
-    self.fieldstringdata = fieldData[:-1]
-    for h in range(self.height):
-      for w in range(self.width):
-        self.fieldData[w][h] = getdata(fieldData.pop(0))
+#    self.fieldData = [[None for i in range(self.height)] for j in range(self.width)]
+#    self.fieldstringdata = fieldData[:-1]
+#    for h in range(self.height):
+#      for w in range(self.width):
+#        self.fieldData[w][h] = getdata(fieldData.pop(0))
+    self.fieldstringdata = [[fieldData.pop(0) for j in range(self.height)] for i in range(self.width)]
+    self.fieldData = [[getdata(i) for i in j] for j in self.fieldstringdata]
   def isPassable(self, x, y, team = None):
     if self.fieldData[int(x)][int(y)] <= 0:
       return True
