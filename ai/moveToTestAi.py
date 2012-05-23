@@ -28,21 +28,28 @@ class Log:
 class MoveToTestAi(AiInterface):
   def __init__(self):
     AiInterface.__init__(self)
-    self.move = None
-#    self.count = 0
-#    self.last = int(time.time()) + 1
+#    self.move = None
+    self.count = 0
+    self.last = int(time.time()) + 1
 #    self.log = Log('moveToTest')
+    self.target = None
   def main(self):
 #    print('\n'.join(str(i) for i in self.field.fieldstringdata), file = sys.stderr)
 #    print('\n'.join(str(i) for i in self.field.fieldData), file = sys.stderr)
-#    if time.time() > self.last:
-#      print(self.count, file = sys.stderr)
-#      self.count = 0
-#      self.last = int(time.time()) + 1
-#    self.count += 1
+    if time.time() > self.last:
+      print(self.count, file = sys.stderr)
+      self.count = 0
+      self.last = int(time.time()) + 1
+    self.count += 1
 #    print(self.myunit.position, file = sys.stderr)
 #    sys.stderr.flush()
-    return self.moveTo(self.bases[self.getOpponentTeamId()].position)
+    if self.target == None:
+      for base in self.bases:
+        if base.team == self.getAllyTeamId():
+          continue
+        self.target = base.position
+        break
+    return self.moveTo(self.target)
 #    if self.move == None:
 #      self.move = MoveTo(self.field, self.myunit, self.bases[1 - self.myunit.team].position)
 #    return Action(*self.move.get(self.field, self.myunit))

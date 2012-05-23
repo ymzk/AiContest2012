@@ -4,13 +4,11 @@ from aiLibrary.moveTo import MoveTo
 from math import atan2
 class CollectItemAi(AiInterface):
   def initCalculation(self):
-    self.log('\n'.join(str(i) for i in self.field.fieldData))
     self.baseMove = None
     for w in range(self.field.width):
       for h in range(self.field.height):
         if self.field.fieldData[w][h] == -1:
           self.itemMove = MoveTo(self.field, self.myunit, ((w + 0.5) * self.field.cellWidth, (h + 0.5) * self.field.cellHeight))
-          self.log(self.itemMove.path)
           return
   def main(self):
     if self.myunit.attack <= 10:
@@ -34,7 +32,11 @@ class CollectItemAi(AiInterface):
         angle = atan2(i.position[1] - self.myunit.position[1], i.position[0] - self.myunit.position[0])
         return Action(speed = 3, rollAngle = self.regularizeAngle(angle - self.myunit.direction),firing = True)
     if self.baseMove == None:
-      self.baseMove = MoveTo(self.field, self.myunit, self.bases[1 - self.myunit.team].position)
+      for base in self.bases:
+        if base.team == self.getAllyTeamId():
+          continue
+        self.baseMove = MoveTo(self.field, self.myunit, base.position)
+        break
     return Action(*self.baseMove.get(self.field, self.myunit))
   '''
     古い仕様　現在この仕様は利用できません

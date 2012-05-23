@@ -34,7 +34,7 @@ htmlファイルを添付して送る。
 //  AIを置くためのディレクトリを作る
   ai以下にsamplesを
 
-# ・aiLibrary.getProcess.getProcessが狂っている（Fieldを書き換えた時にミスった？）
+//・aiLibrary.getProcess.getProcessが狂っている（Fieldを書き換えた時にミスった？）
 ・samplesを
 ・画像
 ・マップ
