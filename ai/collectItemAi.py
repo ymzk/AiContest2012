@@ -1,13 +1,16 @@
+# coding: cp932
 from aiLibrary.aiInterface import AiInterface, Action
 from aiLibrary.moveTo import MoveTo
 from math import atan2
 class CollectItemAi(AiInterface):
   def initCalculation(self):
+    self.log('\n'.join(str(i) for i in self.field.fieldData))
     self.baseMove = None
     for w in range(self.field.width):
       for h in range(self.field.height):
         if self.field.fieldData[w][h] == -1:
           self.itemMove = MoveTo(self.field, self.myunit, ((w + 0.5) * self.field.cellWidth, (h + 0.5) * self.field.cellHeight))
+          self.log(self.itemMove.path)
           return
   def main(self):
     if self.myunit.attack <= 10:
@@ -34,7 +37,7 @@ class CollectItemAi(AiInterface):
       self.baseMove = MoveTo(self.field, self.myunit, self.bases[1 - self.myunit.team].position)
     return Action(*self.baseMove.get(self.field, self.myunit))
   '''
-    古い仕様　現在この仕様は利用できません
+    �Â��d�l�@���݂��̎d�l�͗��p�ł��܂���
   def send(self):
     if self.myunit.attack <= 10:
       for i in self.units:
@@ -65,8 +68,7 @@ class CollectItemAi(AiInterface):
     self.sendData(*self.baseMove.get(self.field, self.myunit))
     return
     '''
-          
-if __name__ == "__main__":
-  ai = CollectItemAi()
-  #ai.run(open("initMessage","r"),open("message","r"))
-  ai.run()
+
+ai = CollectItemAi()
+#ai.run(open("initMessage","r"),open("message","r"))
+ai.run()

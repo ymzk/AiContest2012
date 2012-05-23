@@ -1,3 +1,4 @@
+# coding: cp932
 from aiLibrary.aiInterface import AiInterface
 from math import atan2
 class AimAi(AiInterface):
@@ -14,7 +15,7 @@ class AimAi(AiInterface):
 #    self.sendData(firing = True)
     return Action(speed = 0, rollAngle = 0, firing = True)
   '''
-    古い仕様　現在この仕様は利用できません
+    �Â��d�l�@���݂��̎d�l�͗��p�ł��܂���
   def send(self):
     self.log(len(self.units))
     for i in self.units:
@@ -28,7 +29,6 @@ class AimAi(AiInterface):
     self.sendData(firing = True)
     return
   '''
-if __name__ == "__main__":
-  ai = AimAi()
-  #ai.run(open("initMessage","r"),open("message","r"))
-  ai.run()
+ai = AimAi()
+#ai.run(open("initMessage","r"),open("message","r"))
+ai.run()

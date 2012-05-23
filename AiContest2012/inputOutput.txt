@@ -1,4 +1,4 @@
-
+﻿
 
 
 input::入力データは大きく3つに分かれます。
@@ -52,8 +52,6 @@ Unit_data:
 Field_data:
   width       フィールドの横のセルの数
   height      フィールドの縦のセルの数
-  cellWidth   フィールドのセルの幅
-  cellHeight  フィールドのセルの高さ
   cell        field[0][0]からfield[1][0] field[2][0]の順にfield[width-1][height-1]のデータまでが並ぶ。
   cell        値は"NO" = 何もないセル
   cell        値は"WA" = 壁のセル

@@ -33,6 +33,8 @@ class MoveToTestAi(AiInterface):
 #    self.last = int(time.time()) + 1
 #    self.log = Log('moveToTest')
   def main(self):
+#    print('\n'.join(str(i) for i in self.field.fieldstringdata), file = sys.stderr)
+#    print('\n'.join(str(i) for i in self.field.fieldData), file = sys.stderr)
 #    if time.time() > self.last:
 #      print(self.count, file = sys.stderr)
 #      self.count = 0
@@ -45,8 +47,7 @@ class MoveToTestAi(AiInterface):
 #      self.move = MoveTo(self.field, self.myunit, self.bases[1 - self.myunit.team].position)
 #    return Action(*self.move.get(self.field, self.myunit))
 
-if __name__ == "__main__":
-  ai = MoveToTestAi()
-  #ai.run(open("initMessage","r"),open("message","r"))
-  ai.run()
+ai = MoveToTestAi()
+#ai.run(open("initMessage","r"),open("message","r"))
+ai.run()
 

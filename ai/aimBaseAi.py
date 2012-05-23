@@ -1,7 +1,6 @@
-# coding: cp932
+#coding: cp932
 import sys
 import os
-print(sys.path)
 from aiLibrary.moveTo import MoveTo
 from aiLibrary.aiInterface import AiInterface, Action
 from math import atan2
@@ -26,7 +25,7 @@ class AimBaseAi(AiInterface):
         return Action(0,self.regularizeAngle(atan2(opponentBase.position[1] - self.myunit.position[1], opponentBase.position[0] - self.myunit.position[0]) - self.myunit.direction),firing = True)
     # if self.move == None:
     #   self.move = MoveTo(self.field, self.myunit, self.bases[self.getOpponentTeamId()].position)
-    return self.moveTo(self.bases[self.getOpponentTeamId()].position)
+    return self.moveTo(tuple(int(i) for i in self.bases[self.getOpponentTeamId()].position))
   '''
     古い仕様　現在この仕様は利用できません
   def send(self):
@@ -51,7 +50,6 @@ class AimBaseAi(AiInterface):
     return
   '''
 
-if __name__ == "__main__":
-  ai = AimBaseAi()
-  #ai.run(open("initMessage","r"),open("message","r"))
-  ai.run()
+ai = AimBaseAi()
+#ai.run(open("initMessage","r"),open("message","r"))
+ai.run()

@@ -5,8 +5,8 @@ from . aStar import aStar
 from . smoothPath import smoothPath
 from . binarySearch import binarySearch
 from . checkPassable import checkPassable
-print('hoge', file = sys.stderr)
 from . index import index
+from gameConfig import UNIT_MAX_SPEED, UNIT_MAX_ROLL_ANGLE
 
 INF = float('inf')
 EPS = 1e-6
@@ -67,12 +67,12 @@ def cost(field, path, position, direction):
 SPEED = 10
 ROLL_SPEED = 10
 
-def simurate(position, direction, speed, roll):
+def simulate(position, direction, speed, roll):
   direction += roll
   position = addPP(position, mulNP(speed, getUnitVector(direction)))
   return position, regularizeAngle(direction)
 
-candidates = [(10, 0, 0), (10, 0.1, 0), (10, -0.1, 0)]
+candidates = [(UNIT_MAX_SPEED, 0, 0), (UNIT_MAX_SPEED, UNIT_MAX_ROLL_ANGLE, 0), (UNIT_MAX_SPEED, -UNIT_MAX_ROLL_ANGLE, 0)]
 
 class MoveTo:
   '''
@@ -104,4 +104,4 @@ class MoveTo:
     self.path = list(zip(self.path, self.path[1:]))
   def get(self, field, unit):
     return min(candidates,
-               key = lambda candidate: cost(field, self.path, *simurate(unit.position, unit.direction, candidate[0], candidate[1])))
+               key = lambda candidate: cost(field, self.path, *simulate(unit.position, unit.direction, candidate[0], candidate[1])))

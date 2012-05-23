@@ -28,10 +28,16 @@ htmlファイルを添付して送る。
 ・ドキュメント
 ・C向けライブラリ
 ・ディレクトリ構造の修正
-  AiInterfaceをaiLibrary以下に
-  aiLibraryをトップレベルに
-  logをトップレベルに
-  AIを置くためのディレクトリを作る
+//  AiInterfaceをaiLibrary以下に
+//  aiLibraryをトップレベルに
+//  logをトップレベルに
+//  AIを置くためのディレクトリを作る
   ai以下にsamplesを
+
+# ・aiLibrary.getProcess.getProcessが狂っている（Fieldを書き換えた時にミスった？）
+・samplesを
+・画像
+・マップ
+・aiInterface.moveToが、死んだ時にリセットされるように。
 
 他にタスクがあったらメールしてください

@@ -1,11 +1,12 @@
 # coding: cp932
 import sys
-print(sys.path)
 import time
 from config import gameConfig
 from . moveTo import MoveTo
 from . checkPassable import checkPassable
 from . index import index
+
+from gameConfig import *
 
 class Action(tuple):
   def __new__(cls, speed = 0, rollAngle = 0, firing = False):
@@ -130,32 +131,35 @@ class Field:
     self.myTeam = myTeam
     self.width = int(fieldData.pop(0))
     self.height = int(fieldData.pop(0))
-    self.cellWidth = int(fieldData.pop(0))
-    self.cellHeight = int(fieldData.pop(0))
+    self.cellWidth = FIELD_CELL_WIDTH
+    self.cellHeight = FIELD_CELL_HEIGHT
 #    self.fieldData = [[None for i in range(self.height)] for j in range(self.width)]
 #    self.fieldstringdata = fieldData[:-1]
 #    for h in range(self.height):
 #      for w in range(self.width):
 #        self.fieldData[w][h] = getdata(fieldData.pop(0))
-    self.fieldstringdata = [[fieldData.pop(0) for j in range(self.height)] for i in range(self.width)]
-    self.fieldData = [[getdata(i) for i in j] for j in self.fieldstringdata]
+    self.data = list(zip(*[[fieldData.pop(0) for j in range(self.width)] for i in range(self.height)]))
+    self.fieldData = [[getdata(i) for i in j] for j in self.data]
+
   def isPassable(self, x, y, team = None):
-    if self.fieldData[int(x)][int(y)] <= 0:
+    if x < 0 or x >= self.width or y < 0 or y >= self.height:
+      return False
+    elif self.fieldData[int(x)][int(y)] <= 0:
       return True
     elif team == None:
       team = self.myTeam.team
     return self.fieldData[int(x)][int(y)] == 1 + team
-  def isPassableCheck(self, x, y, team = None):
-    if 0 <= x < self.width and 0 <= y < self.height:
-      return isPassable(x, y, team)
-    return False
+#  def isPassableCheck(self, x, y, team = None):
+#    if 0 <= x < self.width and 0 <= y < self.height:
+#      return isPassable(x, y, team)
+#    return False
   def __str__(self):
     def gen():
       yield self.width
       yield self.height
       yield self.cellWidth
       yield self.cellHeight
-      yield self.fieldstringdata
+      yield self.data
     string = "field"
     for i in gen():
       string += " " + str(i) 
@@ -167,15 +171,15 @@ class AiInterface:
     self.__clear()
     # self.__logFile = open(str(self.__class__.__name__) + ".log","w")
     self.__logFile = sys.stderr
+
+    # for moveTo
+    self.__move = None
+    self.__lastTarget = None
   def __clear(self):
     self.units = []
     self.bullets = []
     self.items = []
     self.bases = []
-
-    # for moveTo
-    self.__move = None
-    self.__lastTarget = None
   def __sendLastData(self):
     print(self.__data[0],self.__data[1],self.__data[2])
     sys.stdout.flush()    
@@ -282,65 +286,11 @@ class AiInterface:
   def canShoot(self, fromPosition, toPosition):
     f = index(self.field, fromPosition)
     t = index(self.field, toPosition)
-    self.log(f, self.field.isPassable(*f))
-    self.log(t, self.field.isPassable(*t))
+    # self.log(f, self.field.isPassable(*f))
+    # self.log(t, self.field.isPassable(*t))
     return checkPassable(self.field,
                          index(self.field, fromPosition),
                          index(self.field, toPosition))
-    '''
-    def nextDelta(first,remain):
-      yield first
-      while True:
-        yield remain
-    dx = toPosition[0] - fromPosition[0]
-    dy = toPosition[1] - fromPosition[1]
-    if dx == dy == 0:
-      return True
-    if abs(dx) > abs(dy):
-      if dx > 0:
-        delta = nextDelta(dy / dx * (self.field.cellWidth - fromPosition[0] % self.field.cellWidth), dy / dx * self.field.cellWidth)
-        py = fromPosition[1]
-        for ix in range(int(fromPosition[0] // self.field.cellWidth), int(toPosition[0] // self.field.cellWidth)):
-          if not self.field.isPassable(ix, py //self.field.cellHeight):
-            return False
-          py += next(delta)
-          if not self.field.isPassable(ix, py // self.field.cellHeight):
-            return False
-        return True
-      else:
-        delta = nextDelta(- dy / dx * (fromPosition[0] % self.field.cellWidth), dy / dx * self.field.cellWidth)
-        py = fromPosition[1]
-        for ix in range(int(fromPosition[0] // self.field.cellWidth), int(toPosition[0] // self.field.cellWidth), -1):
-          if not self.field.isPassable(ix, py //self.field.cellHeight):
-            return False
-          py -= next(delta)
-          if not self.field.isPassable(ix, py // self.field.cellHeight):
-            return False
-        return True
-    else:
-      if dy > 0:
-        delta = nextDelta(dx / dy * (self.field.cellHeight - fromPosition[1] % self.field.cellHeight), dx / dy * self.field.cellHeight)
-        px = fromPosition[0]
-        for iy in range(int(fromPosition[1] // self.field.cellHeight), int(toPosition[1] // self.field.cellHeight)):
-          if not self.field.isPassable(px // self.field.cellWidth, iy):
-            return False
-          px += next(delta)
-          if not self.field.isPassable(px // self.field.cellWidth, iy):
-            return False
-        return True
-      else:
-        delta = nextDelta( - dx / dy * (fromPosition[1] % self.field.cellHeight), dx / dy * self.field.cellHeight)
-        px = fromPosition[0]
-        for iy in range(int(fromPosition[1] // self.field.cellHeight), int(toPosition[1] // self.field.cellHeight), -1):
-          if not self.field.isPassable(px // self.field.cellWidth, iy):
-            return False
-          px -= next(delta)
-          if not self.field.isPassable(px // self.field.cellWidth, iy):
-            return False
-        return True
-      
-    '''
-          
     
   def regularizeSpeed(self, speed):
     if speed < 0:
@@ -358,12 +308,14 @@ class AiInterface:
 #    #次の動きを計算し、sendDataへ送信する
 #    pass
   def main(self):
-    #次の動きを計算し、Actionとして返す
+    # 次の動きを計算し、Actionとして返す
     return NotImplemented
   def moveTo(self, target):
     if target != self.__lastTarget:
+#      self.log(target, self.__lastTarget)
       self.__move = MoveTo(self.field, self.myunit, target)
       self.__lastTarget = target
+#      self.log(target, self.__lastTarget)
     return Action(*self.__move.get(self.field, self.myunit))
   def getAllyTeamId(self):
     return self.myunit.team
