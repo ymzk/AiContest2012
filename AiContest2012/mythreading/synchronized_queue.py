@@ -49,3 +49,9 @@ class SynchronizedQueue:
         return len(self._data) == 0
     def full(self):
         return len(self._data) == self._maxSize
+    def clear(self):
+        self._lock.acquire()
+        try:
+            self._data = []
+        finally:
+            self._lock.release()

@@ -3,8 +3,9 @@ import re
 import sys
 import os
 from time import time, sleep
-from queue import Queue, Full, Empty
+from queue import Full, Empty
 from threading import Thread, Event
+from mythreading.synchronized_queue import SynchronizedQueue
 
 '''
 class ProcessControllerCore(Thread):
@@ -50,8 +51,7 @@ def processControllerCore(subprocess, sendQueue, recvQueue):
           return
     while not recvQueue.empty():
         sleep(0.01)
-    while not sendQueue.empty():
-        sendQueue.pop()
+    sendQueue.clear()
 #  except:
 #    pass
 
@@ -79,7 +79,7 @@ class ProcessController():
                        stdin = PIPE,
                        stdout = PIPE,
                        stderr = self._childError)
-    sendQueue, recvQueue = Queue(3), Queue()
+    sendQueue, recvQueue = SynchronizedQueue(3), SynchronizedQueue()
     t = Thread(target = processControllerCore, args = (subprocess, sendQueue, recvQueue))
     t.start()
     self._childThread = t
