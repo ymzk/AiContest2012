@@ -1,6 +1,7 @@
 from subprocess import Popen, PIPE
 import re
 import sys
+import os
 from time import time, sleep
 from queue import Full, Empty
 from threading import Thread, Event
@@ -67,7 +68,10 @@ class ProcessController():
     # print(command)
     logId = ProcessController.logIds.get(logName, 0)
     ProcessController.logIds[logName] = logId + 1
-    self._childError = open('log/' + logName + '(' + str(logId) + ').log', 'w')
+    filepath = os.path.abspath('log/' + logName + '(' + str(logId) + ').log')
+    if not os.path.exists(os.path.dirname(filepath)):
+        os.makedirs(os.path.dirname(filepath))
+    self._childError = open(filepath, 'w')
     subprocess = Popen(command,
                        stdin = PIPE,
                        stdout = PIPE,

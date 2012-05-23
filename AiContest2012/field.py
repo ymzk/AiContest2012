@@ -119,6 +119,7 @@ class Field(Runnable):
     maxLength = abs(Manager.getScreenSize())
     areaSize = Coordinate(maxLength, maxLength)
     image = self._image.getSubImage(viewPoint.getPosition() - areaSize / 2, areaSize).rotate(viewPoint.getDirection() + PI / 2)
+#    image = self._image
     serface.draw(image = image, position = -(image.getSize() - Manager.getScreenSize()) / 2)
 #    serface.draw(self._image)
   def loadField(self, filename):
