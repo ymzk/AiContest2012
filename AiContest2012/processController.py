@@ -3,9 +3,8 @@ import re
 import sys
 import os
 from time import time, sleep
-from queue import Full, Empty
+from queue import Queue, Full, Empty
 from threading import Thread, Event
-from mythreading.synchronized_queue import SynchronizedQueue
 
 '''
 class ProcessControllerCore(Thread):
@@ -36,7 +35,7 @@ def processControllerCore(subprocess, sendQueue, recvQueue):
         sleep(0.001)
       while not sendQueue.empty():
         flag, sendMessage = sendQueue.pop()
-      #print('sendMessage: ' + str(sendMessage) + '\n', end = '')
+#      print('sendMessage: ' + str(sendMessage) + '\n', end = '')
       try:
         subprocess.stdin.write(str(sendMessage).encode())
         subprocess.stdin.write(b'\n')
@@ -45,10 +44,14 @@ def processControllerCore(subprocess, sendQueue, recvQueue):
         return
       try:
         recvMessage = subprocess.stdout.readline().decode().strip()
-        #print('recvMessage: ' + str(recvMessage) + '\n', end = '')
+#        print('recvMessage: ' + str(recvMessage) + '\n', end = '')
         recvQueue.push(recvMessage)
       except IOError:
           return
+    while not recvQueue.empty():
+        sleep(0.01)
+    while not sendQueue.empty():
+        sendQueue.pop()
 #  except:
 #    pass
 
@@ -76,7 +79,7 @@ class ProcessController():
                        stdin = PIPE,
                        stdout = PIPE,
                        stderr = self._childError)
-    sendQueue, recvQueue = SynchronizedQueue(3), SynchronizedQueue()
+    sendQueue, recvQueue = Queue(3), Queue()
     t = Thread(target = processControllerCore, args = (subprocess, sendQueue, recvQueue))
     t.start()
     self._childThread = t

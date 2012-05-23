@@ -29,18 +29,18 @@ class MoveToTestAi(AiInterface):
   def __init__(self):
     AiInterface.__init__(self)
 #    self.move = None
-    self.count = 0
-    self.last = int(time.time()) + 1
+#    self.count = 0
+#    self.last = int(time.time()) + 1
 #    self.log = Log('moveToTest')
     self.target = None
   def main(self):
 #    print('\n'.join(str(i) for i in self.field.fieldstringdata), file = sys.stderr)
 #    print('\n'.join(str(i) for i in self.field.fieldData), file = sys.stderr)
-    if time.time() > self.last:
-      print(self.count, file = sys.stderr)
-      self.count = 0
-      self.last = int(time.time()) + 1
-    self.count += 1
+#    if time.time() > self.last:
+#      self.log(self.count, file = sys.stderr)
+#      self.count = 0
+#      self.last = int(time.time()) + 1
+#    self.count += 1
 #    print(self.myunit.position, file = sys.stderr)
 #    sys.stderr.flush()
     if self.target == None:

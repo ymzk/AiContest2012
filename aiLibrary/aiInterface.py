@@ -253,8 +253,8 @@ class AiInterface:
       '''
   def run(self,initfile = sys.stdin,file = sys.stdin):
     self.__receiveInit(initfile)
-    print(0,0,0)
-    sys.stdout.flush()
+#    print(0,0,0)
+#    sys.stdout.flush()
     self.__receive(file)
     self.initCalculation()
     print(0, 0, 0)
