@@ -1,7 +1,7 @@
 #ifndef __UNIT_H__
 #define __UNIT_H__
 
-#include "Coordinate.h"
+#include "coordinate.h"
 
 #include <iostream>
 

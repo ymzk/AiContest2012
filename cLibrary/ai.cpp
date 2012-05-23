@@ -1,4 +1,4 @@
-#include "Ai.h"
+#include "ai.h"
 #include "main.h"
 
 bool Ai::read_init(istream& is){

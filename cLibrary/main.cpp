@@ -1,5 +1,4 @@
-
-#include "Ai.h"
+#include "ai.h"
 
 #include <iostream>
 #include <fstream>

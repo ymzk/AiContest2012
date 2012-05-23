@@ -1,4 +1,4 @@
-#include "Field.h"
+#include "field.h"
 #include "main.h"
 
 Field::Field(istream& is){
