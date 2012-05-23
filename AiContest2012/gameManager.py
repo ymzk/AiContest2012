@@ -221,11 +221,11 @@ class GameManager(Runnable):
           self._defeatTeam |= 1<<jj
           break
     if flag:
-      if self.defeatTeam == 1:
+      if self._defeatTeam == 1:
         print("team 1 win")
-      elif self.defeatTeam == 2:
+      elif self._defeatTeam == 2:
         print("team 0 win")
-      elif self.defeatTeam == 3:
+      elif self._defeatTeam == 3:
         print("draw")
       self.end()
     for i in self.units:
