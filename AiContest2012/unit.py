@@ -13,7 +13,7 @@ from draw import draw
 # import gameManager
 class Unit(GameObject):
   def __init__(self, position, direction, gameManager, teamFlag,unitId , aiManager = DefaultAiManager()):
-    super().__init__(position = position, direction = direction, image = "graphics/unit.bmp")
+    super().__init__(position = position, direction = direction, image = "graphics/unit" + str(teamFlag) + ".bmp")
     self._unitId = unitId
     self._startingPoint = position
     self._startingDirection = direction
@@ -21,6 +21,7 @@ class Unit(GameObject):
     self._idForAi = 0
     self._teamFlag = teamFlag
     self._aiManager = aiManager
+    self._resurrection = 0
     if aiManager == None or aiManager == "None":
       self._aiManager = DefaultAiManager()
     '''
@@ -45,6 +46,7 @@ class Unit(GameObject):
   def changeState(self):
     if self._hp <= 0 :
       #Ž€‚ñ‚¾‚Æ‚«‚Ìˆ—
+      self._resurrection = UNIT_RESURRECTION_COST
       self.initialize()
   def getTeamFlag(self):
     return self._teamFlag
@@ -55,6 +57,9 @@ class Unit(GameObject):
     return self._hp
   def setHp(self, _hp):
     self._hp = _hp
+
+  def getAlive(self):
+    return self._resurrection <= 0
   def getHp(self):
     return self._hp
   def getUnitId(self):
@@ -75,6 +80,8 @@ class Unit(GameObject):
     self._aiManager.step()
     self._aiManager.readMessage()
 
+    if not self.getAlive():
+      return
     if self._term <= 0:
       if self._aiManager.getFiring():
         self.makeBullet()
@@ -89,6 +96,8 @@ class Unit(GameObject):
   def step(self):
     if self._term > 0:
       self._term -= 1
+    if self._resurrection > 0:
+      self._resurrection -= 1
     self.recieveData()
     super().step()
   def end(self):

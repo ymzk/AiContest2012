@@ -1,4 +1,4 @@
-#include "Bullet.h"
+#include "bullet.h"
 #include "main.h"
 
 Bullet::Bullet(istream& is){

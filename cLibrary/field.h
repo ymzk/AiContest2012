@@ -1,7 +1,7 @@
 #ifndef __FIELD_H__
 #define __FIELD_H__
 
-#include "Coordinate.h"
+#include "coordinate.h"
 
 #include <iostream>
 #include <vector>

@@ -1,7 +1,7 @@
 #ifndef __BULLET_H__
 #define __BULLET_H__
 
-#include "Coordinate.h"
+#include "coordinate.h"
 
 #include <iostream>
 

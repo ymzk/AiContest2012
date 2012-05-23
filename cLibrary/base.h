@@ -1,7 +1,7 @@
 #ifndef __BASE_H__
 #define __BASE_H__
 
-#include "Coordinate.h"
+#include "coordinate.h"
 
 #include <iostream>
 

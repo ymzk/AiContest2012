@@ -1,12 +1,12 @@
 #ifndef __AI_H__
 #define __AI_H__
 
-#include "Base.h"
-#include "Bullet.h"
-#include "Coordinate.h"
-#include "Field.h"
-#include "Item.h"
-#include "Unit.h"
+#include "base.h"
+#include "bullet.h"
+#include "coordinate.h"
+#include "field.h"
+#include "item.h"
+#include "unit.h"
 
 #include <iostream>
 #include <vector>
