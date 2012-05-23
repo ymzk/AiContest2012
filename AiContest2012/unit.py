@@ -72,8 +72,8 @@ class Unit(GameObject):
     '''
   def recieveData(self):
 
-    self._aiManager.readMessage()
     self._aiManager.step()
+    self._aiManager.readMessage()
 
     if self._term <= 0:
       if self._aiManager.getFiring():
@@ -90,7 +90,6 @@ class Unit(GameObject):
     if self._term > 0:
       self._term -= 1
     self.recieveData()
-    self.sendData()
     super().step()
   def end(self):
     self._aiManager.end()
