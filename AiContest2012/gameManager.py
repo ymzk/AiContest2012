@@ -52,7 +52,7 @@ class GameManager(Runnable):
           continue
         elif aiName == "player":
           unit = Unit(point,direction,self,team,len(self.units))
-          self.addDebugUnit(unit,3)
+          self.addDebugUnit(unit,UNIT_MAX_ROLL_ANGLE,UNIT_MAX_SPEED)
           self.units.append(unit)
           continue
         else:
@@ -62,9 +62,9 @@ class GameManager(Runnable):
       i.sendStartingMessage()
     self._defeatTeam = 0
 
-  def addDebugUnit(self,unit,velocity = 10):
+  def addDebugUnit(self,unit,angle = 0.3,velocity = 10):
     self.debugUnit = unit
-    self.debugUnit.setMove(MoveByKeyAsUnit(velocity = velocity))
+    self.debugUnit.setMove(MoveByKeyAsUnit(angle = angle, velocity = velocity))
     self._viewPoint = self.debugUnit
         
   def writeEndMessage(self,unit,file):
@@ -81,7 +81,7 @@ class GameManager(Runnable):
     file.write("startInit")
     self.writeMessageUnit(unit,file)
     self.writeMessageField(self.field,file)
-    file.write("endInit")
+    file.write("endInit\n")
     self.writeMessage(unit,file)
   def writeMessage(self,unit,file):
     file.write("start")
@@ -221,7 +221,15 @@ class GameManager(Runnable):
           self._defeatTeam |= 1<<jj
           break
     if flag:
+      if self.defeatTeam == 1:
+        print("team 1 win")
+      elif self.defeatTeam == 2:
+        print("team 0 win")
+      elif self.defeatTeam == 3:
+        print("draw")
       self.end()
+    for i in self.units:
+      i.sendData()
   
   def draw(self, screan):
     self.field.draw(screan,self._viewPoint)
