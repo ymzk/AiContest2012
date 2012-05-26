@@ -60,6 +60,8 @@ class Unit(GameObject):
 
   def getAlive(self):
     return self._resurrection <= 0
+  def checkAlive(self):
+    return self.getAlive()
   def getHp(self):
     return self._hp
   def getUnitId(self):

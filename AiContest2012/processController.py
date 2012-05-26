@@ -78,7 +78,8 @@ class ProcessController():
     subprocess = Popen(command,
                        stdin = PIPE,
                        stdout = PIPE,
-                       stderr = self._childError)
+                       stderr = self._childError,
+                       shell = True)
     sendQueue, recvQueue = SynchronizedQueue(3), SynchronizedQueue()
     t = Thread(target = processControllerCore, args = (subprocess, sendQueue, recvQueue))
     t.start()

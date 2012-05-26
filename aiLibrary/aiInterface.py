@@ -284,13 +284,11 @@ class AiInterface:
     print(*arg, **keys)
     self.__logFile.flush()
   def canShoot(self, fromPosition, toPosition):
-    f = index(self.field, fromPosition)
-    t = index(self.field, toPosition)
+#    f = index(self.field, fromPosition)
+#    t = index(self.field, toPosition)
     # self.log(f, self.field.isPassable(*f))
     # self.log(t, self.field.isPassable(*t))
-    return checkPassable(self.field,
-                         index(self.field, fromPosition),
-                         index(self.field, toPosition))
+    return checkPassable(self.field, fromPosition, toPosition)
     
   def regularizeSpeed(self, speed):
     if speed < 0:

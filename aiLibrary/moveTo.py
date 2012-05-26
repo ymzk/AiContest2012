@@ -6,7 +6,7 @@ from . smoothPath import smoothPath
 from . binarySearch import binarySearch
 from . checkPassable import checkPassable
 from . index import index
-from gameConfig import UNIT_MAX_SPEED, UNIT_MAX_ROLL_ANGLE
+from gameConfig import UNIT_MAX_SPEED, UNIT_MAX_ROLL_ANGLE, FIELD_CELL_WIDTH, FIELD_CELL_HEIGHT
 
 INF = float('inf')
 EPS = 1e-6
@@ -64,9 +64,6 @@ def cost(field, path, position, direction):
 #    sys.stderr.flush()
     return result
 
-SPEED = 10
-ROLL_SPEED = 10
-
 def simulate(position, direction, speed, roll):
   direction += roll
   position = addPP(position, mulNP(speed, getUnitVector(direction)))
@@ -95,10 +92,10 @@ class MoveTo:
   '''
   def __init__(self, field, unit, target):
     self.target = target
-    self.path = list(aStar(field, index(field, unit.position), index(field, target)))
+    self.path = [(p[0] * FIELD_CELL_WIDTH + FIELD_CELL_WIDTH // 2, p[1] * FIELD_CELL_HEIGHT + FIELD_CELL_HEIGHT // 2) for p in aStar(field, index(field, unit.position), index(field, target))]
 #    print(self.path, file = sys.stderr)
 #    sys.stderr.flush()
-    self.path = [(p[0] * field.cellWidth + field.cellWidth // 2, p[1] * field.cellHeight + field.cellHeight // 2) for p in smoothPath(field, self.path)]
+    self.path = list(smoothPath(field, self.path))
 #    print(self.path, file = sys.stderr)
 #    sys.stderr.flush()
     self.path = list(zip(self.path, self.path[1:]))

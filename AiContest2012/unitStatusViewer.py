@@ -17,6 +17,8 @@ class LifeBar(RunnableList):
     def step(self):
       pass
     def draw(self, screen):
+      if not self.unit.checkAlive():
+        return
       ration = self.unit.getHp() / self.maxHp
 #      print(ration, self.position)
       if ration < 0:
