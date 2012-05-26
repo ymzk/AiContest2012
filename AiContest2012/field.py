@@ -17,7 +17,6 @@ class Field(Runnable):
     super().__init__()
     self.setFieldSize(100, 100)
     self._gameManager = gameManager
-    self._image = Image(pygame.Surface((self._fieldWidth * FIELD_CELL_WIDTH, self._fieldHeight * FIELD_CELL_HEIGHT)), permeate = False)
     self._modified = False
   def setFieldSize(self, fieldWidth, fieldHeight):
     self._fieldWidth = fieldWidth
@@ -102,10 +101,12 @@ class Field(Runnable):
     return ((int)(point.getx()/self._fieldWidth,(int)(point.gety()/self._fieldHeight)))
   def step(self):
     pass
-  def updateImage(self):
+  def updateImage(self, surface):
+    maxLength = abs(surface.getSize())
+    self._image = Image((FIELD_CELL_WIDTH * self._fieldWidth + maxLength, FIELD_CELL_HEIGHT * self._fieldHeight + maxLength))
     for i in self._fieldData:
       for cell in i:
-        cell.draw(self._image)
+        self._image.draw(cell.getImage(), cell.getPosition() + Coordinate(maxLength / 2, maxLength / 2) - Coordinate(FIELD_CELL_WIDTH / 2, FIELD_CELL_HEIGHT / 2))
   def draw(self,serface,viewPoint):
     PI = 3.14159265
     '''
@@ -114,13 +115,17 @@ class Field(Runnable):
         cell.draw(serface)
     '''
     if self._modified:
-      self.updateImage()
+      self.updateImage(serface)
       self._modified = False
-    maxLength = abs(Manager.getScreenSize())
-    areaSize = Coordinate(maxLength, maxLength)
-    image = self._image.getSubImage(viewPoint.getPosition() - areaSize / 2, areaSize).rotate(viewPoint.getDirection() + PI / 2)
+    maxLength = abs(serface.getSize())
+    size = Coordinate(maxLength, maxLength)
+    mergin = size / 2
+    leftUp = viewPoint.getPosition() - size / 2 + mergin
+    leftUp = Coordinate(max(0, leftUp.getX()), max(0, leftUp.getY()))
+    image = self._image.getSubImage(leftUp, size)
+    image = image.rotate(viewPoint.getDirection() + PI / 2)
 #    image = self._image
-    serface.draw(image = image, position = -(image.getSize() - Manager.getScreenSize()) / 2)
+    serface.draw(image = image, position = -(image.getSize() - serface.getSize()) / 2)
 #    serface.draw(self._image)
   def loadField(self, filename):
     def convert(token):

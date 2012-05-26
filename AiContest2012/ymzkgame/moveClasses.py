@@ -77,33 +77,21 @@ class MoveStraight(Move):
         return self, resultPosition, resultDirection
 
 class MoveByKey(Move):
-    def __init__(self, velocity = 1):
-        self._velocity = velocity
+    UNIT_VECTOR_X = Coordinate(1, 0)
+    UNIT_VECTOR_Y = Coordinate(0, 1)
+    def __init__(self, speed = 1):
+        self._speed = speed
     def __call__(self, position, direction):
-        dx = Coordinate(1, 0)
-        dy = Coordinate(0, 1)
-        d = Coordinate(0, 0)
-        arg = 0
-        flag = False
+        velocity = Coordinate(0, 0)
         if Manager.getKeyStatus(Manager.K_UP):
-            d -= dy
-            arg = -1.57079633
-            flag = True
+            velocity -= self.UNIT_VECTOR_Y
         if Manager.getKeyStatus(Manager.K_DOWN):
-            d += dy
-            arg =  1.57079633
-            flag = True
+            velocity += self.UNIT_VECTOR_Y
         if Manager.getKeyStatus(Manager.K_LEFT):
-            d -= dx
-            arg = 3.14159265 - arg / 2
-            flag = True
+            velocity -= self.UNIT_VECTOR_X
         if Manager.getKeyStatus(Manager.K_RIGHT):
-            d += dx
-            arg /= 2
-            flag = True
-        if d.norm() > EPS:
-            d *= self._velocity / abs(d)
-            position += d
-        if flag:
-            direction = arg
-        return self, position, direction
+            velocity += self.UNIT_VECTOR_X
+        if velocity.norm() > EPS:
+            velocity /= abs(velocity)
+        velocity *= self._speed
+        return self, position + velocity, direction

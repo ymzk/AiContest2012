@@ -7,6 +7,7 @@ from unit import Unit
 from base import Base
 from item import *
 from moveByKeyAsUnit import MoveByKeyAsUnit
+from playerManager import PlayerManager
 
 from aiManager import AiManager
 from ymzkgame.runnableList import RunnableList
@@ -32,11 +33,13 @@ class GameManager(Runnable):
     self.initialize(settingFileName)
     time.sleep(2)
   def defaultInitialize(self):
-    self.specialUnit = GameObject(move = MoveByKeyAsUnit(velocity = 50))
+#    self.specialUnit = GameObject(move = MoveByKeyAsUnit(velocity = 50))
+    self._viewPoint = None
     self.bullets = RunnableList()
     self.units = RunnableList()
     self.items = RunnableList()
     self.bases = RunnableList()
+    self.debugObjects = RunnableList()
     self.field = Field(self)
   def initialize(self,settingFilename):
     self.defaultInitialize()
@@ -51,15 +54,21 @@ class GameManager(Runnable):
           self.units.append(unit)
           continue
         elif aiName == "player":
-          unit = Unit(point,direction,self,team,len(self.units))
-          self.addDebugUnit(unit,UNIT_MAX_ROLL_ANGLE,UNIT_MAX_SPEED)
+          unit = Unit(point,direction,self,team,len(self.units), aiManager = PlayerManager())
+          self._viewPoint = unit
+#          self.addDebugUnit(unit,UNIT_MAX_ROLL_ANGLE,UNIT_MAX_SPEED)
           self.units.append(unit)
           continue
         else:
           self.units.append(Unit(point,direction,self,team,len(self.units),AiManager(aiName)))
-    debugmode = file.readline()    
+    self.debugmode = eval(file.readline())
+    if self.debugmode:
+      pass
     for i in self.units:
       i.sendStartingMessage()
+    if self._viewPoint is None:
+      self._viewPoint = GameObject(direction = -1.57079633, move = MoveByKey(speed = 5))
+      self.debugObjects.append(self._viewPoint)
     self._defeatTeam = 0
 
   def addDebugUnit(self,unit,angle = 0.3,velocity = 10):
@@ -137,14 +146,16 @@ class GameManager(Runnable):
         #baseはひとつだと仮定
         return i
   def step(self):
-    self.readKeyEvent()
-    self.specialUnit.step()
+    if self.debugmode:
+      self.readKeyEvent()
+#    self.specialUnit.step()
     self.field.step()
     self.units.step()
     #baseはunitの後
     self.bases.step()
     self.bullets.step()
     self.items.step()
+    self.debugObjects.step()
 
     for counter in range(20):
       #振動して無限ループになったとき、20回で終了するようにしている。
@@ -238,7 +249,7 @@ class GameManager(Runnable):
     self.bullets.draw(screan, self._viewPoint)
     self.items.draw(screan, self._viewPoint)
   def readKeyEvent(self):
-    self._viewPoint = GetKeyEvent(self._viewPoint, self.units, self.specialUnit)
+    self._viewPoint = GetKeyEvent(self._viewPoint, self.units, self.debugObjects)
   def end(self):
     for i in self.units:
       i.sendEndMessage()

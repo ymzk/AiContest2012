@@ -8,8 +8,8 @@ sys.path.append(os.path.abspath('AiContest2012'))
 sys.path.append(os.path.abspath('config'))
 sys.path.append(os.path.abspath('mapData'))
 
-import playMode
+import gameManager
 from ymzkgame import runner
 
 if __name__ == '__main__':
-  runner.run(playMode.PlayMode())
+  runner.run(gameManager.GameManager())

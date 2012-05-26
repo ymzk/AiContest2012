@@ -1,4 +1,4 @@
-# -*- coding: cp932 -*-
+# coding: cp932
 from . priorityQueue import PriorityQueue
 import sys
 

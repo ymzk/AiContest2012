@@ -11,4 +11,4 @@ def draw(screen, image, position, direction, viewPosition, viewDirection):
                           viewPosition
                           ).rotate(-viewDirection) -
                           image.getSize() / 2 +
-                          Manager.getScreenSize() / 2)
+                          screen.getSize() / 2)

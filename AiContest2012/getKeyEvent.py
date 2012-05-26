@@ -1,6 +1,8 @@
 
 from ymzkgame.manager import Manager
-def GetKeyEvent(current,units,special):
+from ymzkgame.moveClasses import MoveByKey
+from ymzkgame.gameObject import GameObject
+def GetKeyEvent(current,units, debugObjects):
     i = None
     if Manager.getKeyStatus(Manager.K_0):
       i = 0
@@ -23,12 +25,16 @@ def GetKeyEvent(current,units,special):
     elif Manager.getKeyStatus(Manager.K_9):
       i = 9
     elif Manager.getKeyStatus(Manager.K_s):
-      special.setPosition(current.getPosition())
-      special.setDirection(current.getDirection())
-      return special
+      result = GameObject(position = current.getPosition(), direction = -1.57079633, move = MoveByKey(speed = 5))
+      while debugObjects:
+        debugObjects.pop()
+      debugObjects.append(result)
+      return result
     if i == None:
       return current
     elif i < len(units):
+      while debugObjects:
+        debugObjects.pop()
       return units[i]
     else:
       return current

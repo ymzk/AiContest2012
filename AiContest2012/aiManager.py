@@ -118,4 +118,4 @@ class AiManager(Runnable):
     self._fireingFlag = int(factorList[2]) != 0
   def end(self):
     self._processController.end()
-
+    Runnable.end(self)
